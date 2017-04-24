@@ -1,0 +1,143 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1000012880494948}
+  m_IsPrefabParent: 1
+--- !u!1 &1000012880494948
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 4000014273727088}
+  - 114: {fileID: 114000012536022000}
+  - 114: {fileID: 114000013502393916}
+  m_Layer: 5
+  m_Name: ani_yaoshaizi
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4000014273727088
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012880494948}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+--- !u!114 &114000012536022000
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012880494948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f945d2f8b430a140a60224c850dbbdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  frameIndex: 0
+  framerate: 20
+  ignoreTimeScale: 1
+  loop: 1
+  frames:
+  - {fileID: 21300000, guid: 76ac9ce3004c94e418d556863d1a120b, type: 3}
+  - {fileID: 21300000, guid: a51fd9cfcfa820b4ebd5c30049ea27dd, type: 3}
+  - {fileID: 21300000, guid: e81b56b996e3f0a4e9821439d2e5813a, type: 3}
+  - {fileID: 21300000, guid: 867576b5516c8fe439483c4623f335ad, type: 3}
+  - {fileID: 21300000, guid: c5b70f67a81c38246a7c1ced0aebce7a, type: 3}
+  - {fileID: 21300000, guid: 48491c71130cdf04e85635a2e3bf8194, type: 3}
+  - {fileID: 21300000, guid: e72f4d9f0c0f0bc4dad1c2afffdfd242, type: 3}
+  - {fileID: 21300000, guid: 581d3c23a4fb0c74f967ec6b0733eb95, type: 3}
+  - {fileID: 21300000, guid: ed138f362ee10694097b35d66228c125, type: 3}
+  - {fileID: 21300000, guid: 9e8e37448a3c3a7438f8b7e36143a6e4, type: 3}
+  - {fileID: 21300000, guid: 2acfc03489aea154a8ef6c5d93ef923a, type: 3}
+  - {fileID: 21300000, guid: e398702debaa2734bbaf07e134d245b5, type: 3}
+  - {fileID: 21300000, guid: 0452999c1e7e6fb47b6d5c7c814a72a5, type: 3}
+  - {fileID: 21300000, guid: d8ecc6559c1f4764896755f6d3724c25, type: 3}
+  - {fileID: 21300000, guid: 57ba7344375af9b45953310390ca4671, type: 3}
+  - {fileID: 21300000, guid: 20050443254426342a798fd64d170b35, type: 3}
+  - {fileID: 21300000, guid: d49c55f3b0d3dca49b5c10737ff13e2b, type: 3}
+  - {fileID: 21300000, guid: f81b2c9258b947a4ea74879bd501d33c, type: 3}
+  - {fileID: 21300000, guid: 7bbe27f52cb926147a85cd7799d04906, type: 3}
+  - {fileID: 21300000, guid: bf4c0df290abaf84cbad4201b2923476, type: 3}
+  - {fileID: 21300000, guid: 58c3bc6cd6d17714ca69d795eab4a12d, type: 3}
+  - {fileID: 21300000, guid: 86256d27f5878704288105980d51773b, type: 3}
+  - {fileID: 21300000, guid: 01e018b1f1f79df4a82e2f43457121ea, type: 3}
+  - {fileID: 21300000, guid: 63c5e9af5cd218a45ae363739cac37e7, type: 3}
+  - {fileID: 21300000, guid: da841951516acaa4093aed759615a53c, type: 3}
+  - {fileID: 21300000, guid: e3842c849d6682a4d8a5e2bc6df1912e, type: 3}
+  - {fileID: 21300000, guid: 53d6ffd6838d0d5438183fda699d6901, type: 3}
+--- !u!114 &114000013502393916
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012880494948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96b31ce75e592f45a1cff563a4869db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftAnchor:
+    target: {fileID: 0}
+    relative: 0
+    absolute: 0
+  rightAnchor:
+    target: {fileID: 0}
+    relative: 1
+    absolute: 0
+  bottomAnchor:
+    target: {fileID: 0}
+    relative: 0
+    absolute: 0
+  topAnchor:
+    target: {fileID: 0}
+    relative: 1
+    absolute: 0
+  updateAnchors: 1
+  mColor: {r: 1, g: 1, b: 1, a: 1}
+  mPivot: 4
+  mWidth: 100
+  mHeight: 100
+  mDepth: 0
+  autoResizeBoxCollider: 0
+  hideIfOffScreen: 0
+  keepAspectRatio: 0
+  aspectRatio: 1
+  mType: 0
+  mFillDirection: 4
+  mFillAmount: 1
+  mInvert: 0
+  mFlip: 0
+  mApplyGradient: 0
+  mGradientTop: {r: 1, g: 1, b: 1, a: 1}
+  mGradientBottom: {r: 0.7, g: 0.7, b: 0.7, a: 1}
+  centerType: 1
+  leftType: 1
+  rightType: 1
+  bottomType: 1
+  topType: 1
+  mSprite: {fileID: 0}
+  mMat: {fileID: 0}
+  mShader: {fileID: 4800000, guid: e75727d9555d9d14ca51d91908c681bc, type: 3}
+  mBorder: {x: 0, y: 0, z: 0, w: 0}
+  mFixedAspect: 0
+  mPixelSize: 1
+  nextSprite: {fileID: 0}

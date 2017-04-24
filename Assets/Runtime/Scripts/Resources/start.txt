@@ -1,0 +1,51 @@
+--[[
+https://github.com/yongkangchen/poker-server
+
+Copyright (C) 2016  Yongkang Chen lx1988cyk#gmail.com
+
+GNU GENERAL PUBLIC LICENSE
+   	Version 3, 29 June 2007
+
+Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>
+Everyone is permitted to copy and distribute verbatim copies
+of this license document, but changing it is not allowed.
+--]]
+
+local Application = UnityEngine.Application
+local RuntimePlatform = UnityEngine.RuntimePlatform
+
+print("lua version: ", _VERSION, "jit.on: ", jit ~= nil, "persistentDataPath: ", Application.persistentDataPath)
+print("Application.dataPath: ", Application.dataPath)
+
+package.path = "Assets/?.lua;"
+CWD = "Assets/"
+
+if not UnityEngine.Debug.isDebugBuild then
+	CWD = Application.streamingAssetsPath .. "/"
+end
+
+local function add_package(path)
+	path =  CWD .. path .. "/Lua/?.lua"
+	package.path = package.path .. ";" .. path
+	print("add package: ", path)
+end
+
+if IsLua then
+	add_package("")
+end
+add_package("Runtime")
+add_package(IsLobby and "Lobby" or "Simple")
+
+add_package(MainFloder)
+
+local game_cfg = require "game_cfg"
+for _, v in ipairs(game_cfg.GAME or {}) do
+	package.loaded[v .. ".game_msg"] = require("game_" .. v .. "/Lua/game_msg")
+	package.loaded[v .. ".game_cfg"] = require("game_" .. v .. "/Lua/game_cfg")
+	add_package("game_" .. v)
+end
+
+
+ResourcesLoad = UnityEngine.Resources.Load
+
+require("main").start()
