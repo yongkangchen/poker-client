@@ -11,7 +11,7 @@ Everyone is permitted to copy and distribute verbatim copies
 of this license document, but changing it is not allowed.
 --]]
 
-local check_dict_hu = require "lib.hu"
+local check_dict_hu = require "zzmj.lib.hu"
 
 local function check_hu(hand, seven_hu, is_dict)
     local dict
