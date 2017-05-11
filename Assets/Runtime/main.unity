@@ -133,7 +133,7 @@ MonoBehaviour:
   isLua: 0
   isLobby: 0
   mainFolder: {fileID: 102900000, guid: 49acba7ccf66c42cd931a65670ac5563, type: 3}
-  mainFolderString: game_zzmj
+  mainFolderString: 
 --- !u!1 &708970418
 GameObject:
   m_ObjectHideFlags: 0

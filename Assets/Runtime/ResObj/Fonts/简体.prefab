@@ -21,7 +21,7 @@ GameObject:
   - 4: {fileID: 4000011247047744}
   - 114: {fileID: 114000013041355680}
   m_Layer: 0
-  m_Name: "\u65B9\u6B63\u7C97\u5706\u7B80\u4F53"
+  m_Name: "\u7B80\u4F53"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

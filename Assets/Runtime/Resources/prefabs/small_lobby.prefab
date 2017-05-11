@@ -407,9 +407,9 @@ MonoBehaviour:
   characterLimit: 7
   savedAs: 
   selectOnTab: {fileID: 0}
-  activeTextColor: {r: 0.9058824, g: 0.7843138, b: 0.29411766, a: 1}
+  activeTextColor: {r: 1, g: 1, b: 1, a: 1}
   caretColor: {r: 1, g: 1, b: 1, a: 0.8}
-  selectionColor: {r: 1, g: 0.8745098, b: 0.5529412, a: 0.5}
+  selectionColor: {r: 1, g: 1, b: 1, a: 0.5}
   onSubmit: []
   onChange: []
   mValue: 
@@ -498,7 +498,7 @@ MonoBehaviour:
     relative: 1
     absolute: 0
   updateAnchors: 1
-  mColor: {r: 0.9044118, g: 0.78626955, b: 0.29260382, a: 1}
+  mColor: {r: 1, g: 1, b: 1, a: 1}
   mPivot: 4
   mWidth: 266
   mHeight: 38
