@@ -12,6 +12,7 @@ of this license document, but changing it is not allowed.
 --]]
 
 local Destroy = UnityEngine.Object.Destroy
+
 return function(data)
     local transform = UI.InitWindow("room_info")
     UI.Label(transform, "name/word", data.name)
@@ -23,7 +24,11 @@ return function(data)
     end
     
     UI.RoleHead(transform:Find("head/icon"), data.headimgurl)
+    UI.OnClick(transform, "close", function()
+        Destroy(transform.gameObject)
+    end)
     
+    if require "game_cfg".APPSTORE then return end
     local dis_trans_tbl = UI.Children(transform:Find("distance"))
     if not data.lat or not data.lon then
         local dis_trans = dis_trans_tbl[2]
@@ -54,8 +59,4 @@ return function(data)
             end
         end
     end
-
-    UI.OnClick(transform, "close", function()
-        Destroy(transform.gameObject)
-    end)
 end

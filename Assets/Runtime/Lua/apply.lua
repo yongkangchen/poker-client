@@ -16,6 +16,7 @@ local Vector3 = UnityEngine.Vector3
 local server = require "lib.server"
 local msg = require "data.msg"
 local show_hint = require "hint"
+local agree_color_tbl = {{12, 120, 165}, {191, 54, 0}, {135, 77, 46}, {28, 111, 135}}
 
 return function(parent, exit_info, on_close)
     local transform = UI.InitWindow("apply", parent)
@@ -35,19 +36,19 @@ return function(parent, exit_info, on_close)
         local function set_state()
             if is_agree then
                 agree_str = "【已同意】"
-                UI.LabelColorChange(item_trans, nil, 28, 111, 135)
+                UI.LabelColorChange(item_trans, nil, unpack(agree_color_tbl[idx] or agree_color_tbl[4]))
             else
                 agree_str = "【等待选择】"
-                UI.LabelColorChange(item_trans, nil, 131, 89, 50)
+                UI.LabelColorChange(item_trans, nil, unpack(agree_color_tbl[idx] or agree_color_tbl[4]))
             end
             UI.Label(item_trans, nil, UI.LimitName(role_name) .. agree_str)
             
             if not is_online then
                 online_str = "离线"
-                UI.LabelColorChange(item_trans:Find("online"), nil, 106, 106, 106)
+                UI.LabelColorChange(item_trans:Find("online"), nil, 121, 121, 121)
             else
                 online_str = "在线"
-                UI.LabelColorChange(item_trans:Find("online"), nil, 37, 152, 14)
+                UI.LabelColorChange(item_trans:Find("online"), nil, 5, 143, 21)
             end
             UI.Label(item_trans:Find("online"), nil, online_str)
             

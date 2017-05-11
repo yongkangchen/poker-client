@@ -375,3 +375,8 @@ function UI.ShowType(transform, path)
 end
 
 UI.cash_type = require "game_cfg".LOBBY_TYPE == "XK" and "钻石" or "小吆玉"
+UI.coin_type = require "game_cfg".LOBBY_TYPE == "XK" and "小咖币" or "小吆币"
+
+function UI.TrimBlank(s)
+    return (string.gsub(s, "^%s*(.-)%s*$", "%1"))
+end

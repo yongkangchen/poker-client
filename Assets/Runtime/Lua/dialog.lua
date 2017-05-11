@@ -15,7 +15,7 @@ local Destroy = UnityEngine.Object.Destroy
 
 return function(text, on_ok, on_close)
     on_close = on_close or on_ok
-    local transform = UI.InitWindow("dialog")
+    local transform = UI.InitWindowX("dialog")
     UI.Label(transform, "text", text)
     UI.OnClick(transform, "ok", function()
         Destroy(transform.gameObject)

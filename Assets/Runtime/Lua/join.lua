@@ -13,12 +13,13 @@ of this license document, but changing it is not allowed.
 
 local Destroy = UnityEngine.Object.Destroy
 return function(do_enter)
-    local transform = UI.InitWindow("join")
+    local transform = UI.InitWindowX("join")
     UI.OnClick(transform, "close", function()
         Destroy(transform.gameObject)
     end)
 
     local input = UI.Children(transform:Find("input"))
+    local tip = transform:Find("input/tip")
 
     local idx = 0
     local num = 0
@@ -31,12 +32,16 @@ return function(do_enter)
         num = num - num % (10^(7-idx))
         UI.Sprite(v, "num", nil)
         idx = idx - 1
+        if idx == 0 then
+            UI.Active(tip, true)
+        end
     end
     
     local function clear()
         for _ = 1, idx do
             delete()
         end
+        UI.Active(tip, true)
     end
     
     for i = 0, 9 do
@@ -49,6 +54,7 @@ return function(do_enter)
             num = num + (10^(6 - idx)) * i
             UI.Sprite(input[idx], "num", "light_num_" .. i)
 
+            UI.Active(tip, false)
             if idx ~= 6 then
                 return
             end

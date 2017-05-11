@@ -39,7 +39,7 @@ add_package(IsLobby and "Lobby" or "Simple")
 add_package(MainFloder)
 
 local game_cfg = require "game_cfg"
-for _, v in ipairs(game_cfg.GAME or {}) do
+for _, v in ipairs(game_cfg.ALL_GAME or {}) do
 	package.loaded[v .. ".game_msg"] = require("game_" .. v .. "/Lua/game_msg")
 	package.loaded[v .. ".game_cfg"] = require("game_" .. v .. "/Lua/game_cfg")
 	add_package("game_" .. v)

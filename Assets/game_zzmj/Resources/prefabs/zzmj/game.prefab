@@ -84,7 +84,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000010877378824}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 272, y: -25.09999, z: 0}
+  m_LocalPosition: {x: 243, y: -34, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -97,7 +97,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012645185032}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -256, y: -18.199991, z: 0}
+  m_LocalPosition: {x: -247, y: -34, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -113,7 +113,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 334, y: 374, z: 0}
+  m_Size: {x: 480, y: 454, z: 0}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!65 &65000013545801488
 BoxCollider:
@@ -125,7 +125,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 366, y: 376, z: 0}
+  m_Size: {x: 480, y: 454, z: 0}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &114000011689962220
 MonoBehaviour:
@@ -247,13 +247,13 @@ MonoBehaviour:
   updateAnchors: 1
   mColor: {r: 1, g: 1, b: 1, a: 1}
   mPivot: 4
-  mWidth: 366
-  mHeight: 376
+  mWidth: 480
+  mHeight: 454
   mDepth: 1
   autoResizeBoxCollider: 1
   hideIfOffScreen: 0
   keepAspectRatio: 0
-  aspectRatio: 0.9734042
+  aspectRatio: 1.0572687
   mType: 0
   mFillDirection: 4
   mFillAmount: 1
@@ -273,7 +273,7 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
-  mTexture: {fileID: 2800000, guid: 45f6a80d1ecad19419ab107227510579, type: 3}
+  mTexture: {fileID: 2800000, guid: 5ab48da03194f5140a50e868a46a05b1, type: 3}
   mMat: {fileID: 0}
   mShader: {fileID: 4800000, guid: e75727d9555d9d14ca51d91908c681bc, type: 3}
   mBorder: {x: 0, y: 0, z: 0, w: 0}
@@ -308,13 +308,13 @@ MonoBehaviour:
   updateAnchors: 1
   mColor: {r: 1, g: 1, b: 1, a: 1}
   mPivot: 4
-  mWidth: 334
-  mHeight: 374
+  mWidth: 480
+  mHeight: 454
   mDepth: 1
   autoResizeBoxCollider: 1
   hideIfOffScreen: 0
   keepAspectRatio: 0
-  aspectRatio: 0.8930481
+  aspectRatio: 1.0572687
   mType: 0
   mFillDirection: 4
   mFillAmount: 1
@@ -334,7 +334,7 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
-  mTexture: {fileID: 2800000, guid: 7526b1b778517ed4592c1112bec9c374, type: 3}
+  mTexture: {fileID: 2800000, guid: b8287a57e59ea344ea08c3ff388640af, type: 3}
   mMat: {fileID: 0}
   mShader: {fileID: 4800000, guid: e75727d9555d9d14ca51d91908c681bc, type: 3}
   mBorder: {x: 0, y: 0, z: 0, w: 0}
