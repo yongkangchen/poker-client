@@ -15,18 +15,25 @@ local Destroy = UnityEngine.Object.Destroy
 
 return function(text, on_ok, on_close)
     on_close = on_close or on_ok
-    local transform = UI.InitWindowX("dialog")
-    UI.Label(transform, "text", text)
-    UI.OnClick(transform, "ok", function()
+    
+    local prefab = ResourcesLoad("prefabs/dialog")
+    local gameObject = UnityEngine.Object.Instantiate(prefab)
+    local transform = gameObject.transform
+
+    transform:SetParent(UnityEngine.GameObject.Find("UI Root").transform, false)
+    transform:Find("text"):GetComponent(UILabel).text = text
+    
+    UIEventListener.Get(transform:Find("ok").gameObject).onClick = function()
         Destroy(transform.gameObject)
         if on_ok then
             on_ok()
         end
-    end)
-    UI.OnClick(transform, "close", function()
+    end
+    
+    UIEventListener.Get(transform:Find("close").gameObject).onClick = function()
         Destroy(transform.gameObject)
         if on_close then
             on_close()
         end
-    end)
+    end
 end

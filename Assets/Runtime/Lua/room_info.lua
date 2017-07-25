@@ -14,7 +14,10 @@ of this license document, but changing it is not allowed.
 local Destroy = UnityEngine.Object.Destroy
 
 return function(data)
-    local transform = UI.InitWindow("room_info")
+    local game = require "game"
+    
+    local transform = game.InitWindowGame(data.game_name, "room_info")
+    
     UI.Label(transform, "name/word", data.name)
     UI.Label(transform, "id", "ID: "..data.id)
     if data.ip then

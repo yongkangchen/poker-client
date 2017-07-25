@@ -18,6 +18,7 @@ local msg = require "data.msg"
 local show_dismiss = require "dismiss"
 local show_apply = require "apply"
 local show_dialog = require "dialog"
+local game_cfg = require "game_cfg"
 
 local function get_room_players(role_tbl)
     local tbl = {}
@@ -121,6 +122,30 @@ return function(init_game, player_data, on_over)
     local startgame = UI.Child(transform, "waiting/startgame")
     UI.Active(startgame, false)
 
+    if game_cfg.CAN_MID_ENTER then
+        UI.OnClick(transform, "waiting/startgame", function()
+            server.start_game()
+        end)
+    end
+
+    local function can_startgame()
+        if game_cfg.CAN_MID_ENTER then
+            local ready_count = 0
+            for _,role in pairs(role_tbl) do
+                if role.data.is_ready then
+                    ready_count = ready_count + 1
+                end
+            end
+            
+            local is_host = room_data.host_id == player_id
+            if is_host and ready_count > 1 and ready_count == table.length(role_tbl) and room_data.start_count == 0 then
+                UI.Active(startgame, true)
+                return
+            end
+        end
+        UI.Active(startgame, false)
+    end
+	
     server.listen(msg.READY, function(id, is_ready, count)
         if id == player_id then
             prepare.value = is_ready
@@ -137,6 +162,8 @@ return function(init_game, player_data, on_over)
                 role.start()
             end
         end
+		
+		can_startgame()
     end)
     
     server.listen(msg.DISMISS, function()

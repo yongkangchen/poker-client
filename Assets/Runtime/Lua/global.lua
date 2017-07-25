@@ -206,7 +206,7 @@ function UI.GetComponent(transform, path, type)
 end
 
 function UI.Active(transform, v)
-    transform.gameObject:SetActive(v == true)
+    transform.gameObject:SetActive(v ~= nil and v ~= false)
     return v
 end
 
@@ -219,13 +219,18 @@ function UI.Children(transform)
 end
 
 local SpriteRenderer = UnityEngine.SpriteRenderer
-function UI.LoadSprite(value)
+function UI.LoadSprite(value, game_name)
+    game_name = game_name and game_name .. "/" or ""
     local tbl = value:split("_")
     table.remove(tbl)
 
-    local prefab_name = "altas/" .. table.concat(tbl, "_")
+    local prefab_name = "altas/" .. game_name .. table.concat(tbl, "_")
     local prefab = ResourcesLoad(prefab_name)
-    local render = UI.GetComponent(prefab.transform, value, SpriteRenderer)
+    if not prefab then
+        LERR("nil prefab: %s, %s", value, prefab_name)
+    end
+    
+    local render = UI.GetComponent(prefab.transform, table.remove(value:split("/")), SpriteRenderer)
     -- print(render, value, prefab_name)
     return render.sprite
 end
@@ -248,9 +253,14 @@ function UI.LabelColorChange(transform, path, r, g, b, a)
     UI.Child(transform, path):GetComponent(UILabel).color = color
 end
 
-function UI.Sprite(transform, path, value, perfect)
+function UI.Sprite(transform, path, value, game_name, perfect)
+    if type(game_name) ~= "string" then
+        perfect = game_name
+        game_name = nil
+    end
+    
     local sprite = UI.GetComponent(transform, path, UI2DSprite)
-    sprite.sprite2D = value and UI.LoadSprite(value) or nil
+    sprite.sprite2D = value and UI.LoadSprite(value, game_name) or nil
     if perfect then 
         sprite:MakePixelPerfect()
     end

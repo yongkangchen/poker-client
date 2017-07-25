@@ -15,6 +15,9 @@ local PlayerPrefs = UnityEngine.PlayerPrefs
 local Destroy = UnityEngine.Object.Destroy
 
 local function get_toggle_tbl(select_tbl)    
+    if not select_tbl then
+        return
+    end
     local create_ob    
     local toggle_tbl = {} 
     for i = 1, select_tbl.Length do        

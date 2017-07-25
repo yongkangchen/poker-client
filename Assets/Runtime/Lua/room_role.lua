@@ -20,10 +20,10 @@ local show_info = require "room_info"
 
 return function(parent, data, distance)
     UI.Active(parent, true)
-
     local info_trans = parent:Find("role(Clone)")
     if not info_trans then
-        info_trans = UI.InitPrefab("role", parent)
+        local game = require "game"
+        info_trans = game.InitPrefabGame(data.game_name, "role", parent) 
     end
 
     local start_pos = parent:Find("pos/start").position

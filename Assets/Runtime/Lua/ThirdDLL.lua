@@ -20,7 +20,7 @@ return {
     StopRecord = empty_func,
     StartRecord = empty_func,
     DownloadRecord = empty_func,
-    SwitchNet = function()
-        
-    end,
+    SwitchNet = empty_func,
+    CheckLobby = empty_func,
+    CheckGame = empty_func,
 }

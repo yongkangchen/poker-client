@@ -19,9 +19,9 @@ using SLua;
 public class Main : MonoBehaviour {
 	#if UNITY_EDITOR
 	public bool isLua = false;
-	public bool isLobby = false;
 	public UnityEditor.DefaultAsset mainFolder;
 	#endif
+	public bool isLobby = false;
 	public string mainFolderString;
 
 	public delegate void UnityTask();
@@ -43,11 +43,11 @@ public class Main : MonoBehaviour {
 			if(mainFolder){
 				svr.luaState.doString("MainFloder='" + mainFolder.name + "'");
 			}
-			svr.luaState.doString("IsLobby=" + (isLobby?"true":"false"));
 			svr.luaState.doString("IsLua=" + (isLua?"true":"false"));
 			#else
 			svr.luaState.doString("MainFloder='" + mainFolderString + "'");
 			#endif
+			svr.luaState.doString("IsLobby=" + (isLobby?"true":"false"));
 			svr.start("start");
 		});
 	}
@@ -72,7 +72,7 @@ public class Main : MonoBehaviour {
 			}
 		}
 	}
-	
+
 	void OnDestroy()
 	{
 		taskList.Clear ();

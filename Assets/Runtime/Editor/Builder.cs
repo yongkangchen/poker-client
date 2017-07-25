@@ -23,7 +23,6 @@ using System.IO;
 
 public class Builder
 {
-	[MenuItem("Assets/Export Lua")]
 	public static void BuildLua()
 	{
 		SLua.LuaState l = new SLua.LuaState ();
