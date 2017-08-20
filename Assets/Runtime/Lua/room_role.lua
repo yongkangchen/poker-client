@@ -22,8 +22,7 @@ return function(parent, data, distance)
     UI.Active(parent, true)
     local info_trans = parent:Find("role(Clone)")
     if not info_trans then
-        local game = require "game"
-        info_trans = game.InitPrefabGame(data.game_name, "role", parent) 
+        info_trans = UI.InitPrefab("role", parent) 
     end
 
     local start_pos = parent:Find("pos/start").position

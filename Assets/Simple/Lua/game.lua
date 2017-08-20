@@ -16,63 +16,44 @@ local show_create = require "create"
 
 local game_cfg = require "game_cfg"
 
-local function init_select(game_name, transform)
-    local select_trans = UI.InitPrefabX(game_name .. "/select", transform)
-    local select_tbl = UI.Children(select_trans) 
-    select_trans.localPosition = UnityEngine.Vector3(-554, 257)
+local function init_game_create(game_name, transform)
+    local panel_tbl = UI.Children(UI.InitPrefab(game_name .. "/create", transform))
     
-    if not select_trans:GetComponent(UITable) then
-        local tb = select_trans.gameObject:AddComponent(UITable)
-        tb.columns = 1
-        tb.padding = UnityEngine.Vector2(0, 2)
-    end
-    return select_tbl
-end
-
-local function get_create(game_name, transform)
-    local select_tbl = init_select(game_name, transform)  
-    local panel_tbl = UI.Children(UI.InitPrefabX(game_name .. "/create", transform))
+    local select_tbl = UI.Children(UI.InitPrefab(game_name .. "/select", transform))
     
     for i, select in ipairs(select_tbl) do
         select:GetComponent(UIToggledObjects).activate[0] = panel_tbl[i].gameObject
     end
-    return select_tbl
 end
 
-local function init(parent, lobby_controller)
-    UI.InitPrefabX(game_cfg.NAME .. "/title", parent)
+local function init(parent, enter_room, create_room)
+    local game_name = game_cfg.NAME
     
-    local trans = UI.InitPrefabX(game_cfg.NAME .. "/game", parent)
+    local trans = UI.InitPrefab(game_name .. "/game", parent)
     local join_btn = trans:Find("join")
     
     UI.OnClick(join_btn, nil, function()
-        show_join(lobby_controller.enter)
+        coroutine.wrap(function()
+            local room_id, on_join = sync(show_join)()
+            on_join(enter_room(room_id))
+        end)()
     end)
     
     UI.OnClick(trans:Find("create"), nil, function()
-        coroutine.wrap(function()
-            local game_name = game_cfg.NAME
-            
-            local init_create = require(game_name .. ".create")
-            show_create(lobby_controller, get_create, 3, nil, init_create, game_name)
-        end)()
+        local transform = show_create(function(close_create)
+            coroutine.wrap(function()
+                local parse_create = require(game_name .. ".create")
+                if create_room(game_name, nil, parse_create()) then
+                    close_create()
+                end
+            end)()
+        end)
+        init_game_create(game_name, transform)
     end)
 end
 
-local function InitPrefabGame(_, path, parent, is_x)
-    if is_x then
-        return UI.InitPrefabX(path, parent)
-    end
-
-    return  UI.InitPrefab(path, parent)
-end
-
-local function InitWindowGame(_, path, parent, is_x)
-    if is_x then
-        return UI.InitWindowX(path, parent)
-    end
-
-    return  UI.InitWindow(path, parent)
+local function InitWindowGame(_, path, parent)
+    return UI.InitWindow(path, parent)
 end
 
 return {
@@ -85,10 +66,5 @@ return {
         end
     end,
     init = init,
-    get_create = get_create,
-    get_cfg = function()
-        return game_cfg
-    end,
-    InitPrefabGame = InitPrefabGame,
     InitWindowGame = InitWindowGame,
 }

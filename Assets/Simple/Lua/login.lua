@@ -15,7 +15,7 @@ local PlayerPrefs = UnityEngine.PlayerPrefs
 
 local server = require "lib.server"
 
-LOGIN_SAVE_KEY = UnityEngine.Application.dataPath
+LOGIN_SAVE_KEY = "LOGIN_KEY:" .. UnityEngine.Application.dataPath
 local function get_login()
     local data = table.undump(PlayerPrefs.GetString(LOGIN_SAVE_KEY)) or {}
     if type(data) ~= "table" then
@@ -40,6 +40,6 @@ return function()
     
     player_data.room_data = room_id and server:get_room() or nil
     
-    LLOG("login success: %d", player_data.id)
+    LLOG("login success, pid: %d", player_data.id)
     return player_data
 end

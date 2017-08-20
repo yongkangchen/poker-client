@@ -38,11 +38,11 @@ UI = {}
 local click_audio
 local function play_click_audio(is_close)
     local clip
-        if is_close then
-            clip = UI.LoadAudio("sound_win_close")
-        else
-            clip = UI.LoadAudio("sound_button_click")
-        end
+    if is_close then
+        clip = UI.LoadAudio("sound_win_close")
+    else
+        clip = UI.LoadAudio("sound_button_click")
+    end
     
     if not click_audio then
         local click_obj = GameObject()
@@ -53,47 +53,6 @@ local function play_click_audio(is_close)
     click_audio.volume = UI.GetVolume()
     click_audio:Play()
 end
-
-function UI.InitPrefabX(path, parent)
-    local prefab = ResourcesLoad("prefabs/" .. path)
-    if not prefab then
-        LERR("nil prefab: %s", path)
-        return
-    end
-    
-    local gameObject = Instantiate(prefab)
-    local transform = gameObject.transform
-
-    parent = parent or GameObject.Find("UI Root").transform
-    transform:SetParent(parent, false)
-    
-    local toggles = gameObject:GetComponentsInChildren(UIToggle)
-    LuaTimer.Add(1000, function()
-        for i = 1, toggles.Length do
-            EventDelegate.Add(toggles[i].onChange, function()
-                play_click_audio()
-            end)
-        end
-    end)
-    
-    return transform
-end
-
-function UI.InitWindowX(path, parent)
-    local transform = UI.InitPrefabX(path, parent)
-    -- assert(transform:GetComponent(UIPanel) ~= nil)
-    if not transform:GetComponent(UIPanel) then 
-        transform.gameObject:AddComponent(UIPanel).depth = 2
-    end    
-    --TODO: mask, depth = -100
-    local mask = UI.InitPrefab("mask", transform)
-    --TODO: 要设置mask的anchor使其全屏
-    mask:GetComponent(UIWidget):SetAnchor(transform.gameObject, 0, 0, 0, 0)    
-    mask:GetComponent(UI2DSprite).depth = -100
-
-    return transform
-end
-
 
 function UI.InitPrefab(path, parent)
     local prefab = ResourcesLoad("prefabs/" .. path)
@@ -134,6 +93,9 @@ function UI.InitWindow(path, parent)
     
     return transform
 end
+
+UI.InitPrefabX = UI.InitPrefab
+UI.InitWindowX = UI.InitWindow
 
 function UI.Child(transform, path)
     if path == nil then
@@ -380,14 +342,6 @@ function UI.LimitName(name)
     return string.utf8sub(name, 1, 8) .. ".."
 end
 
-function UI.ShowType(transform, path)
-    local is_xk = require "game_cfg".LOBBY_TYPE == "XK"
-    UI.Active(UI.Child(transform, path .. "_xy"), not is_xk)
-    UI.Active(UI.Child(transform, path .. "_xk"), is_xk)
-end
-
-UI.cash_type = require "game_cfg".LOBBY_TYPE == "XK" and "钻石" or "小吆玉"
-UI.coin_type = require "game_cfg".LOBBY_TYPE == "XK" and "小咖币" or "小吆币"
 
 function UI.TrimBlank(s)
     return (string.gsub(s, "^%s*(.-)%s*$", "%1"))

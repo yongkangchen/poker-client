@@ -19,8 +19,7 @@ local show_hint = require "hint"
 local agree_color_tbl = {{12, 120, 165}, {191, 54, 0}, {135, 77, 46}, {28, 111, 135}}
 
 return function(parent, exit_info, on_close)
-    local game = require "game"
-    local transform = game.InitWindowGame(exit_info.game_name,  "apply", parent)
+    local transform = UI.InitWindow("apply", parent)
     local item_tbl = {}
     
     for idx, role_data in pairs(exit_info.role_tbl) do

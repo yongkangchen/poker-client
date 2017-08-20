@@ -15,17 +15,12 @@ local GameObject = UnityEngine.GameObject
 local AudioSource = UnityEngine.AudioSource
 local PlayerPrefs = UnityEngine.PlayerPrefs
 
-local function init_sound(transform)
-    local audio = transform:GetComponent(AudioSource)
-    return function(name)     
-        local clip = UI.LoadAudio(name)
-        audio.clip = clip
-        audio.volume = PlayerPrefs.GetFloat("VOLUME_BGM", 0.6)
-        audio:Play()
-    end, audio
-end
-
 return function(bgm_name)
-    local play_bgm = init_sound(GameObject.Find("UI Root/Camera").transform)
-    play_bgm(bgm_name)
+    local transform = GameObject.Find("UI Root/Camera").transform
+    local audio = transform:GetComponent(AudioSource)
+    
+    local clip = UI.LoadAudio(bgm_name)
+    audio.clip = clip
+    audio.volume = PlayerPrefs.GetFloat("VOLUME_BGM", 0.6)
+    audio:Play()
 end

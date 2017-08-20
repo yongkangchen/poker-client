@@ -52,3 +52,5 @@ UI预设：Assets/game_${GAME_NAME}/Resources/prefabs/${GAME_NAME}
 8、客户端的Assets/Runtime和Assets/Simple尽量不修改 
 
 9、UILable不要使用Unity默认的字体，要用NGUI的字体，否则会导致打包失败
+
+10、请确保`Assets/Runtime/Lua/data/msg.lua`和`Assets/game_zzmj/Lua/game_msg.lua`两个消息文件内的键值对不要重复，否则会报错：`!!! duplicate val in game_msg` 或者`!!! duplicate key in game_msg`

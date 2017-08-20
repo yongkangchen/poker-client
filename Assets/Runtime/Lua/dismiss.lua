@@ -13,9 +13,8 @@ of this license document, but changing it is not allowed.
 
 local Destroy = UnityEngine.Object.Destroy
 
-return function(transform, is_out, on_ok, game_name)    
-    local game = require "game"
-    transform = game.InitWindowGame(game_name, "dismiss", transform, true)
+return function(transform, is_out, on_ok)    
+    transform = UI.InitWindow("dismiss", transform)
     
     local out_trans = transform:Find("title/quit")
     local dimiss_trans = transform:Find("title/dismiss")    

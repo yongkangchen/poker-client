@@ -13,23 +13,11 @@ of this license document, but changing it is not allowed.
 
 require "global"
 
-do
-    local uiroot = UnityEngine.GameObject.Find("UI Root"):GetComponent(UIRoot)
-    uiroot.manualWidth = 1280
-    uiroot.manualHeight = 720
-end
-
-local msg = require "data.msg"
-for k, v in pairs(require("game_msg")) do
-    if msg[k] == nil then
-        msg[k] = v
-    elseif msg[k] ~= v then
-        LERR("!!! duplicate in game_msg, k: %s, v: 0x%08x", k, v)
-    end
-end
+require "check_game"
 
 local start = coroutine.wrap(function()
     local game_cfg = require "game_cfg"
+    
     SocketManager.HOST = game_cfg.DEV_HOST
     SocketManager.PORT = game_cfg.DEV_PORT
     

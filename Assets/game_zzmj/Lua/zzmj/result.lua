@@ -134,7 +134,7 @@ local function show_horse(transform, data_horse)
 end
 
 return function(player_id, room_data, result, on_close)
-    local transform = UI.InitPrefab("zzmj/result")
+    local transform = UI.InitWindow("zzmj/result")
     local sound_eff = init_sound(transform)
     UI.Label(transform, "bg/words", string.format("第%d/%d局", room_data.round, room_data.max_round))
     

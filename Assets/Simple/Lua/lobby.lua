@@ -15,28 +15,22 @@ local server = require "lib.server"
 local show_hint = require "hint"
 
 local game = require "game"
+
 local PlayerPrefs = UnityEngine.PlayerPrefs
 local ENTER_ERROR = {
     [1] = "已在房间中，请退后台重试或联系客服。",
     [2] = "房间id号错误。",
     [3] = "房间已满。",
     [4] = "人数已达上限。",
-    [5] = "您的" .. UI.cash_type .. "不足，请去商城购买。",
     [6] = "游戏已经开始，无法进入房间。",
-    [7] = "游戏升级维护中。",
 }
 
 local CREATE_ERROR = {
     [1] = "已在房间中，请退后台重试或联系客服。",
-    [3] = "创建失败，您没有被授权。",
-    [4] = "创建失败，授权人玉不足。",
-    [5] = "您的" .. UI.cash_type .. "不足。",
-    [6] = "您的" .. UI.cash_type .. "不足，请去商城购买。",
-    [7] = "游戏升级维护中。",
 }
 
 return function(player_data)
-    local transform = UI.InitPrefabX("small_lobby")
+    local transform = UI.InitPrefab("small_lobby")
     UI.Active(transform, false)
     
     UI.Label(transform, "id", player_data.id)
@@ -48,41 +42,31 @@ return function(player_data)
     local do_enter_game
     local function enter_room(room_id)
         local room_data = server:enter(room_id)
-
-        if type(room_data) == "table" then
-            UI.Active(transform, false)
-            do_enter_game(room_data)
-            return true
+        local error = ENTER_ERROR[room_data]
+        if error then
+            show_hint(error)
+            return false
         end
         
-        show_hint(ENTER_ERROR[room_data])
-        return false
+        UI.Active(transform, false)
+        do_enter_game(room_data)
+        return true
     end
 
     local function create_room(game_name, money_type, num, ...)
         local room_data = server:create(game_name, money_type, num, ...)
-
-        if type(room_data) == "table" then
-            UI.Active(transform, false)
-            do_enter_game(room_data)
-            return true
+        local error = CREATE_ERROR[room_data]
+        if error then
+            show_hint(error)
+            return false
         end
         
-        show_hint(CREATE_ERROR[room_data])
-        return false
+        UI.Active(transform, false)
+        do_enter_game(room_data)
+        return true
     end
     
-    game.init(transform, {
-        enter = enter_room,
-        create = create_room, 
-        get_coin_num = function()
-            return 0
-        end,
-        get_cash_num = function()
-            return 0
-        end,
-        buy = function() end
-    })
+    game.init(transform, enter_room, create_room)
 
     return function(func)
         UI.Active(transform, true)

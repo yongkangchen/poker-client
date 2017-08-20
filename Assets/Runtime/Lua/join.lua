@@ -13,7 +13,7 @@ of this license document, but changing it is not allowed.
 
 local Destroy = UnityEngine.Object.Destroy
 return function(do_enter)
-    local transform = UI.InitWindowX("join")
+    local transform = UI.InitWindow("join")
     UI.OnClick(transform, "close", function()
         Destroy(transform.gameObject)
     end)
@@ -58,14 +58,14 @@ return function(do_enter)
             if idx ~= 6 then
                 return
             end
-
-            coroutine.wrap(function()
-                if do_enter(num) then
+            
+            do_enter(num, function(ok)
+                if ok then
                     Destroy(transform.gameObject)
                 else
                     delete()
                 end
-            end)()
+            end)
         end)
     end
 
