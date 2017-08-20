@@ -608,7 +608,7 @@ Transform:
   m_GameObject: {fileID: 1000010331197172}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.25, y: 1.25, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 4000010056251120}
@@ -1685,7 +1685,7 @@ MonoBehaviour:
   updateAnchors: 1
   mColor: {r: 0.7058824, g: 0.43529412, b: 0.21176471, a: 1}
   mPivot: 4
-  mWidth: 46
+  mWidth: 44
   mHeight: 16
   mDepth: 2
   autoResizeBoxCollider: 0

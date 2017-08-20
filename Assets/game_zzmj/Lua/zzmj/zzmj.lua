@@ -92,7 +92,7 @@ return function(player_info, parent, close_room)
     local room_data = player_info.room_data
     local player_id = player_info.id
     
-    room_data.type_name = TYPE_NAME[room_data.type]
+    room_data.type_name = TYPE_NAME
     
     local transform = UI.InitPrefab("zzmj/zzmj", parent)
     -- room_id, num, horse
