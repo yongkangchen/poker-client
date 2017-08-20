@@ -50,3 +50,5 @@ UI预设：Assets/game_${GAME_NAME}/Resources/prefabs/${GAME_NAME}
 7、lua禁止写全局变量 
 
 8、客户端的Assets/Runtime和Assets/Simple尽量不修改 
+
+9、UILable不要使用Unity默认的字体，要用NGUI的字体，否则会导致打包失败
