@@ -202,5 +202,8 @@ return function(parent, data, distance)
             local alpha = msg_start:Find("msg_bg_"..name):GetComponent(TweenAlpha)
             alpha:Play(true)
         end,
+        show_trust = function(v)
+            UI.Active(info_trans:Find("trust"), v)
+        end
     }
 end

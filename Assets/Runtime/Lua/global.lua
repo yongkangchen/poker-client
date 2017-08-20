@@ -117,10 +117,6 @@ function UI.InitPrefab(path, parent)
         end
     end)
     
-    if parent.name == "UI Root" then
-        transform.localScale = UnityEngine.Vector3(1.25, 1.25, 1)
-    end
-    
     return transform
 end
 
@@ -135,7 +131,7 @@ function UI.InitWindow(path, parent)
     --TODO: 要设置mask的anchor使其全屏
     mask:GetComponent(UIWidget):SetAnchor(transform.gameObject, 0, 0, 0, 0)    
     mask:GetComponent(UI2DSprite).depth = -100
-    transform.localScale = UnityEngine.Vector3(1.25, 1.25, 1)
+    
     return transform
 end
 
@@ -285,9 +281,15 @@ local Object = UnityEngine.Object
 function UI.RoleHead(transform, url)
     if not url then
         LERR("nil head url")
-        if not require "game_cfg".IS_VISITOR then
+        local game_cfg = require "game_cfg"
+        if not game_cfg.IS_VISITOR then
             return
         end
+        
+        if game_cfg.APPSTORE then
+            return
+        end
+        
         url = url or "https://www.baidu.com/img/bd_logo1.png"
     end
     
@@ -389,4 +391,15 @@ UI.coin_type = require "game_cfg".LOBBY_TYPE == "XK" and "小咖币" or "小吆�
 
 function UI.TrimBlank(s)
     return (string.gsub(s, "^%s*(.-)%s*$", "%1"))
+end
+
+function UI.ShareScreen(transform, path)
+    if require "game_cfg".APPSTORE then
+        UI.Active(transform:Find(path), false)
+        return
+    end
+    
+    UI.OnClick(transform, path, function()
+        ShareScreenShot()
+    end)
 end

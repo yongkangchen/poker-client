@@ -43,7 +43,9 @@ return {
     OFFLINE = 0x1008,
     UPLOAD_VOICE = 0x1011,
     PLAY_VOICE = 0x1012,
-    
+    CANCEL_TRUST = 0x0050,
+    TRUST = 0x0051,
+
     ------LOBBY_EXTEND----------
     NEWS = 0x0003, --lobby
     COIN = 0x0023,

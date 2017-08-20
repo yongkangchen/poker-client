@@ -32,4 +32,8 @@ return function(transform, is_out, on_ok, game_name)
         Destroy(transform.gameObject)
         return true
     end)
+    
+    UI.OnClick(transform, "close", function()
+        Destroy(transform.gameObject)
+    end)
 end

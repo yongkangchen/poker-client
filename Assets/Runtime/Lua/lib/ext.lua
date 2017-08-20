@@ -104,6 +104,16 @@ function table.length(tbl)
     return n
 end
 
+function table.update(old, new)
+    for k in pairs(old) do
+        old[k] = nil
+    end
+    for k,v in pairs(new) do
+        old[k] = v
+    end
+end
+
+
 function table.remove_values(tbl, value, count)
     local n = 0
     count = count or 1
