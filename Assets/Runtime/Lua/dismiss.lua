@@ -32,7 +32,10 @@ return function(transform, is_out, on_ok)
         return true
     end)
     
-    UI.OnClick(transform, "close", function()
-        Destroy(transform.gameObject)
-    end)
+    local close = transform:Find("close")
+    if close then
+        UI.OnClick(close, nil, function()
+            Destroy(transform.gameObject)
+        end)
+    end
 end

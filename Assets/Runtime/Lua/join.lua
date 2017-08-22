@@ -32,7 +32,7 @@ return function(do_enter)
         num = num - num % (10^(7-idx))
         UI.Sprite(v, "num", nil)
         idx = idx - 1
-        if idx == 0 then
+        if idx == 0 and tip then
             UI.Active(tip, true)
         end
     end
@@ -41,7 +41,9 @@ return function(do_enter)
         for _ = 1, idx do
             delete()
         end
-        UI.Active(tip, true)
+        if tip then
+            UI.Active(tip, true)
+        end
     end
     
     for i = 0, 9 do
@@ -53,8 +55,11 @@ return function(do_enter)
             idx = idx + 1
             num = num + (10^(6 - idx)) * i
             UI.Sprite(input[idx], "num", "light_num_" .. i)
-
-            UI.Active(tip, false)
+            
+            if tip then
+                UI.Active(tip, false)
+            end
+            
             if idx ~= 6 then
                 return
             end

@@ -52,10 +52,6 @@ local function init(parent, enter_room, create_room)
     end)
 end
 
-local function InitWindowGame(_, path, parent)
-    return UI.InitWindow(path, parent)
-end
-
 return {
     play = function()
         local init_room = require "room"    
@@ -66,5 +62,4 @@ return {
         end
     end,
     init = init,
-    InitWindowGame = InitWindowGame,
 }
