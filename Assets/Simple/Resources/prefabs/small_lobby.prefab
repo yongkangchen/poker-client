@@ -312,7 +312,7 @@ MonoBehaviour:
   rightType: 1
   bottomType: 1
   topType: 1
-  mSprite: {fileID: 21300000, guid: 2062062b9129e48d1b03b6f44ed65766, type: 3}
+  mSprite: {fileID: 21300000, guid: 8bddcaad586894d3abe5d9565034fa86, type: 3}
   mMat: {fileID: 0}
   mShader: {fileID: 4800000, guid: e75727d9555d9d14ca51d91908c681bc, type: 3}
   mBorder: {x: 0, y: 0, z: 0, w: 0}
@@ -509,7 +509,7 @@ MonoBehaviour:
   aspectRatio: 7
   keepCrispWhenShrunk: 1
   mTrueTypeFont: {fileID: 0}
-  mFont: {fileID: 114000013041355680, guid: c1efd6ec70a183f44944dab2b841a6ed, type: 2}
+  mFont: {fileID: 114000011281501762, guid: 07e8b3f87df3f964e9bbbeaa5782dbd8, type: 2}
   mText: "\u70B9\u51FB\u8F93\u5165ID..."
   mFontSize: 22
   mFontStyle: 0

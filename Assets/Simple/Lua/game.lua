@@ -30,6 +30,10 @@ local function init(parent, enter_room, create_room)
     local game_name = game_cfg.NAME
     
     local trans = UI.InitPrefab(game_name .. "/game", parent)
+    if trans == nil then
+        trans = UI.InitPrefab("small_game", parent)
+    end
+    
     local join_btn = trans:Find("join")
     
     UI.OnClick(join_btn, nil, function()

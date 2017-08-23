@@ -131,14 +131,18 @@ return function(init_game, player_data, on_over)
     local function can_startgame()
         if game_cfg.CAN_MID_ENTER then
             local ready_count = 0
+            local can_start = false
             for _,role in pairs(role_tbl) do
                 if role.data.is_ready then
                     ready_count = ready_count + 1
                 end
+                
+                if role.data.idx == 1 and role.data.id == player_id then
+                    can_start = true
+                end
             end
             
-            local is_host = room_data.host_id == player_id
-            if is_host and ready_count > 1 and ready_count == table.length(role_tbl) and room_data.start_count == 0 then
+            if can_start and ready_count > 1 and ready_count == table.length(role_tbl) and room_data.start_count == 0 then
                 UI.Active(startgame, true)
                 return
             end
