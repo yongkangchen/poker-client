@@ -43,9 +43,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &1000011891307762
+--- !u!1 &1000011058863536
 GameObject:
   m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 4000014111842288}
+  m_Layer: 5
+  m_Name: create_list
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1000011891307762
+GameObject:
+  m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
@@ -136,7 +151,7 @@ Transform:
   m_Children:
   - {fileID: 4000010471140172}
   - {fileID: 4000013956969010}
-  - {fileID: 4000012506236768}
+  - {fileID: 4000014111842288}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!4 &4000012506236768
@@ -145,14 +160,14 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011891307762}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 117, y: -236, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 4000012963924216}
-  m_Father: {fileID: 4000012235267342}
-  m_RootOrder: 2
+  m_Father: {fileID: 4000014111842288}
+  m_RootOrder: 0
 --- !u!4 &4000012508918104
 Transform:
   m_ObjectHideFlags: 1
@@ -192,6 +207,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4000012235267342}
   m_RootOrder: 1
+--- !u!4 &4000014111842288
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011058863536}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children:
+  - {fileID: 4000012506236768}
+  m_Father: {fileID: 4000012235267342}
+  m_RootOrder: 2
 --- !u!65 &65000011282517716
 BoxCollider:
   m_ObjectHideFlags: 1
