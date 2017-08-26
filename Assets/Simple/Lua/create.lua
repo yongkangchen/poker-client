@@ -20,7 +20,7 @@ return function(on_create)
     end
     UI.OnClick(transform, "back", close)
     
-    UI.OnClick(transform, "create_free", function()
+    UI.OnClick(transform, "create_list/create_free", function()
         on_create(close)
     end)
     
