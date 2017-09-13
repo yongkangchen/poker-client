@@ -54,3 +54,11 @@ UI预设：Assets/game_${GAME_NAME}/Resources/prefabs/${GAME_NAME}
 9、UILable不要使用Unity默认的字体，要用NGUI的字体，否则会导致打包失败
 
 10、请确保`Assets/Runtime/Lua/data/msg.lua`和`Assets/game_zzmj/Lua/game_msg.lua`两个消息文件内的键值对不要重复，否则会报错：`!!! duplicate val in game_msg` 或者`!!! duplicate key in game_msg`
+
+11、截屏微信分享函数：
+```
+ShareScreenShot(type, tbl)
+type为nil或者0表示分享给好友，1表示分享到朋友圈
+
+tbl是数组，每个元素是一个gameObject，会在截屏前将tbl里的所有gameObject隐藏掉，截屏后会将tbl所有的gameObject显示出来。
+```
