@@ -65,3 +65,5 @@ tbl是数组，每个元素是一个gameObject，会在截屏前将tbl里的所�
 
 12、大厅内的授权开房功能配置：
 `game_cfg.lua里添加：ACCREDIT = true, -- 授权开房`
+
+13、分享app标题设置：`game_cfg.lua里添加：PRODUCT_NAME = "xx棋牌",` 
