@@ -21,6 +21,8 @@ DEV_PORT = 9878, --服务器端口
 
 http://cdn.u3d.biucloud.com/com.biucloud.game.preview.apk
 
+ ![image](https://github.com/yongkangchen/poker-client/blob/master/android.png?raw=true)
+
 # 开发规范
 1、下载客户端和服务器工程： 
 
