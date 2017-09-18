@@ -17,6 +17,10 @@ DEV_HOST = "127.0.0.1", --服务器地址
 DEV_PORT = 9878, --服务器端口
 ```
 
+# 商业版-安卓手机包测试
+
+http://cdn.u3d.biucloud.com/com.biucloud.game.preview.apk
+
 # 开发规范
 1、下载客户端和服务器工程： 
 
