@@ -73,3 +73,7 @@ tbl是数组，每个元素是一个gameObject，会在截屏前将tbl里的所�
 `game_cfg.lua里添加：ACCREDIT = true, -- 授权开房`
 
 13、分享app标题设置：`game_cfg.lua里添加：PRODUCT_NAME = "xx棋牌",` 
+
+14、开房模式预设规范：
+看例子：select.prefab预设里有zz的子物体，且UIToggle的group为100。那么《土豪房》UISavedOption的值为zz_opentype1, 《AA开房》zz_opentype2
+
