@@ -77,3 +77,4 @@ tbl是数组，每个元素是一个gameObject，会在截屏前将tbl里的所�
 14、开房模式预设规范：
 看例子：select.prefab预设里有zz的子物体，且UIToggle的group为100。那么《土豪房》UISavedOption的值为zz_opentype1, 《AA开房》zz_opentype2
 
+15、房间内规则显示，通用是自动读取创建界面create.prefab的UISavedOption的值，然后把这个值恢复到房间里的规则界面里的。
