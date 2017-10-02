@@ -14,7 +14,7 @@ of this license document, but changing it is not allowed.
 local Destroy = UnityEngine.Object.Destroy
 
 return function(text, sec)
-    sec = sec or 1
+    sec = sec or 2
     local transform = UI.InitPrefab("hint")
     local bg = transform:Find("bg"):GetComponent(UI2DSprite)
     local label = transform:Find("text"):GetComponent(UILabel)

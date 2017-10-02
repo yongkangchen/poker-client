@@ -16,7 +16,7 @@ local Destroy = UnityEngine.Object.Destroy
 return function(data)
     local transform = UI.InitWindow("room_info")
     
-    UI.Label(transform, "name/word", data.name)
+    UI.Label(transform, "name/word", UI.LimitName(data.name))
     UI.Label(transform, "id", "ID: "..data.id)
     if data.ip then
         UI.Label(transform, "ip", "IP: "..data.ip)
@@ -48,9 +48,9 @@ return function(data)
                 else
                     local gps_distance = ThirdDLL.GPSDistance(data.lat, data.lon, role_data.lat, role_data.lon)
                     if gps_distance > 999 then
-                        gps_distance = ">999米"
+                        gps_distance = math.floor(gps_distance / 1000) .. "公里"
                     else
-                        gps_distance = gps_distance .. "米"
+                        gps_distance = (gps_distance - gps_distance % 0.01) .. "米"
                     end
                     UI.Label(dis_trans, "word", "与【"..UI.LimitName(role_data.name).."】距离 "..gps_distance)
                 end
