@@ -240,7 +240,7 @@ local WWW = UnityEngine.WWW
 local Yield = UnityEngine.Yield
 local Texture2D = UnityEngine.Texture2D
 local Object = UnityEngine.Object
-function UI.RoleHead(transform, url)
+function UI.RoleHead(transform, url, on_end)
     if not url then
         LERR("nil head url")
         local game_cfg = require "game_cfg"
@@ -284,6 +284,9 @@ function UI.RoleHead(transform, url)
             File.WriteAllBytes(path, new:EncodeToPNG())
         end
         www:Dispose()
+        if on_end then
+            on_end()
+        end
     end)()
 end
 
