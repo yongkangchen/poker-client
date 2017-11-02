@@ -463,9 +463,9 @@ return function(player_info, parent, close_room)
         local timer_id = LuaTimer.Add(time, function()
             on_close = show_result(player_id, room_data, result, coroutine.wrap(function()
                 if is_over then
-                    sync(show_over)(result)
+                    sync(show_over)(result, player_id)
                 end
-                close_room()
+                close_room(is_over)
             end))
         end)
         

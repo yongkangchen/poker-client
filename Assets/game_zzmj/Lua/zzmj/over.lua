@@ -12,8 +12,10 @@ of this license document, but changing it is not allowed.
 --]]
 
 local Destroy = UnityEngine.Object.Destroy
+local game = require "game"
 
-return function(result, on_close)
+return function(result, player_id, on_close)
+    local invite_tbl = {}
     local max_score = -1
     local max_pao = -1
     for _, data in ipairs(result) do
@@ -29,9 +31,14 @@ return function(result, on_close)
     end
     
     local transform = UI.InitWindow("zzmj/over")
+    local trans_continue
     for i, trans in ipairs(UI.Children(transform:Find("player"))) do
         local data = result[i]
         if data then
+            if data.is_host and player_id == data.id then
+                trans_continue = trans:Find("continue")
+                UI.Active(trans_continue, true)
+            end
             UI.Label(trans, "info/name", data.name)
             UI.Label(trans, "info/id", data.id)
             UI.RoleHead(trans:Find("info/head"), data.headimgurl)
@@ -58,6 +65,9 @@ return function(result, on_close)
                 --LLOG(data.result[label.name])
                 UI.Label(label,"count",data.result[label.name])
             end
+            if not data.is_host then 
+                table.insert(invite_tbl, data.id)
+            end
         else
             UI.Active(trans, false)
         end
@@ -71,4 +81,12 @@ return function(result, on_close)
         Destroy(transform.gameObject)
         on_close()
     end)
+    
+    if trans_continue then
+        UI.OnClick(trans_continue, nil, function()
+            Destroy(transform.gameObject)
+            on_close()
+            game.create(invite_tbl)
+        end)
+    end
 end

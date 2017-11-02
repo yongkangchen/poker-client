@@ -253,6 +253,17 @@ return function(init_game, player_data, on_over)
         end
     end
     
+    server.listen(msg.INVITE_PLAYER, function(organizer_id, room_id, end_time)
+        require "continue_game"(player_data, organizer_id, room_id, end_time, close)
+    end)
+    
+    local refusal_tbl = {}
+    server.listen(msg.REFUSE_INVITE, function(refuse_name, type) 
+        refusal_tbl[refuse_name] = type
+        require "refuse_hint"(transform, refusal_tbl)
+    end)
+    
+    
     return function()
         close()
     end
