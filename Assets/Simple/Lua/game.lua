@@ -13,8 +13,15 @@ of this license document, but changing it is not allowed.
 
 local show_join = require "join"
 local show_create = require "create"
+local show_hint = require "hint"
 
 local game_cfg = require "game_cfg"
+local server = require "lib.server"
+local PlayerPrefs = UnityEngine.PlayerPrefs
+
+local create_r
+local enter_r
+local CREATE_SAVE_KEY = "PARSE_CREATE:" .. game_cfg.NAME
 
 local function init_game_create(game_name, transform)
     local panel_tbl = UI.Children(UI.InitPrefab(game_name .. "/create", transform))
@@ -27,6 +34,8 @@ local function init_game_create(game_name, transform)
 end
 
 local function init(parent, enter_room, create_room)
+    create_r = create_room
+    enter_r = enter_room
     local game_name = game_cfg.NAME
     
     local trans = UI.InitPrefab(game_name .. "/game", parent)
@@ -48,7 +57,9 @@ local function init(parent, enter_room, create_room)
         local transform = show_create(function(close_create)
             coroutine.wrap(function()
                 local parse_create = require(game_name .. ".create")
-                if create_room(game_name, nil, parse_create()) then
+                local create_tbl = {parse_create()}
+                if create_room(game_name, nil, unpack(create_tbl)) then
+                    PlayerPrefs.SetString(CREATE_SAVE_KEY, table.dump(create_tbl))
                     close_create()
                 end
             end)()
@@ -67,4 +78,17 @@ return {
         end
     end,
     init = init,
+    create = function()
+        coroutine.wrap(function()
+            if create_r(game_cfg.NAME, nil, unpack(table.undump(PlayerPrefs.GetString(CREATE_SAVE_KEY)))) then
+                require "xf.refuse_hint"()
+                server.invite_player()
+            end
+        end)()
+    end, 
+    enter = function(room_id)
+        coroutine.wrap(function() 
+            enter_r(room_id)
+        end)()
+    end,
 }

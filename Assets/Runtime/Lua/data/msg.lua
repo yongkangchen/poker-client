@@ -64,4 +64,8 @@ return {
 
     VISITOR = 0x001F, --lobby
     SHOW_CASH = 0x001D, --lobby
+    
+    INVITE_PLAYER = 0x0040,
+    REFUSE_INVITE = 0x0041, 
+    AGREE_INVITE = 0x0042,
 }
