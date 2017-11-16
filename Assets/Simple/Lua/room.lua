@@ -19,6 +19,7 @@ local show_dismiss = require "dismiss"
 local show_apply = require "apply"
 local show_dialog = require "dialog"
 local game_cfg = require "game_cfg"
+local xufang = require "xf.xufang"
 
 local function get_room_players(role_tbl)
     local tbl = {}
@@ -252,7 +253,17 @@ return function(init_game, player_data, on_over)
             role_tbl[player_id].show_score()
         end
     end
-    
+
+    server.listen(msg.INVITE_PLAYER, function(room_id, end_time)
+        require "xf.continue_game"(player_data, room_id, end_time, close)
+    end)
+
+    local refusal_tbl = {}
+    server.listen(msg.REFUSE_INVITE, function(refuse_name, type) 
+        refusal_tbl[refuse_name] = type
+        require "xf.refuse_hint"(transform, refusal_tbl)
+    end)
+
     return function()
         close()
     end
