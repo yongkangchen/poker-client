@@ -73,6 +73,7 @@ return function(init_game, player_data, on_over)
             show_dismiss(transform, not is_host, function()
                 if is_host then
                     server.dismiss()
+                    server.comfirm_msg(msg.HINT)
                 else
                     server.room_out()
                 end
@@ -163,8 +164,11 @@ return function(init_game, player_data, on_over)
         if count == room_data.player_size then
             hide_waiting()
             room_data.start_count = room_data.round
-            for _, role in pairs(role_tbl) do
+            for id, role in pairs(role_tbl) do
                 role.start()
+                if id == room_data.host_id then
+                    server.comfirm_msg(msg.HINT)
+                end
             end
         end
 		
