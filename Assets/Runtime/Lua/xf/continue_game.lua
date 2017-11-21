@@ -43,12 +43,12 @@ return function(player_data, room_id, create_time, close)
     
     UI.OnClick(transform, "sure", function()
          game.enter(room_id)
-         server.room_invite(true, room_id, create_time)
+         server.comfirm_msg(msg.ROOM_INVITE, true, room_id, create_time)
           close_func()
     end)    
     
     UI.OnClick(transform, "no", function ()
-        server.room_invite(false, room_id, create_time)
+        server.comfirm_msg(msg.ROOM_INVITE, false, room_id, create_time)
         close_func()
     end)
 end

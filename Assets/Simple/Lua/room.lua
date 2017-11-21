@@ -263,7 +263,7 @@ return function(init_game, player_data, on_over)
     end)
 
     server.listen(msg.ROOM_INVITE, function(room_id, create_time, up_room_id)
-        if player_data.room_data.id and player_data.room_data.id ~= room_id and player_data.room_data.id ~= up_room_id then
+        if player_data.room_data and player_data.room_data.id ~= room_id and player_data.room_data.id ~= up_room_id then
             return
         end
         require "xf.continue_game"(player_data, room_id, create_time, close)

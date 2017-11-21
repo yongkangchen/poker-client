@@ -68,4 +68,5 @@ return {
     ROOM_CONTINUE = 0x0043,
     ROOM_INVITE = 0x0044,
     HINT = 0x0045,
+    COMFIRM_MSG = 0x0046,
 }
