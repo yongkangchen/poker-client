@@ -15,6 +15,10 @@ local show_join = require "join"
 local show_create = require "create"
 
 local game_cfg = require "game_cfg"
+local server = require "lib.server"
+
+local create_r
+local enter_r
 
 local function init_game_create(game_name, transform)
     local panel_tbl = UI.Children(UI.InitPrefab(game_name .. "/create", transform))
@@ -27,6 +31,8 @@ local function init_game_create(game_name, transform)
 end
 
 local function init(parent, enter_room, create_room)
+    create_r = create_room
+    enter_r = enter_room
     local game_name = game_cfg.NAME
     
     local trans = UI.InitPrefab(game_name .. "/game", parent)
@@ -67,4 +73,16 @@ return {
         end
     end,
     init = init,
+    create = function(id_tbl, create_params, up_room_id)
+        coroutine.wrap(function()
+            if create_r(game_cfg.NAME, nil, unpack(create_params)) then
+                server.room_continue(id_tbl, up_room_id)
+            end
+        end)()
+    end, 
+    enter = function(room_id)
+        coroutine.wrap(function() 
+            enter_r(room_id)
+        end)()
+    end,
 }

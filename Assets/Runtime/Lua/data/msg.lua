@@ -64,4 +64,8 @@ return {
 
     VISITOR = 0x001F, --lobby
     SHOW_CASH = 0x001D, --lobby
+    
+    ROOM_CONTINUE = 0x0043,
+    ROOM_INVITE = 0x0044,
+    HINT = 0x0045,
 }
