@@ -12,6 +12,7 @@ of this license document, but changing it is not allowed.
 --]]
 
 local server = require "lib.server"
+local msg = require "data.msg"
 local show_hint = require "hint"
 
 local game = require "game"
@@ -65,8 +66,12 @@ return function(player_data)
         do_enter_game(room_data)
         return true
     end
+
+    game.init(transform, enter_room, create_room, info_tbl, room_id)
     
-    game.init(transform, enter_room, create_room)
+    server.listen(msg.ROOM_INVITE, function(room_id, create_time)
+        require "xf.continue_game"(player_data, room_id, create_time)
+    end)
 
     return function(func)
         UI.Active(transform, true)

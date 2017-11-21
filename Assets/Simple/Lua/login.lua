@@ -14,6 +14,8 @@ of this license document, but changing it is not allowed.
 local PlayerPrefs = UnityEngine.PlayerPrefs
 
 local server = require "lib.server"
+local msg = require "data.msg"
+local show_hint = require "hint"
 
 LOGIN_SAVE_KEY = "LOGIN_KEY:" .. UnityEngine.Application.dataPath
 local function get_login()
@@ -29,6 +31,11 @@ local function get_login()
 end
 
 return function()
+
+    server.listen(msg.HINT, function(hint)
+        show_hint(hint, 3)
+    end)
+    
     local pid = get_login()
     
     local player_data = server:login(pid)

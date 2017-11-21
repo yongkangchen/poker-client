@@ -13,7 +13,7 @@ of this license document, but changing it is not allowed.
 
 local Destroy = UnityEngine.Object.Destroy
 
-return function(result, on_close)
+return function(result, player_data, on_close)
     local max_score = -1
     local max_pao = -1
     for _, data in ipairs(result) do
@@ -32,6 +32,9 @@ return function(result, on_close)
     for i, trans in ipairs(UI.Children(transform:Find("player"))) do
         local data = result[i]
         if data then
+            if data.is_host and player_data.id == data.id then
+                require "xf.xufang"(transform, player_data.id_tbl,  player_data.create_params, player_data.up_room_id, on_close)
+            end
             UI.Label(trans, "info/name", data.name)
             UI.Label(trans, "info/id", data.id)
             UI.RoleHead(trans:Find("info/head"), data.headimgurl)

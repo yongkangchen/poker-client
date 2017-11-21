@@ -19,6 +19,7 @@ local show_dismiss = require "dismiss"
 local show_apply = require "apply"
 local show_dialog = require "dialog"
 local game_cfg = require "game_cfg"
+local xufang = require "xf.xufang"
 
 local function get_room_players(role_tbl)
     local tbl = {}
@@ -72,6 +73,7 @@ return function(init_game, player_data, on_over)
             show_dismiss(transform, not is_host, function()
                 if is_host then
                     server.dismiss()
+                    server.comfirm_msg(msg.HINT)
                 else
                     server.room_out()
                 end
@@ -162,8 +164,11 @@ return function(init_game, player_data, on_over)
         if count == room_data.player_size then
             hide_waiting()
             room_data.start_count = room_data.round
-            for _, role in pairs(role_tbl) do
+            for id, role in pairs(role_tbl) do
                 role.start()
+                if id == room_data.host_id then
+                    server.comfirm_msg(msg.HINT)
+                end
             end
         end
 		
@@ -253,6 +258,26 @@ return function(init_game, player_data, on_over)
         end
     end
     
+    server.listen(msg.ROOM_CONTINUE, function(id_tbl, create_params, up_room_id)
+        if room_data.host_id == player_id then
+             role_tbl[player_id].data.id_tbl = id_tbl
+             role_tbl[player_id].data.create_params = create_params
+             role_tbl[player_id].data.up_room_id = up_room_id
+        end
+    end)
+
+    server.listen(msg.ROOM_INVITE, function(room_id, create_time, up_room_id)
+        if player_data.room_data and player_data.room_data.id ~= room_id and player_data.room_data.id ~= up_room_id then
+            return
+        end
+        require "xf.continue_game"(player_data, room_id, create_time, close)
+    end)
+    
+    server.listen(msg.HINT, function(hint)
+        show_hint(hint, 3)
+    end)
+
+
     return function()
         close()
     end
