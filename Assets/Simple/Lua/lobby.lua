@@ -11,6 +11,8 @@ Everyone is permitted to copy and distribute verbatim copies
 of this license document, but changing it is not allowed.
 --]]
 
+local show_mid_enter = require "mid_enter"
+local msg = require "data.msg"
 local server = require "lib.server"
 local show_hint = require "hint"
 
@@ -65,6 +67,18 @@ return function(player_data)
         do_enter_game(room_data)
         return true
     end
+
+    local function mid_enter_room(room_id)
+        server.enter(room_id, true)
+    end
+    server.listen(msg.MID_ENTER,function(room_data)
+        if close_wait then
+            close_wait()
+            close_wait = nil
+        end
+        server.listen(msg.ENTER, check_room)
+        show_mid_enter(room_data, mid_enter_room)
+    end)
     
     game.init(transform, enter_room, create_room)
 
