@@ -72,11 +72,6 @@ return function(player_data)
         server.enter(room_id, true)
     end
     server.listen(msg.MID_ENTER,function(room_data)
-        if close_wait then
-            close_wait()
-            close_wait = nil
-        end
-        server.listen(msg.ENTER, check_room)
         show_mid_enter(room_data, mid_enter_room)
     end)
     
