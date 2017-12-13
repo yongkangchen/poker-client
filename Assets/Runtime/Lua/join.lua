@@ -29,7 +29,17 @@ return function(do_enter, player_data)
     end)
 
     local input = UI.Children(transform:Find("input"))
-    local tip = transform:Find("input/tip")
+    local tip
+    if player_data then
+        UI.Active(transform:Find("bg/title"), false)
+        UI.Active(transform:Find("bg/title_pk"), true)
+        UI.Active(transform:Find("paste"), true)
+        UI.Active(transform:Find("input/tip", false))
+        tip = transform:Find("input/tip_pk")
+        UI.Active(tip, true)
+    else
+        tip = transform:Find("input/tip")
+    end
 
     local idx = 0
     local num = 0
@@ -92,7 +102,6 @@ return function(do_enter, player_data)
 
     -- 粘贴邀请码
     local paste_value = UI.GetComponent(transform, "temp", UIInput)
-    UI.Active(transform:Find("paste"), player_data)
     UI.OnClick(transform, "paste", function()
         -- 手机粘贴板
         if BDLocationUtil == nil then
