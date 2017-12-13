@@ -100,44 +100,46 @@ return function(do_enter, player_data)
         end
     end
 
+    if player_data then
     -- 粘贴邀请码
     local paste_value = UI.GetComponent(transform, "temp", UIInput)
-    UI.OnClick(transform, "paste", function()
-        -- 手机粘贴板
-        if BDLocationUtil == nil then
-            require "app_upgrade"("app需要更新才能粘贴文字")
-        else
-            local text = Util.clipboardGetText()
-            if text == nil then
-                LLOG("nil text")
+        UI.OnClick(transform, "paste", function()
+            -- 手机粘贴板
+            if BDLocationUtil == nil then
+                require "app_upgrade"("app需要更新才能粘贴文字")
             else
-                LLOG("clipboardGetText:%s", text)
-                paste_value.value = text
+                local text = Util.clipboardGetText()
+                if text == nil then
+                    LLOG("nil text")
+                else
+                    LLOG("clipboardGetText:%s", text)
+                    paste_value.value = text
+                end
             end
-        end
-        -- paste_value.value = "小幺756841668335哈哈"
-        local num = tonumber(paste_value.value)
-        if num < 0 then
-            return
-        end
-        LERR("@@@@@@@@@@@ paste_value:%s", num)
-        UI.Active(tip, false)
-        local num_str = tostring(num)
-        idx = 0
-        for i = 1, #num_str do
-            idx = idx + 1
-            local num_sub = string.sub(num_str, i, i)
-            -- LERR("%s = %s", i, num_sub)
-            UI.Sprite(input[idx], "num", "light_num_" .. num_sub)
-            if input[idx + 1] == nil then
-                break
+            -- paste_value.value = "小幺756841668335哈哈"
+            local num = tonumber(paste_value.value)
+            if num < 0 then
+                return
             end
-        end
-        if idx ~= 6 then
-            return
-        end
-        do_join()
-    end)
+            LERR("@@@@@@@@@@@ paste_value:%s", num)
+            UI.Active(tip, false)
+            local num_str = tostring(num)
+            idx = 0
+            for i = 1, #num_str do
+                idx = idx + 1
+                local num_sub = string.sub(num_str, i, i)
+                -- LERR("%s = %s", i, num_sub)
+                UI.Sprite(input[idx], "num", "light_num_" .. num_sub)
+                if input[idx + 1] == nil then
+                    break
+                end
+            end
+            if idx ~= 6 then
+                return
+            end
+            do_join()
+        end)
+    end
 
     for i = 0, 9 do
         UI.OnClick(transform, "keyboard/" .. i, function()
