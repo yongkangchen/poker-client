@@ -68,8 +68,8 @@ return function(player_data)
         return true
     end
 
-    local function mid_enter_room(room_id)
-        server.enter(room_id, true)
+    local function mid_enter_room(room_id, is_visit)
+        server.enter(room_id, true, is_visit)
     end
     server.listen(msg.MID_ENTER,function(room_data)
         show_mid_enter(room_data, mid_enter_room)
