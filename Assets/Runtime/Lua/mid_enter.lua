@@ -21,14 +21,17 @@ return function(room_data, mid_enter_room)
     UI.OnClick(transform, "close", function()
         Destroy(transform.gameObject)
     end)
-    
-    UI.OnClick(transform, "visit", function()
-        coroutine.wrap(function()
-            mid_enter_room(room_data.room_id, true)
-            Destroy(transform.gameObject)
-        end)()
-    end)
-    
+
+    local visit_btn = transform:Find("visit")
+    if visit_btn then
+        UI.OnClick(visit_btn, nil, function()
+            coroutine.wrap(function()
+                mid_enter_room(room_data.room_id, true)
+                Destroy(transform.gameObject)
+            end)()
+        end)
+    end
+
     UI.OnClick(transform, "join", function()
         coroutine.wrap(function()
             mid_enter_room(room_data.room_id)

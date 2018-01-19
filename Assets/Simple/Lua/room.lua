@@ -35,25 +35,22 @@ return function(init_game, player_data, on_over)
     local room_data = player_data.room_data
     local player_id = player_data.id
     local role_tbl
-    
-    local close_visit
+
     local transform = UI.InitPrefab("room")
     local function close(is_over)
-        close_visit()
-        
         transform:GetComponent(UIPanel).depth = -1
         Destroy(transform.gameObject, 0.06)
         if player_data.room_data then
             if type(is_over) ~= "boolean" then
                 is_over = player_data.room_data.round == player_data.room_data.max_round
             end
-            if not is_over then 
+            if not is_over then
                 player_data.room_data.round = player_data.room_data.round + 1
             else
                 player_data.room_data = nil
             end
         end
-        
+
         on_over()
 
         if on_close then
@@ -63,15 +60,16 @@ return function(init_game, player_data, on_over)
             end
         end
     end
-    
+
     local function do_quit()
         -- LERR("room_data: %s", table.dump(room_data))
-        if game_cfg.CAN_VISIT and room_data.is_visit then
+        if room_data.is_visit then
             server.room_out(true)
             player_data.room_data = nil
             close()
             return
         end
+
         if room_data.start_count == 0 then
             local is_host = room_data.host_id == player_id
             show_dismiss(transform, not is_host, function()
@@ -87,45 +85,24 @@ return function(init_game, player_data, on_over)
             end)
         end
     end
-    
-    local watch_game = UI.InitPrefab("watch_game")
-    UI.Active(watch_game, false)
-    
-    if game_cfg.CAN_VISIT then
-        if room_data.is_visit then
-            UI.Active(watch_game, true)
-        end
+
+
+    if room_data.is_visit then
+        local watch_game = UI.InitPrefab("watch_game", transform)
+        UI.Active(watch_game, true)
+        UI.OnClick(watch_game, "quit", do_quit)
     end
 
-    close_visit = function()
-        if game_cfg.CAN_VISIT then
-            if room_data.is_visit then
-                UI.Active(watch_game, false)
-                Destroy(watch_game.gameObject)
-            end
-        end
-    end
-    
-    local function quit_visit()
-        if game_cfg.CAN_VISIT and room_data.is_visit then
-            server.room_out(true)
-            player_data.room_data = nil
-            close()
-            return
-        end
-    end
-    UI.OnClick(watch_game, "quit", quit_visit)
-    
     UI.OnClick(transform, "buttons/quit", do_quit)
     UI.OnClick(transform, "buttons/setting", function()
         show_dialog("确认重新加载游戏？", function()
             UnityEngine.SceneManagement.SceneManager.LoadScene(0)
         end, function() end)
     end)
-    
+
     UI.Active(transform:Find("buttons/voice"), false)
     UI.Active(transform:Find("buttons/chat"), false)
-    
+
     local function hide_waiting()
         UI.Active(transform:Find("waiting"), false)
         local blink = transform:Find("desk/blink")
@@ -150,7 +127,7 @@ return function(init_game, player_data, on_over)
     if room_data.round ~= 1 then
         UI.Active(transform:Find("waiting"), false)
     end
-    
+
     local startgame = UI.Child(transform, "waiting/startgame")
     UI.Active(startgame, false)
 
@@ -168,12 +145,12 @@ return function(init_game, player_data, on_over)
                 if role.data.is_ready then
                     ready_count = ready_count + 1
                 end
-                
+
                 if role.data.idx == 1 and role.data.id == player_id then
                     can_start = true
                 end
             end
-            
+
             if can_start and ready_count > 1 and ready_count == table.length(role_tbl) and room_data.start_count == 0 then
                 UI.Active(startgame, true)
                 return
@@ -181,11 +158,12 @@ return function(init_game, player_data, on_over)
         end
         UI.Active(startgame, false)
     end
-	
+
     server.listen(msg.READY, function(id, is_ready, count)
-        if game_cfg.CAN_VISIT and room_data.is_visit then
+        if room_data.is_visit then
             return
         end
+
         if id == player_id then
             prepare.value = is_ready
         end
@@ -201,22 +179,22 @@ return function(init_game, player_data, on_over)
                 role.start()
             end
         end
-		
+
 		can_startgame()
     end)
-    
+
     server.listen(msg.DISMISS, function()
         show_hint("房间已经解散！", 1)
         player_data.room_data = nil
         close()
     end)
-    
+
     server.listen(msg.ROOM_OUT, function(pid)
         local role = role_tbl[pid]
         if not role then
             return
         end
-        
+
         role.clear()
         if pid == player_id then
             player_data.room_data = nil
@@ -225,7 +203,7 @@ return function(init_game, player_data, on_over)
         end
         role_tbl[pid] = nil
     end)
-    
+
     server.listen(msg.APPLY, function(dismiss_tbl, dismiss_time)
         show_apply(transform, {
             player_name = role_tbl[player_id].data.name,
@@ -239,7 +217,7 @@ return function(init_game, player_data, on_over)
             close()
         end)
     end)
-    
+
     local on_init_role
     server.listen(msg.INIT, function(data, distance)
         data.src_distance = distance
@@ -248,19 +226,19 @@ return function(init_game, player_data, on_over)
         end
         data.distance = distance
         data.role_tbl = role_tbl
-        
+
         if role_tbl[data.id] then
             data = table.merge(role_tbl[data.id].data, data)
         end
-        
+
         on_init_role(data)
-        
+
         local role = role_tbl[data.id]
         role.online(data.ip ~= nil)
         if data.ip ~= nil then
             role.pause(data.is_pause)
         end
-        
+
         if room_data.start_count == room_data.round then
             hide_waiting()
             role.start(true)
@@ -274,11 +252,11 @@ return function(init_game, player_data, on_over)
         end
         role.score(data.score)
     end)
-    
+
     on_init_role, role_tbl, on_close = init_game(table.copy(player_data), transform, close)
-    
+
     player_data.role_tbl = role_tbl
-    
+
     if room_data.start_count == room_data.round then
         if role_tbl[player_id] then
             role_tbl[player_id].start(true)
@@ -288,7 +266,7 @@ return function(init_game, player_data, on_over)
             role_tbl[player_id].show_score()
         end
     end
-    
+
     return function()
         close()
     end
