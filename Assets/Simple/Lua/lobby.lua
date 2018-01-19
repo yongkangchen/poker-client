@@ -43,7 +43,9 @@ return function(player_data)
 
     local do_enter_game
     local function enter_room(room_id)
-        local room_data = server:enter(room_id)
+        local room_data, is_visitor = server:enter(room_id)
+        room_data.is_visitor = is_visitor
+        
         local error = ENTER_ERROR[room_data]
         if error then
             show_hint(error)
