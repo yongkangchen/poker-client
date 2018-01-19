@@ -34,6 +34,12 @@ return function(init_game, player_data, on_over)
     local on_close
     local room_data = player_data.room_data
     local player_id = player_data.id
+
+    if room_data.visitor_id then
+        player_id = room_data.visitor_id
+        room_data.is_visit = true
+    end
+
     local role_tbl
 
     local transform = UI.InitPrefab("room")
@@ -160,10 +166,6 @@ return function(init_game, player_data, on_over)
     end
 
     server.listen(msg.READY, function(id, is_ready, count)
-        if room_data.is_visit then
-            return
-        end
-
         if id == player_id then
             prepare.value = is_ready
         end
@@ -243,9 +245,8 @@ return function(init_game, player_data, on_over)
             hide_waiting()
             role.start(true)
         else
-            if not room_data.is_visit then
-                role.prepare(data.is_ready)
-            end
+            role.prepare(data.is_ready)
+
             if room_data.round > 1 then
                 role.show_score()
             end
@@ -253,7 +254,11 @@ return function(init_game, player_data, on_over)
         role.score(data.score)
     end)
 
-    on_init_role, role_tbl, on_close = init_game(table.copy(player_data), transform, close)
+    local game_player_data = table.copy(player_data)
+    if game_player_data then
+        game_player_data.id = player_id
+    end
+    on_init_role, role_tbl, on_close = init_game(game_player_data, transform, close)
 
     player_data.role_tbl = role_tbl
 
