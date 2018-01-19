@@ -34,16 +34,15 @@ return function(init_game, player_data, on_over)
     local on_close
     local room_data = player_data.room_data
     local player_id = player_data.id
-
-    
     local role_tbl
     
+    local close_visit
     local transform = UI.InitPrefab("room")
-    
     local function close(is_over)
+        close_visit()
+        
         transform:GetComponent(UIPanel).depth = -1
         Destroy(transform.gameObject, 0.06)
-    
         if player_data.room_data then
             if type(is_over) ~= "boolean" then
                 is_over = player_data.room_data.round == player_data.room_data.max_round
@@ -67,6 +66,12 @@ return function(init_game, player_data, on_over)
     
     local function do_quit()
         -- LERR("room_data: %s", table.dump(room_data))
+        if game_cfg.CAN_VISIT and room_data.is_visit then
+            server.room_out(true)
+            player_data.room_data = nil
+            close()
+            return
+        end
         if room_data.start_count == 0 then
             local is_host = room_data.host_id == player_id
             show_dismiss(transform, not is_host, function()
@@ -82,6 +87,34 @@ return function(init_game, player_data, on_over)
             end)
         end
     end
+    
+    local watch_game = UI.InitPrefab("watch_game")
+    UI.Active(watch_game, false)
+    
+    if game_cfg.CAN_VISIT then
+        if room_data.is_visit then
+            UI.Active(watch_game, true)
+        end
+    end
+
+    close_visit = function()
+        if game_cfg.CAN_VISIT then
+            if room_data.is_visit then
+                UI.Active(watch_game, false)
+                Destroy(watch_game.gameObject)
+            end
+        end
+    end
+    
+    local function quit_visit()
+        if game_cfg.CAN_VISIT and room_data.is_visit then
+            server.room_out(true)
+            player_data.room_data = nil
+            close()
+            return
+        end
+    end
+    UI.OnClick(watch_game, "quit", quit_visit)
     
     UI.OnClick(transform, "buttons/quit", do_quit)
     UI.OnClick(transform, "buttons/setting", function()
@@ -118,7 +151,6 @@ return function(init_game, player_data, on_over)
         UI.Active(transform:Find("waiting"), false)
     end
     
-
     local startgame = UI.Child(transform, "waiting/startgame")
     UI.Active(startgame, false)
 
@@ -151,6 +183,9 @@ return function(init_game, player_data, on_over)
     end
 	
     server.listen(msg.READY, function(id, is_ready, count)
+        if game_cfg.CAN_VISIT and room_data.is_visit then
+            return
+        end
         if id == player_id then
             prepare.value = is_ready
         end
@@ -230,12 +265,13 @@ return function(init_game, player_data, on_over)
             hide_waiting()
             role.start(true)
         else
-            role.prepare(data.is_ready)
+            if not data.is_visit then
+                role.prepare(data.is_ready)
+            end
             if room_data.round > 1 then
                 role.show_score()
             end
         end
-        
         role.score(data.score)
     end)
     
