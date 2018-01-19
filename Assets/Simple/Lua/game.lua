@@ -18,9 +18,9 @@ local game_cfg = require "game_cfg"
 
 local function init_game_create(game_name, transform)
     local panel_tbl = UI.Children(UI.InitPrefab(game_name .. "/create", transform))
-    
+
     local select_tbl = UI.Children(UI.InitPrefab(game_name .. "/select", transform))
-    
+
     for i, select in ipairs(select_tbl) do
         select:GetComponent(UIToggledObjects).activate[0] = panel_tbl[i].gameObject
     end
@@ -28,14 +28,14 @@ end
 
 local function init(parent, enter_room, create_room)
     local game_name = game_cfg.NAME
-    
+
     local trans = UI.InitPrefab(game_name .. "/game", parent)
     if trans == nil then
         trans = UI.InitPrefab("small_game", parent)
     end
-    
+
     local join_btn = trans:Find("join")
-    
+
     UI.OnClick(join_btn, nil, function()
         show_join(function(room_id, on_join)
             coroutine.wrap(function()
@@ -43,7 +43,7 @@ local function init(parent, enter_room, create_room)
             end)()
         end)
     end)
-    
+
     UI.OnClick(trans:Find("create"), nil, function()
         local transform = show_create(function(close_create)
             coroutine.wrap(function()
@@ -59,8 +59,14 @@ end
 
 return {
     play = function()
-        local init_room = require "room"    
+        local init_room = require "room"
         return function(player_data, on_over)
+            player_data = table.copy(player_data)
+            if player_data.room_data.visitor_id then
+                player_data.id = player_data.room_data.visitor_id
+                room_data.is_visit = true
+            end
+
             local game_name = player_data.room_data.game_name
             local play = require(game_name .. "." .. game_name)
             return init_room(play, player_data, on_over)
