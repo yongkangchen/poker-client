@@ -34,13 +34,13 @@ local CREATE_ERROR = {
 return function(player_data)
     local transform = UI.InitPrefab("small_lobby")
     UI.Active(transform, false)
-    
+
     UI.Label(transform, "id", player_data.id)
     UI.OnClick(transform, "ok", function()
         PlayerPrefs.SetString(LOGIN_SAVE_KEY, table.dump({id = tonumber(UI.GetComponent(transform, "id", UILabel).text)}))
         UnityEngine.SceneManagement.SceneManager.LoadScene(0)
     end)
-    
+
     local do_enter_game
     local function enter_room(room_id)
         local room_data = server:enter(room_id)
@@ -49,7 +49,7 @@ return function(player_data)
             show_hint(error)
             return false
         end
-        
+
         UI.Active(transform, false)
         do_enter_game(room_data)
         return true
@@ -62,19 +62,20 @@ return function(player_data)
             show_hint(error)
             return false
         end
-        
+
         UI.Active(transform, false)
         do_enter_game(room_data)
         return true
     end
 
-    local function mid_enter_room(room_id, is_visit)
-        server.enter(room_id, true, is_visit)
+    local function mid_enter_room(...)
+        server.enter(...)
     end
-    server.listen(msg.MID_ENTER,function(room_data)
+    server.listen(msg.MID_ENTER,function(room_data, ask_data)
+        room_data.ask_data = ask_data
         show_mid_enter(room_data, mid_enter_room)
     end)
-    
+
     game.init(transform, enter_room, create_room)
 
     return function(func)

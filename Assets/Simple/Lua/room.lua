@@ -243,7 +243,7 @@ return function(init_game, player_data, on_over)
             hide_waiting()
             role.start(true)
         else
-            if not data.is_visit then
+            if not room_data.is_visit then
                 role.prepare(data.is_ready)
             end
             if room_data.round > 1 then
