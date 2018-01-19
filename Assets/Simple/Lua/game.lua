@@ -64,7 +64,7 @@ return {
             player_data = table.copy(player_data)
             if player_data.room_data.visitor_id then
                 player_data.id = player_data.room_data.visitor_id
-                room_data.is_visit = true
+                player_data.room_data.is_visit = true
             end
 
             local game_name = player_data.room_data.game_name
