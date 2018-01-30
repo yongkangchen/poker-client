@@ -10,6 +10,8 @@ Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>
 Everyone is permitted to copy and distribute verbatim copies
 of this license document, but changing it is not allowed.
 --]]
+
+local show_mid_enter = require "mid_enter"
 local msg = require "data.msg"
 local server = require "lib.server"
 local show_hint = require "hint"
@@ -42,15 +44,13 @@ return function(player_data)
     local do_enter_game
     local function enter_room(room_id)
         local room_data, is_visit = server:enter(room_id)
-        if is_visit and type(room_data) == "table" then
-            room_data.is_visit = true
-        end
-        
         local error = ENTER_ERROR[room_data]
         if error then
             show_hint(error)
             return false
         end
+
+        room_data.is_visit = is_visit
 
         UI.Active(transform, false)
         do_enter_game(room_data)
@@ -59,20 +59,27 @@ return function(player_data)
 
     local function create_room(game_name, money_type, num, ...)
         local room_data = server:create(game_name, money_type, num, ...)
-        if room_data and type(room_data) == "table" then
-            room_data.is_visit = room_data.host_start
-        end
-        
+
         local error = CREATE_ERROR[room_data]
         if error then
             show_hint(error)
             return false
         end
-        
+
+        room_data.is_visit = room_data.host_start
+
         UI.Active(transform, false)
         do_enter_game(room_data)
         return true
     end
+
+    local function mid_enter_room(...)
+        server.enter(...)
+    end
+    server.listen(msg.MID_ENTER,function(room_data, ask_data)
+        room_data.ask_data = ask_data
+        show_mid_enter(room_data, mid_enter_room)
+    end)
 
     game.init(transform, enter_room, create_room)
 
