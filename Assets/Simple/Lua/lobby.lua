@@ -43,14 +43,14 @@ return function(player_data)
 
     local do_enter_game
     local function enter_room(room_id)
-        local room_data, visitor_id = server:enter(room_id)
-        room_data.visitor_id = visitor_id
-
+        local room_data, is_visit = server:enter(room_id)
         local error = ENTER_ERROR[room_data]
         if error then
             show_hint(error)
             return false
         end
+
+        room_data.is_visit = is_visit
 
         UI.Active(transform, false)
         do_enter_game(room_data)
@@ -59,11 +59,14 @@ return function(player_data)
 
     local function create_room(game_name, money_type, num, ...)
         local room_data = server:create(game_name, money_type, num, ...)
+
         local error = CREATE_ERROR[room_data]
         if error then
             show_hint(error)
             return false
         end
+
+        room_data.is_visit = room_data.host_start
 
         UI.Active(transform, false)
         do_enter_game(room_data)

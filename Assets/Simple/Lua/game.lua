@@ -61,12 +61,6 @@ return {
     play = function()
         local init_room = require "room"
         return function(player_data, on_over)
-            player_data = table.copy(player_data)
-            if player_data.room_data.visitor_id then
-                player_data.id = player_data.room_data.visitor_id
-                room_data.is_visit = true
-            end
-
             local game_name = player_data.room_data.game_name
             local play = require(game_name .. "." .. game_name)
             return init_room(play, player_data, on_over)
