@@ -262,7 +262,14 @@ return function(init_game, player_data, on_over)
             close()
         end)
     end)
-
+    
+    server.listen(msg.VISITOR, function(visit_player, count)
+        --TODO  观战玩家数据填充
+        if not room_data.is_visit then
+            return
+        end
+    end)
+    
     local on_init_role
     server.listen(msg.INIT, function(data, distance, is_renter)     --观战状态进入游戏
         if game_cfg.CAN_VISIT_ENTER and room_data.is_visit then
