@@ -17,11 +17,21 @@ local show_create = require "create"
 local game_cfg = require "game_cfg"
 
 local function init_game_create(game_name, transform)
+    local select_trans = UI.InitPrefab(game_name .. "/select", transform)
+    local pos = transform:Find("select_pos")
+    if pos then
+        select_trans.localPosition = pos.localPosition
+    end
+
+    if not select_trans:GetComponent(UITable) then
+        local tb = select_trans.gameObject:AddComponent(UITable)
+        tb.columns = 1
+        tb.padding = UnityEngine.Vector2(0, 2)
+        tb:Reposition()
+    end
+
     local panel_tbl = UI.Children(UI.InitPrefab(game_name .. "/create", transform))
-
-    local select_tbl = UI.Children(UI.InitPrefab(game_name .. "/select", transform))
-
-    for i, select in ipairs(select_tbl) do
+    for i, select in ipairs(UI.Children(select_trans)) do
         select:GetComponent(UIToggledObjects).activate[0] = panel_tbl[i].gameObject
     end
 end
