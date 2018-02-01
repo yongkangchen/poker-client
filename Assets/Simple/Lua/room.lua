@@ -173,6 +173,10 @@ return function(init_game, player_data, on_over)
         end
         
         if room_data.is_visit then
+            if room_data.start_count > 0 then
+                show_hint("此房间坐下的玩家都会消耗钻石哦！")
+            end
+            
             local sit_down = watch_game:Find("sit_down")
             if sit_down then
                 show_sit_down = function()
