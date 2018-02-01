@@ -69,13 +69,14 @@ return function(init_game, player_data, on_over)
 
     local function do_quit()
         -- LERR("room_data: %s", table.dump(room_data))
-        if room_data.is_visit or (room_data.host_start and room_data.start_count == 0 and room_data.host_id == player_id) then
+        --TODO  加一个俱乐部开房
+        if room_data.is_visit or (room_data.host_start and room_data.start_count == 0 and room_data.host_id == player_id and room_data.groud_id) then
             server.room_out()
             player_data.room_data = nil
             close()
             return
         end
-
+        
         if room_data.start_count == 0 then
             local is_host = room_data.host_id == player_id
             show_dismiss(transform, not is_host, function()
@@ -98,11 +99,11 @@ return function(init_game, player_data, on_over)
         if blink then
             UI.Active(blink, true)
         end
-
+        
         if room_data.is_visit then
             local sit_down = transform:Find("sit_down")
             if sit_down then
-                sit_down.localPosition = UnityEngine.Vector3(0, 0, 0)
+                sit_down.localPosition = UnityEngine.Vector3(0, -300, 0)
             end
         end
     end
@@ -136,21 +137,40 @@ return function(init_game, player_data, on_over)
     end
 
     local startgame = UI.Child(transform, "waiting/startgame")
-    UI.Active(startgame, false)
-
+    local startgame_mask
+    if room_data.host_start and player_id == room_data.host_id then
+        local mask = startgame:Find("mask")
+        if mask then
+            startgame_mask = function(is_mask)
+                UI.Active(mask, is_mask)
+            end
+            startgame_mask(true)
+        end
+    else 
+        UI.Active(startgame, false)
+    end
+    
     UI.OnClick(transform, "waiting/startgame", function()
         server.start_game()
+        if room_data.is_visit then
+            hide_waiting()
+        end
     end)
 
     local show_sit_down
+    local visitor_info
     if room_data.can_visit_enter then
         UI.Active(transform:Find("waiting/prepare"), false)
         UI.Active(transform:Find("waiting/cancel"), false)
-
+        if room_data.start_count == 0 then
+            UI.Active(transform:Find("waiting"), true)
+        end
+        
         if room_data.is_visit then
             local sit_down = transform:Find("sit_down")
             if sit_down then
                 show_sit_down = function()
+                    role_tbl = role_tbl or {}
                     UI.Active(sit_down, room_data.is_visit and room_data.player_size > (table.length(role_tbl) - 1))
                 end
 
@@ -164,10 +184,61 @@ return function(init_game, player_data, on_over)
                     show_sit_down()
                 end
             end
+        elseif room_data.host_start and player_id == room_data.host_id then
+            startgame.localPosition = UnityEngine.Vector3(120, 20, 0)--不确定玩法会不会改
         else
-            if room_data.host_start and player_id == room_data.host_id then
-                UI.Active(transform:Find("waiting/invite"), false) --TODO: 这里要处理？
-                UI.Active(transform:Find("waiting"), true)
+            local invite = transform:Find("waiting/invite")
+            invite.localPosition = UnityEngine.Vector3(0, 0, 0)
+        end
+        
+        visit_list = transform:Find("list")
+        if visit_list then 
+            UI.Active(visit_list, true)
+            
+            UI.OnClick(visit_list, "btn", function()
+                UI.Active(visit_list:Find("window"), true)
+            end)
+            
+            UI.OnClick(visit_list:Find("window"), "close", function()
+                UI.Active(visit_list:Find("window"), false)
+            end)
+            
+            local trans_grid = visit_list:Find("window/scorllview/grid")
+            local grid = trans_grid:GetComponent(UIGrid)
+            local trans_card = trans_grid:Find("card")
+            
+            local visitor_tbl = {}
+            local label_num = visit_list:Find("num"):GetComponent(UILabel)
+            visitor_info = function(id, name, headimgurl)
+                if id and name then--and headimgurl then --TODO  头像暂时无
+                    local card = UnityEngine.Object.Instantiate(trans_card).transform
+                    card:SetParent(trans_grid, false)
+                    
+                    local label_name = card:Find("name"):GetComponent(UILabel)
+                    if label_name then
+                        label_name.text = UI.LimitName(name)
+                    end
+                    
+                    local label_id = card:Find("id"):GetComponent(UILabel)
+                    if label_id then
+                        label_id.text = id
+                    end
+                    
+                    local visitor_pic = card:Find("icon/pic")
+                    local visitor_texture = visitor_pic:GetComponent(UITexture)
+                    UI.RoleHead(visitor_pic, headimgurl) --TODO 这里还有问题
+                    
+                    UI.Active(card, true)
+                    visitor_tbl[id] = card
+                elseif visitor_tbl[id] then
+                    Destroy(visitor_tbl[id].gameObject)--NOTE  或者对象池
+                    visitor_tbl[id] = nil
+                end
+                
+                if label_num then
+                    label_num.text = tostring(table.length(visitor_tbl))
+                end
+                grid:Reposition() 
             end
         end
     end
@@ -177,7 +248,7 @@ return function(init_game, player_data, on_over)
             local ready_count = 0
             local can_start = false
 
-            for _, role in pairs(role_tbl) do
+            for q, role in pairs(role_tbl) do
                 if role.data.is_ready then
                     ready_count = ready_count + 1
                 end
@@ -193,18 +264,24 @@ return function(init_game, player_data, on_over)
                 end
             end
 
-            local player_size = table.length(role_tbl)
-            if room_data.is_visit then
-                player_size = player_size - 1
-                -- ready_count = ready_count - 1
-            end
-
-            if can_start and room_data.start_count == 0 and ready_count > 1 and ready_count == player_size then
-                UI.Active(startgame, true)
+            if can_start and room_data.start_count == 0 and ready_count > 1 and ready_count == table.length(role_tbl) then
+                if room_data.host_start then
+                    if startgame_mask then
+                        startgame_mask(false)
+                    end
+                else
+                    UI.Active(startgame, true)
+                end
                 return
             end
         end
-        UI.Active(startgame, false)
+        if room_data.can_visit_enter then
+            if startgame_mask then
+                startgame_mask(true)
+            end
+        else
+            UI.Active(startgame, false)
+        end
     end
 
     server.listen(msg.READY, function(id, is_ready, count)
@@ -216,7 +293,7 @@ return function(init_game, player_data, on_over)
             role_tbl[id].prepare(is_ready)
         end
 
-        if count == room_data.player_size then
+        if count == room_data.player_size and not room_data.host_start then
             hide_waiting()
             room_data.start_count = room_data.round
             for _, role in pairs(role_tbl) do
@@ -249,6 +326,7 @@ return function(init_game, player_data, on_over)
         if show_sit_down then
             show_sit_down()
         end
+        can_startgame()
     end)
 
     server.listen(msg.APPLY, function(dismiss_tbl, dismiss_time)
@@ -264,21 +342,27 @@ return function(init_game, player_data, on_over)
             close()
         end)
     end)
-
+    
+    --TODO 
     server.listen(msg.VISITOR, function(visit_player, is_sit)
         if player_data.id == visit_player and is_sit then
             room_data.is_visit = nil
             if on_close then
                 on_close()
+                if room_data.start_count > 0 then
+                    server.renter()
+                end
             end
             return
         end
-
-        -- if type(visit_player) == "table" then
-        --     --TODO: 填充数据
-        -- else
-        --     --TODO: 删除
-        -- end
+        
+        if type(visit_player) == "table" then
+            for _, data in ipairs(visit_player) do
+                visitor_info(unpack(data))
+            end
+        else
+            visitor_info(visit_player)
+        end
     end)
 
     local on_init_role
@@ -293,9 +377,9 @@ return function(init_game, player_data, on_over)
         if role_tbl[data.id] then
             data = table.merge(role_tbl[data.id].data, data)
         end
-
+        
         on_init_role(data)
-
+        
         local role = role_tbl[data.id]
         role.online(data.ip ~= nil)
         if data.ip ~= nil then
@@ -312,7 +396,6 @@ return function(init_game, player_data, on_over)
             end
         end
         role.score(data.score)
-
         if room_data.host_start then  --房主坐下
             can_startgame()
         end
