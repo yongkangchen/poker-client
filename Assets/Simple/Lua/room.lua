@@ -51,9 +51,7 @@ return function(init_game, player_data, on_over)
                 is_over = player_data.room_data.round == player_data.room_data.max_round
             end
             if not is_over then
-                if not room_data.is_visit then
-                    player_data.room_data.round = player_data.room_data.round + 1
-                end
+                player_data.room_data.round = player_data.room_data.round + 1
             else
                 player_data.room_data = nil
             end
@@ -356,10 +354,11 @@ return function(init_game, player_data, on_over)
     
     server.listen(msg.VISITOR, function(visit_player, is_sit)
         if player_data.id == visit_player and is_sit then
+            room_data.is_visit = nil
+            player_data.room_data.round = player_data.room_data.round - 1
             if on_close then
                 close()
             end
-            room_data.is_visit = nil
             return
         end
         
