@@ -215,7 +215,7 @@ return function(init_game, player_data, on_over)
             local visitor_tbl = {}
             local label_num = visit_list:Find("num"):GetComponent(UILabel)
             visitor_info = function(id, name, headimgurl)
-                if id and name then--and headimgurl then --TODO  头像暂时无
+                if id and name and headimgurl then 
                     local card = UnityEngine.Object.Instantiate(trans_card).transform
                     card:SetParent(trans_grid, false)
                     
@@ -231,7 +231,7 @@ return function(init_game, player_data, on_over)
                     
                     local visitor_pic = card:Find("icon/pic")
                     local visitor_texture = visitor_pic:GetComponent(UITexture)
-                    UI.RoleHead(visitor_pic, headimgurl) --TODO 这里还有问题
+                    UI.RoleHead(visitor_pic, headimgurl) 
                     
                     UI.Active(card, true)
                     visitor_tbl[id] = card
