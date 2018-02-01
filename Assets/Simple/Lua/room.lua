@@ -69,8 +69,7 @@ return function(init_game, player_data, on_over)
 
     local function do_quit()
         -- LERR("room_data: %s", table.dump(room_data))
-        --TODO  加一个俱乐部开房
-        if room_data.is_visit or (room_data.host_start and room_data.start_count == 0 and room_data.host_id == player_id and room_data.groud_id) then
+        if room_data.is_visit or (room_data.host_start and room_data.start_count == 0 and room_data.host_id == player_id and room_data.group_id) then
             server.room_out()
             player_data.room_data = nil
             close()
@@ -93,6 +92,12 @@ return function(init_game, player_data, on_over)
         end
     end
 
+    local watch_game
+    if room_data.can_visit_enter then
+        watch_game = UI.InitPrefab("watch_game", transform)
+        UI.OnClick(watch_game, "bg/quit", do_quit)  --和以前的不兼容
+    end
+    
     local function hide_waiting()
         UI.Active(transform:Find("waiting"), false)
         local blink = transform:Find("desk/blink")
@@ -100,8 +105,9 @@ return function(init_game, player_data, on_over)
             UI.Active(blink, true)
         end
         
-        if room_data.is_visit then
-            local sit_down = transform:Find("sit_down")
+        if room_data.is_visit and watch_game then
+            UI.Active(watch_game:Find("bg"), true)
+            local sit_down = watch_game:Find("sit_down")
             if sit_down then
                 sit_down.localPosition = UnityEngine.Vector3(0, -300, 0)
             end
@@ -167,7 +173,7 @@ return function(init_game, player_data, on_over)
         end
         
         if room_data.is_visit then
-            local sit_down = transform:Find("sit_down")
+            local sit_down = watch_game:Find("sit_down")
             if sit_down then
                 show_sit_down = function()
                     role_tbl = role_tbl or {}
@@ -179,10 +185,9 @@ return function(init_game, player_data, on_over)
                 end)
 
                 if room_data.start_count > 0 then
-                    sit_down.localPosition = UnityEngine.Vector3(0, 0, 0)
-                else
-                    show_sit_down()
+                    sit_down.localPosition = UnityEngine.Vector3(0, -300, 0)
                 end
+                show_sit_down()
             end
         elseif room_data.host_start and player_id == room_data.host_id then
             startgame.localPosition = UnityEngine.Vector3(120, 20, 0)--不确定玩法会不会改
@@ -191,7 +196,7 @@ return function(init_game, player_data, on_over)
             invite.localPosition = UnityEngine.Vector3(0, 0, 0)
         end
         
-        visit_list = transform:Find("list")
+        visit_list = watch_game:Find("list")
         if visit_list then 
             UI.Active(visit_list, true)
             
@@ -343,15 +348,11 @@ return function(init_game, player_data, on_over)
         end)
     end)
     
-    --TODO 
     server.listen(msg.VISITOR, function(visit_player, is_sit)
         if player_data.id == visit_player and is_sit then
             room_data.is_visit = nil
             if on_close then
-                on_close()
-                if room_data.start_count > 0 then
-                    server.renter()
-                end
+                close()
             end
             return
         end
