@@ -173,38 +173,59 @@ return function(init_game, player_data, on_over)
     end
 
     local function can_startgame()
-        if game_cfg.CAN_MID_ENTER or room_data.can_visit_enter then
-            local ready_count = 0
+        UI.Active(startgame, false)
+
+        if not cfg.CAN_MID_ENTER and not room_data.can_visit_enter then
+            return
+        end
+        
+        if room_data.start_count ~= 0 then
+            return
+        end
+
+        if room_data.auto_start_type then
+            if room_data.auto_start_type ~= 1 then
+                return
+            end
+
+            if player_id ~= room_data.host_id then
+                return
+            end
+        else
             local can_start = false
-
             for _, role in pairs(role_tbl) do
-                if role.data.is_ready then
-                    ready_count = ready_count + 1
-                end
-
-                if room_data.host_start then
-                    if player_id == room_data.host_id then
-                        can_start = true
-                    end
-                else
-                    if role.data.idx == 1 and role.data.id == player_id then
-                        can_start = true
-                    end
+                if role.data.idx == 1 and role.data.id == player_id then
+                    can_start = true
                 end
             end
 
-            local player_size = table.length(role_tbl)
-            if room_data.is_visit then
-                player_size = player_size - 1
-                -- ready_count = ready_count - 1
-            end
-
-            if can_start and room_data.start_count == 0 and ready_count > 1 and ready_count == player_size then
-                UI.Active(startgame, true)
+            if not can_start then
                 return
             end
         end
-        UI.Active(startgame, false)
+        
+        local ready_count = 0
+        for _, role in pairs(role_tbl) do
+            if role.data.is_ready then
+                ready_count = ready_count + 1
+            end
+        end
+
+        if ready_count < 2 then
+            return
+        end
+
+        local player_size = table.length(role_tbl)
+        if room_data.is_visit then
+            player_size = player_size - 1
+        end
+
+        if ready_count ~= player_size then
+            return
+        end
+
+        UI.Active(transform:Find("waiting"), true)
+        UI.Active(startgame, true)
     end
 
     server.listen(msg.READY, function(id, is_ready, count)
