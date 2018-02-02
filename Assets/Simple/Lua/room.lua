@@ -35,18 +35,22 @@ return function(init_game, player_data, on_over)
     local room_data = player_data.room_data
     local player_id = player_data.id
 
-    if room_data.visitor_id then
-        player_id = room_data.visitor_id
-        room_data.is_visit = true
-    end
-
     local role_tbl
 
     local transform = UI.InitPrefab("room")
+    local skip_change_room = false
     local function close(is_over)
+        if not on_over then
+            return
+        end
+
+        local do_on_over = on_over
+        on_over = nil
+
         transform:GetComponent(UIPanel).depth = -1
         Destroy(transform.gameObject, 0.06)
-        if player_data.room_data then
+
+        if not skip_change_room and player_data.room_data then
             if type(is_over) ~= "boolean" then
                 is_over = player_data.room_data.round == player_data.room_data.max_round
             end
@@ -57,7 +61,7 @@ return function(init_game, player_data, on_over)
             end
         end
 
-        on_over()
+        do_on_over()
 
         if on_close then
             local ok, err = pcall(on_close)
@@ -69,10 +73,8 @@ return function(init_game, player_data, on_over)
 
     local function do_quit()
         -- LERR("room_data: %s", table.dump(room_data))
-        if room_data.is_visit or (room_data.host_start and room_data.start_count == 0 and room_data.host_id == player_id) then
+        if room_data.is_visit then
             server.room_out()
-            player_data.room_data = nil
-            close()
             return
         end
 
@@ -97,13 +99,6 @@ return function(init_game, player_data, on_over)
         local blink = transform:Find("desk/blink")
         if blink then
             UI.Active(blink, true)
-        end
-
-        if room_data.is_visit then
-            local sit_down = transform:Find("sit_down")
-            if sit_down then
-                sit_down.localPosition = UnityEngine.Vector3(0, 0, 0)
-            end
         end
     end
 
@@ -147,38 +142,47 @@ return function(init_game, player_data, on_over)
         UI.Active(transform:Find("waiting/prepare"), false)
         UI.Active(transform:Find("waiting/cancel"), false)
 
+        local function room_is_full()
+            local count = table.length(role_tbl) - 1
+            if count >= room_data.player_size or (room_data.max_player_size and count >= room_data.max_player_size) then
+                return true
+            end
+        end
+
         if room_data.is_visit then
-            local sit_down = transform:Find("sit_down")
-            if sit_down then
-                show_sit_down = function()
-                    UI.Active(sit_down, room_data.is_visit and room_data.player_size > (table.length(role_tbl) - 1))
-                end
+            local watch_game = UI.InitPrefab("watch_game", transform)
+            UI.OnClick(watch_game, "quit", do_quit)
 
-                UI.OnClick(sit_down, nil, function()
-                    server.enter()
-                end)
+            local sit_down = watch_game:Find("sit_down")
+            show_sit_down = function()
+                UI.Active(sit_down, room_data.is_visit and not room_is_full())
+            end
 
-                if room_data.start_count > 0 then
-                    sit_down.localPosition = UnityEngine.Vector3(0, 0, 0)
-                else
-                    show_sit_down()
-                end
-            end
-        else
-            if room_data.host_start and player_id == room_data.host_id then
-                UI.Active(transform:Find("waiting/invite"), false) --TODO: 这里要处理？
-                UI.Active(transform:Find("waiting"), true)
-            end
+            UI.OnClick(sit_down, nil, function()
+                coroutine.wrap(function()
+                    server.sit_down()
+                    local new_room_data = require "game".wait_enter()
+                    if new_room_data then
+                        player_data.room_data = new_room_data
+                        skip_change_room = true
+                        close()
+                    end
+                end)()
+            end)
         end
     end
 
     local function can_startgame()
+        if show_sit_down then
+            show_sit_down()
+        end
+
         UI.Active(startgame, false)
 
         if not cfg.CAN_MID_ENTER and not room_data.can_visit_enter then
             return
         end
-        
+
         if room_data.start_count ~= 0 then
             return
         end
@@ -203,7 +207,7 @@ return function(init_game, player_data, on_over)
                 return
             end
         end
-        
+
         local ready_count = 0
         for _, role in pairs(role_tbl) do
             if role.data.is_ready then
@@ -267,9 +271,8 @@ return function(init_game, player_data, on_over)
             show_hint("已经退出房间！")
         end
         role_tbl[pid] = nil
-        if show_sit_down then
-            show_sit_down()
-        end
+
+        can_startgame()
     end)
 
     server.listen(msg.APPLY, function(dismiss_tbl, dismiss_time)
@@ -284,22 +287,6 @@ return function(init_game, player_data, on_over)
             player_data.room_data = nil
             close()
         end)
-    end)
-
-    server.listen(msg.VISITOR, function(visit_player, is_sit)
-        if player_data.id == visit_player and is_sit then
-            room_data.is_visit = nil
-            if on_close then
-                on_close()
-            end
-            return
-        end
-
-        -- if type(visit_player) == "table" then
-        --     --TODO: 填充数据
-        -- else
-        --     --TODO: 删除
-        -- end
     end)
 
     local on_init_role
@@ -334,13 +321,7 @@ return function(init_game, player_data, on_over)
         end
         role.score(data.score)
 
-        if room_data.host_start then  --房主坐下
-            can_startgame()
-        end
-
-        if show_sit_down then
-            show_sit_down()
-        end
+        can_startgame()
     end)
 
     local game_player_data = table.copy(player_data)
