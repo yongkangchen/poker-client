@@ -151,35 +151,35 @@ function string:split(_sep)
 end
 
 local function chsize(char)
-    if not char then
-        return 0
-    elseif char > 240 then
+    if char > 251 then
+        return 6
+    elseif char > 247 then
+        return 5
+    elseif char > 239 then
         return 4
-    elseif char > 225 then
+    elseif char > 223 then
         return 3
-    elseif char > 192 then
+    elseif char > 191 then
         return 2
     else
         return 1
     end
 end
 
-function string.utf8sub(str, startChar, numChars)
-    local startIndex = 1
-    while startChar > 1 do
-        local char = string.byte(str, startIndex)
-        local size = chsize(char)
-        startIndex = startIndex + size 
-        startChar = startChar - (size > 1 and 2 or size)
+local function str_sub(str, startIndex, numChars)
+    while numChars > 1 and startIndex <= #str do
+        local char = string.byte(str, startIndex)	  
+        startIndex = startIndex + chsize(char)	
+        numChars = numChars - 1
     end
- 
-    local currentIndex = startIndex
- 
-    while numChars > 0 and currentIndex <= #str do
-        local char = string.byte(str, currentIndex)
-        local size = chsize(char)
-        currentIndex = currentIndex + size
-        numChars = numChars - (size > 1 and 2 or size)
+    return startIndex
+end
+
+function string.utf8sub(str, startChar, numChars)--NOTE 这里的char不是字节
+    if not str then
+        return
     end
+    local startIndex = str_sub(str, 1, startChar)
+    local currentIndex = str_sub(str, startIndex, numChars + 1)
     return str:sub(startIndex, currentIndex - 1)
 end
