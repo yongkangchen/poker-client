@@ -125,8 +125,7 @@ return function(init_game, player_data, on_over)
         end
 
         if room_data.start_count == 0 then
-            -- room_data.group_id
-            local is_host = room_data.host_id == player_id
+            local is_host = room_data.host_id == player_id and not room_data.group_id
             show_dismiss(transform, not is_host, function()
                 if is_host then
                     server.dismiss()
