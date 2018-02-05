@@ -66,8 +66,6 @@ return function(player_data)
             return false
         end
 
-        room_data.is_visit = room_data.host_start
-
         UI.Active(transform, false)
         do_enter_game(room_data)
         return true
@@ -82,6 +80,24 @@ return function(player_data)
     end)
 
     game.init(transform, enter_room, create_room)
+    game.wait_enter = function()
+        local co = coroutine.running()
+        server.listen(msg.ENTER, function(room_data, is_visit)
+            if type(room_data) == 'table' then
+                room_data.is_visit = is_visit
+                coroutine.resume(co, room_data)
+                return
+            end
+
+            local error = CREATE_ERROR[room_data]
+            if error then
+                show_hint(error)
+                coroutine.resume(co)
+                return
+            end
+        end)
+        return coroutine.yield()
+    end
 
     return function(func)
         UI.Active(transform, true)

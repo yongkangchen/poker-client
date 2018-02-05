@@ -30,16 +30,23 @@ end
 
 return function()
     local pid = get_login()
-    
+
     local player_data = server:login(pid)
-    
+
     local room_id = player_data.room_id
     player_data.room_id = nil
-    
+
     PlayerPrefs.SetString(LOGIN_SAVE_KEY, table.dump({id = player_data.id}))
-    
-    player_data.room_data = room_id and server:get_room() or nil
-    
+
+    if room_id then
+        local room_data, is_visit = server:get_room()
+        room_data.is_visit = is_visit
+        player_data.room_data = room_data
+    else
+        player_data.room_data = nil
+    end
+
+
     LLOG("login success, pid: %d", player_data.id)
     return player_data
 end
