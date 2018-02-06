@@ -401,6 +401,12 @@ return function(init_game, player_data, on_over)
         can_startgame()
     end)
 
+    server.listen(msg.START_GAME, function()
+        room_data.start_count = room_data.round
+        hide_waiting()
+        can_startgame()
+    end)
+
     local game_player_data = table.copy(player_data)
     game_player_data.id = player_id
 
