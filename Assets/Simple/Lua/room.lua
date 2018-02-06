@@ -354,7 +354,7 @@ return function(init_game, player_data, on_over)
         end)
     end)
 
-    server.listen(msg.VISITOR, function(visit_player)
+    server.listen(msg.VISITOR_LIST, function(visit_player)
         if type(visit_player) == "table" then
             for id, name in pairs(visit_player) do
                 show_visitor_info(id, name, true)
