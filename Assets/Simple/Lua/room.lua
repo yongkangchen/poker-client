@@ -50,6 +50,9 @@ local function init_visit_list(visit_list)
     local label_num = visit_list:Find("num"):GetComponent(UILabel)
     return function(id, name, is_add)
         if is_add then
+            if visitor_tbl[id] then
+                return
+            end
             local card = UnityEngine.Object.Instantiate(trans_card).transform
             card:SetParent(trans_grid, false)
 
