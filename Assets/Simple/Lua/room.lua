@@ -50,6 +50,9 @@ local function init_visit_list(visit_list)
     local label_num = visit_list:Find("num"):GetComponent(UILabel)
     return function(id, name, is_add)
         if is_add then
+            if visitor_tbl[id] then
+                return
+            end
             local card = UnityEngine.Object.Instantiate(trans_card).transform
             card:SetParent(trans_grid, false)
 
@@ -354,7 +357,7 @@ return function(init_game, player_data, on_over)
         end)
     end)
 
-    server.listen(msg.VISITOR, function(visit_player)
+    server.listen(msg.VISITOR_LIST, function(visit_player)
         if type(visit_player) == "table" then
             for id, name in pairs(visit_player) do
                 show_visitor_info(id, name, true)
@@ -395,6 +398,12 @@ return function(init_game, player_data, on_over)
             end
         end
         role.score(data.score)
+        can_startgame()
+    end)
+
+    server.listen(msg.START_GAME, function()
+        room_data.start_count = room_data.round
+        hide_waiting()
         can_startgame()
     end)
 
