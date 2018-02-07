@@ -76,6 +76,8 @@ local function init_visit_list(visit_list)
             label_num.text = tostring(table.length(visitor_tbl))
         end
         grid.repositionNow = true
+    end, function(v)
+        UI.Active(visit_list, v)
     end
 end
 
@@ -185,76 +187,8 @@ return function(init_game, player_data, on_over)
     UI.OnClick(transform, "waiting/startgame", function()
         server.start_game()
     end)
-
-    local show_sit_down
-    local show_visitor_info
-    if room_data.can_visit_enter then
-        local watch_game = UI.InitPrefab("watch_game", transform)
-        UI.OnClick(watch_game, "bg/quit", do_quit)
-
-        UI.Active(transform:Find("waiting/prepare"), false)
-        UI.Active(transform:Find("waiting/cancel"), false)
-
-        local function room_is_full()
-            local count = table.length(role_tbl) - 1
-            if count >= room_data.player_size or (room_data.max_player_size and count >= room_data.max_player_size) then
-                return true
-            end
-        end
-
-        if room_data.is_visit then
-            if room_data.start_count > 0 then
-                show_hint("此房间坐下的玩家都会消耗钻石哦！")
-            end
-
-            local sit_down = watch_game:Find("sit_down")
-            show_sit_down = function()
-                UI.Active(sit_down, room_data.is_visit and not room_is_full())
-                if room_data.start_count > 0 then
-                    sit_down.localPosition = watch_game:Find("gaming_pos").localPosition
-                    UI.Active(watch_game:Find("bg"), true)
-                end
-            end
-            show_sit_down()
-        elseif room_data.auto_start_type == 1 and player_id == room_data.host_id then
-            startgame.position = watch_game:Find("sit_down").position
-        else
-            local invite = transform:Find("waiting/invite")
-            local pos = invite.localPosition
-            pos.x = 0
-            invite.localPosition = pos
-        end
-
-        UI.OnClick(sit_down, nil, function()
-            coroutine.wrap(function()
-                server.sit_down()
-                local new_room_data = require "game".wait_enter()
-                if new_room_data then
-                    player_data.room_data = new_room_data
-                    skip_change_room = true
-                    close()
-                end
-            end)()
-        end)
-
-        show_visitor_info = init_visit_list(watch_game:Find("list"))
-    end
-
-    local function can_startgame()
-        if show_sit_down then
-            show_sit_down()
-        end
-
-        UI.Active(startgame, false)
-
-        if not game_cfg.CAN_MID_ENTER and not room_data.can_visit_enter then
-            return
-        end
-
-        if room_data.start_count ~= 0 then
-            return
-        end
-
+    
+    local function player_can_start()
         if room_data.auto_start_type then
             if room_data.auto_start_type ~= 1 then
                 return
@@ -274,6 +208,91 @@ return function(init_game, player_data, on_over)
             if not can_start then
                 return
             end
+        end
+        return true
+    end
+    
+    local function room_is_full()
+        local count = table.length(role_tbl or {}) - 1
+        if count >= room_data.player_size or (room_data.max_player_size and count >= room_data.max_player_size) then
+            return true
+        end
+    end
+    
+    local invite = transform:Find("waiting/invite")
+    local function invite_center()
+        local pos = invite.localPosition
+        pos.x = 0
+        invite.localPosition = pos
+    end
+    
+    local show_sit_down
+    local show_visitor_info
+    local show_watch_btn
+    if room_data.can_visit_enter then
+        local watch_game = UI.InitPrefab("watch_game", transform)
+        UI.OnClick(watch_game, "bg/quit", do_quit)
+
+        UI.Active(transform:Find("waiting/prepare"), false)
+        UI.Active(transform:Find("waiting/cancel"), false)
+
+        if room_data.is_visit then
+            local sit_down = watch_game:Find("sit_down")
+            UI.Active(watch_game:Find("bg"), true)
+
+            show_sit_down = function()
+                local active = room_data.is_visit and not room_is_full(-1)
+                UI.Active(sit_down, active)
+
+                if not active then
+                    invite_center()
+                end
+
+                if room_data.start_count > 0 then
+                    sit_down.localPosition = watch_game:Find("gaming_pos").localPosition
+                end
+            end
+
+            show_sit_down()
+
+            UI.OnClick(sit_down, nil, function()
+                coroutine.wrap(function()
+                    server.sit_down()
+                    local new_room_data = game.wait_enter()
+                    if new_room_data then
+                        player_data.room_data = new_room_data
+                        is_reconnect = true
+                    end
+                end)()
+            end)
+        else
+            startgame.position = watch_game:Find("sit_down").position
+            show_sit_down = function()
+                if not player_can_start() then
+                    invite_center()
+                end
+            end
+        end
+        show_visitor_info, show_watch_btn = init_visit_list(watch_game:Find("list"))
+    end
+
+    local function can_startgame()
+        if show_sit_down then
+            show_sit_down()
+        end
+
+        UI.Active(startgame, false)
+
+        if not game_cfg.CAN_MID_ENTER and not room_data.can_visit_enter then
+            return
+        end
+
+        if room_data.start_count ~= 0 then
+            return
+        end
+
+        if not player_can_start() then
+            return
         end
 
         UI.Active(transform:Find("waiting"), true)
@@ -297,7 +316,7 @@ return function(init_game, player_data, on_over)
         if mask then
             UI.Active(mask, enable)
         else
-            UI.Active(startgame, false)
+            UI.Active(startgame, not enable)
         end
     end
 
@@ -332,7 +351,7 @@ return function(init_game, player_data, on_over)
         if not role then
             return
         end
-
+        
         role.clear()
         if pid == player_id then
             player_data.room_data = nil
@@ -369,6 +388,16 @@ return function(init_game, player_data, on_over)
 
     local on_init_role
     server.listen(msg.INIT, function(data, distance)     --观战状态进入游戏
+        if room_data.is_visit then
+            if room_is_full(-1 + (role_tbl[data.id] and 0 or 1)) then
+                distance = 0
+            else
+                if distance >= 0 then
+                    distance = distance + 1
+                end
+            end
+        end
+        
         data.src_distance = distance
         if distance < 0 then
             distance = distance + room_data.player_size
