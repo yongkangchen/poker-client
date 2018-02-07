@@ -389,10 +389,6 @@ return function(init_game, player_data, on_over)
     local on_init_role
     server.listen(msg.INIT, function(data, distance)     --观战状态进入游戏
         if room_data.is_visit then
-            local offset = -1
-            if data.id ~= player_id and role_tbl[data.id] == nil then
-
-            end
             if room_is_full(-1 + (role_tbl[data.id] and 0 or 1)) then
                 distance = 0
             else
