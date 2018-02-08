@@ -258,7 +258,7 @@ return function(init_game, player_data, on_over)
             UI.OnClick(sit_down, nil, function()
                 coroutine.wrap(function()
                     server.sit_down()
-                    local new_room_data = game.wait_enter()
+                    local new_room_data = require "game".wait_enter()
                     if new_room_data then
                         player_data.room_data = new_room_data
                         is_reconnect = true
