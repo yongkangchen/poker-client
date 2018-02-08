@@ -65,7 +65,11 @@ return function(player_data)
             show_hint(error)
             return false
         end
-
+        
+        if room_data.can_visit_enter then
+            room_data.is_visit = true
+        end
+        
         UI.Active(transform, false)
         do_enter_game(room_data)
         return true
