@@ -190,7 +190,11 @@ return function(init_game, player_data, on_over)
     local startgame
     if room_data.auto_start_type == -1 and watch_game then
         startgame = UI.InitPrefab("startgame", watch_game)
-        startgame.position = watch_game:Find("start_pos").position
+        
+        local start_pos = watch_game:Find("start_pos")
+        if start_pos then
+            startgame.position = start_pos.position
+        end
         UI.Active(startgame:Find("mask"), true)
     else
         startgame = UI.InitPrefab("startgame", transform:Find("waiting"))
@@ -251,6 +255,13 @@ return function(init_game, player_data, on_over)
             local sit_down = watch_game:Find("sit_down")
             UI.Active(watch_game:Find("bg"), true)
             UI.Active(invite, false)
+            
+            if room_data.auto_start_type == -1 then
+                local sitdown_pos = watch_game:Find("sitdown_pos")
+                if sitdown_pos then
+                    sit_down.position = sitdown_pos.position
+                end
+            end
             
             show_sit_down = function()
                 local offset = -1

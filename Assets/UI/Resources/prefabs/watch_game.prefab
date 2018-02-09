@@ -60,6 +60,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1000010313820204
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 4000012090438632}
+  m_Layer: 5
+  m_Name: start_pos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1000010324893432
 GameObject:
   m_ObjectHideFlags: 1
@@ -450,7 +465,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 4000010534822132}
   m_Layer: 5
-  m_Name: start_pos
+  m_Name: sitdown_pos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -516,12 +531,12 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000014278778458}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -200, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 4000011293002206}
-  m_RootOrder: 4
+  m_RootOrder: 5
 --- !u!4 &4000010617110564
 Transform:
   m_ObjectHideFlags: 1
@@ -618,6 +633,7 @@ Transform:
   - {fileID: 4000013563760130}
   - {fileID: 4000010168072378}
   - {fileID: 4000013839294482}
+  - {fileID: 4000012090438632}
   - {fileID: 4000010534822132}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -634,6 +650,19 @@ Transform:
   m_Children:
   - {fileID: 4000013782607984}
   m_Father: {fileID: 4000012321986006}
+  m_RootOrder: 4
+--- !u!4 &4000012090438632
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000010313820204}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -200, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 4000011293002206}
   m_RootOrder: 4
 --- !u!4 &4000012094958404
 Transform:
