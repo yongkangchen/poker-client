@@ -195,7 +195,11 @@ return function(init_game, player_data, on_over)
         if start_pos then
             startgame.position = start_pos.position
         end
-        UI.Active(startgame:Find("mask"), true)
+        if room_data.host_id == player_id then
+            UI.Active(startgame:Find("mask"), false)
+        else
+            UI.Active(startgame, false)
+        end
     else
         startgame = UI.Child(transform, "waiting/startgame")
         if not startgame then
@@ -262,7 +266,7 @@ return function(init_game, player_data, on_over)
             if room_data.auto_start_type == -1 then
                 local sitdown_pos = watch_game:Find("sitdown_pos")
                 if sitdown_pos then
-                    sit_down.position = sitdown_pos.position
+                    sit_down.localPosition = sitdown_pos.localPosition
                 end
             end
             
@@ -338,7 +342,9 @@ return function(init_game, player_data, on_over)
 
         local player_size = table.length(role_tbl)
         if room_data.is_visit then
-            player_size = player_size - 1
+            if role_tbl and role_tbl[player_id] then
+                player_size = player_size - 1
+            end
         end
 
         local mask = startgame:Find("mask")
@@ -361,10 +367,12 @@ return function(init_game, player_data, on_over)
         end
 
         if count == room_data.player_size then
-            hide_waiting()
-            room_data.start_count = room_data.round
-            for _, role in pairs(role_tbl) do
-                role.start()
+            if not room_data.auto_start_type or room_data.auto_start_type ~= -1 then
+                hide_waiting()
+                room_data.start_count = room_data.round
+                for _, role in pairs(role_tbl) do
+                    role.start()
+                end
             end
         end
 
@@ -426,7 +434,18 @@ return function(init_game, player_data, on_over)
     local on_init_role
     server.listen(msg.INIT, function(data, distance)     --观战状态进入游戏
         if room_data.is_visit then
-            if room_is_full(-1 + (role_tbl[data.id] and 0 or 1)) then
+            local count = table.length(role_tbl or {})
+            if role_tbl then 
+                if role_tbl[player_id] then
+                    count = count - 1
+                end
+                
+                if not role_tbl[data.id] then
+                    count = count + 1
+                end
+            end
+            
+            if count >= room_data.player_size or (room_data.max_player_size and count >= room_data.max_player_size) then
                 distance = 0
             else
                 if distance >= 0 then
