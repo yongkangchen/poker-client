@@ -242,7 +242,7 @@ return function(init_game, player_data, on_over)
     local show_sit_down
     local show_visitor_info
     local show_watch_btn
-    if room_data.can_visit_enter and watch_game then
+    if watch_game then
         UI.OnClick(watch_game, "bg/quit", do_quit)
         UI.Active(transform:Find("waiting/prepare"), false)
         UI.Active(transform:Find("waiting/cancel"), false)
