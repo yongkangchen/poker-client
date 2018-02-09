@@ -197,7 +197,10 @@ return function(init_game, player_data, on_over)
         end
         UI.Active(startgame:Find("mask"), true)
     else
-        startgame = UI.InitPrefab("startgame", transform:Find("waiting"))
+        startgame = UI.Child(transform, "waiting/startgame")
+        if not startgame then
+            startgame = UI.InitPrefab("startgame", transform:Find("waiting"))
+        end
         UI.Active(startgame, false)
     end
     
