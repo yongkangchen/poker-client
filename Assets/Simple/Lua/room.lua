@@ -190,6 +190,7 @@ return function(init_game, player_data, on_over)
     local startgame
     if room_data.auto_start_type == -1 and watch_game then
         startgame = UI.InitPrefab("startgame", watch_game)
+        startgame.position = watch_game:Find("start_pos").position
         UI.Active(startgame:Find("mask"), true)
     else
         startgame = UI.InitPrefab("startgame", transform:Find("waiting"))
