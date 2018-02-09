@@ -90,7 +90,7 @@ return function(init_game, player_data, on_over)
     local role_tbl
 
     local transform = UI.InitPrefab("room")
-    local skip_change_room = false
+    local is_reconnect = false
     local function close(is_over)
         if not on_over then
             return
@@ -182,16 +182,35 @@ return function(init_game, player_data, on_over)
         UI.Active(transform:Find("waiting"), false)
     end
 
-    local startgame = UI.Child(transform, "waiting/startgame")
-    UI.Active(startgame, false)
-
-    UI.OnClick(transform, "waiting/startgame", function()
+    local watch_game
+    if room_data.can_visit_enter then 
+        watch_game = UI.InitPrefab("watch_game", transform)
+    end
+    
+    local startgame
+    if room_data.auto_start_type == -1 and watch_game then
+        startgame = UI.InitPrefab("startgame", watch_game)
+        
+        local start_pos = watch_game:Find("start_pos")
+        if start_pos then
+            startgame.position = start_pos.position
+        end
+        UI.Active(startgame:Find("mask"), true)
+    else
+        startgame = UI.Child(transform, "waiting/startgame")
+        if not startgame then
+            startgame = UI.InitPrefab("startgame", transform:Find("waiting"))
+        end
+        UI.Active(startgame, false)
+    end
+    
+    UI.OnClick(startgame, nil, function()
         server.start_game()
     end)
     
     local function player_can_start()
         if room_data.auto_start_type then
-            if room_data.auto_start_type ~= 1 then
+            if room_data.auto_start_type ~= -1 then
                 return
             end
 
@@ -230,10 +249,8 @@ return function(init_game, player_data, on_over)
     local show_sit_down
     local show_visitor_info
     local show_watch_btn
-    if room_data.can_visit_enter then
-        local watch_game = UI.InitPrefab("watch_game", transform)
+    if watch_game then
         UI.OnClick(watch_game, "bg/quit", do_quit)
-
         UI.Active(transform:Find("waiting/prepare"), false)
         UI.Active(transform:Find("waiting/cancel"), false)
 
@@ -241,6 +258,13 @@ return function(init_game, player_data, on_over)
             local sit_down = watch_game:Find("sit_down")
             UI.Active(watch_game:Find("bg"), true)
             UI.Active(invite, false)
+            
+            if room_data.auto_start_type == -1 then
+                local sitdown_pos = watch_game:Find("sitdown_pos")
+                if sitdown_pos then
+                    sit_down.position = sitdown_pos.position
+                end
+            end
             
             show_sit_down = function()
                 local offset = -1
