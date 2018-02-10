@@ -122,6 +122,10 @@ local function init_watch_game(transform, player_data, simple_close)
 
     if room_data.auto_start_type and room_data.auto_start_type == -1 and room_data.host_id == player_id and room_data.start_count == 0 then
         UI.Active(startgame:Find("mask"), true)
+        local startgame_init_pos = watch_game:Find("startgame_init_pos")
+        if startgame_init_pos then
+            startgame.localPosition = startgame_init_pos.localPosition
+        end
     else
         local sitdown_init_pos = watch_game:Find("sitdown_init_pos")
         if sitdown_init_pos then
