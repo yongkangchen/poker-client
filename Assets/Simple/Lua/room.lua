@@ -163,6 +163,7 @@ local function init_watch_game(transform, player_data, simple_close)
             if room_data.start_count > 0 then
                 sit_down.localPosition = watch_game:Find("sitdown_gaming_pos").localPosition
                 UI.Active(watch_game:Find("bg"), true)
+		UI.Active(watch_game:Find("quit"), true)
                 if bg_tween then
                     bg_tween.enabled = true
                 end
