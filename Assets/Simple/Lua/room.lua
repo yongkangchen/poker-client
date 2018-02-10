@@ -64,7 +64,7 @@ local function init_visit_list(visit_list)
             label_id.text = id
 
             local visitor_pic = card:Find("icon/pic")
-            -- UI.RoleHead(visitor_pic, id)
+            UI.RoleHead(visitor_pic, id)
 
             UI.Active(card, true)
             visitor_tbl[id] = card
