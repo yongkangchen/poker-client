@@ -118,9 +118,15 @@ local function init_watch_game(transform, player_data, simple_close)
     local invite = waiting_btn:Find("invite")
 
     local watch_game = UI.InitPrefab("watch_game", transform)
+    local sit_down = waiting_btn:Find("sit_down")
+
     if room_data.auto_start_type and room_data.auto_start_type == -1 and room_data.host_id == player_id and room_data.start_count == 0 then
         UI.Active(startgame:Find("mask"), true)
     else
+        local sitdown_init_pos = watch_game:Find("sitdown_init_pos")
+        if sitdown_init_pos then
+            sit_down.localPosition = sitdown_init_pos.localPosition
+        end
         UI.Active(startgame, false)
     end
 
@@ -149,8 +155,6 @@ local function init_watch_game(transform, player_data, simple_close)
     local bg_tween = UI.GetComponent(watch_game, "bg", TweenPosition)
     local show_sit_down
     if room_data.is_visit then
-        local sit_down = waiting_btn:Find("sit_down")
-
         show_sit_down = function()
             if room_data.start_count > 0 then
                 sit_down.localPosition = watch_game:Find("sitdown_gaming_pos").localPosition
@@ -162,6 +166,7 @@ local function init_watch_game(transform, player_data, simple_close)
                 UI.Active(invite, false)
 
                 if room_data.stop_mid_enter then
+                    UI.Active(sit_down, false)
                     return
                 end
             end
