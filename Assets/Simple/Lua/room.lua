@@ -145,12 +145,23 @@ return function(init_game, player_data, on_over)
             end)
         end
     end
-
+    
+    local bg_tween
+    local button
     local function hide_waiting()
-        UI.Active(transform:Find("waiting"), false)
+        if room_data.can_visit_enter then
+            UI.Active(button:Find("invite"), false)
+        else
+            UI.Active(button, false)
+        end
+        
         local blink = transform:Find("desk/blink")
         if blink then
             UI.Active(blink, true)
+        end
+        
+        if room_data.is_visit and bg_tween then
+            bg_tween.enabled = true
         end
     end
 
@@ -163,9 +174,18 @@ return function(init_game, player_data, on_over)
 
     UI.Active(transform:Find("buttons/voice"), false)
     UI.Active(transform:Find("buttons/chat"), false)
-
-    local prepare = UI.GetComponent(transform, "waiting/prepare", UIToggle)
-
+    
+    local watch_game
+    if room_data.can_visit_enter then 
+        watch_game = UI.InitPrefab("watch_game", transform)
+        if watch_game then
+            button = UI.InitPrefab("btn", watch_game)
+        end
+    else
+        button = UI.InitPrefab("btn", transform)
+    end
+    
+    local prepare = UI.GetComponent(button, "prepare", UIToggle)
     if not player_data.is_playback then
         EventDelegate.Add(prepare.onChange, function()
             server.ready(prepare.value)
@@ -179,28 +199,21 @@ return function(init_game, player_data, on_over)
     end
 
     if room_data.round ~= 1 then
-        UI.Active(transform:Find("waiting"), false)
-    end
-
-    local watch_game
-    if room_data.can_visit_enter then 
-        watch_game = UI.InitPrefab("watch_game", transform)
+        if not room_data.can_visit_enter then
+            UI.Active(button, false)
+        end
     end
     
-    local startgame
-    if room_data.auto_start_type == -1 and watch_game then
-        startgame = UI.InitPrefab("startgame", watch_game)
-        
-        local start_pos = watch_game:Find("start_pos")
-        if start_pos then
-            startgame.position = start_pos.position
+    local startgame = button:Find("startgame")
+    if watch_game then
+        if room_data.auto_start_type and room_data.auto_start_type == -1 then
+            if room_data.host_id == player_id and room_data.start_count == 0 then
+                UI.Active(startgame:Find("mask"), true)
+            end
+        else
+            UI.Active(startgame, false)
         end
-        UI.Active(startgame:Find("mask"), true)
     else
-        startgame = UI.Child(transform, "waiting/startgame")
-        if not startgame then
-            startgame = UI.InitPrefab("startgame", transform:Find("waiting"))
-        end
         UI.Active(startgame, false)
     end
     
@@ -239,47 +252,51 @@ return function(init_game, player_data, on_over)
         end
     end
     
-    local invite = transform:Find("waiting/invite")
+    local invite = button:Find("invite")
     local function invite_center()
-        local pos = invite.localPosition
-        pos.x = 0
-        invite.localPosition = pos
+        if not player_can_start() then
+            invite.localPosition = watch_game:Find("invite_pos")
+        end
     end
     
     local show_sit_down
     local show_visitor_info
     local show_watch_btn
     if watch_game then
-        UI.OnClick(watch_game, "bg/quit", do_quit)
-        UI.Active(transform:Find("waiting/prepare"), false)
-        UI.Active(transform:Find("waiting/cancel"), false)
-
-        if room_data.is_visit then
-            local sit_down = watch_game:Find("sit_down")
-            UI.Active(watch_game:Find("bg"), true)
+        UI.OnClick(watch_game, "quit", do_quit)
+        UI.Active(button:Find("prepare"), false)
+        UI.Active(button:Find("cancel"), false)
+        if room_data.start_count > 0 then
             UI.Active(invite, false)
+        end
+        
+        bg_tween = UI.GetComponent(watch_game, "bg", TweenPosition)
+        if room_data.is_visit then
+            local sit_down = button:Find("sit_down")
+            UI.Active(watch_game:Find("bg"), true)
             
-            if room_data.auto_start_type == -1 then
-                local sitdown_pos = watch_game:Find("sitdown_pos")
-                if sitdown_pos then
-                    sit_down.position = sitdown_pos.position
-                end
+            if bg_tween and room_data.start_count > 0 then
+                bg_tween.enabled = true
             end
             
             show_sit_down = function()
+                if room_data.start_count > 0 and room_data.start_stop_enter then
+                    return
+                end
+                
                 local offset = -1
                 if role_tbl and not role_tbl[player_id] then
                     offset = 0
                 end
                 local active = room_data.is_visit and not room_is_full(offset)
                 UI.Active(sit_down, active)
-
+                
                 if not active then
                     invite_center()
                 end
 
                 if room_data.start_count > 0 then
-                    sit_down.localPosition = watch_game:Find("gaming_pos").localPosition
+                    sit_down.localPosition = watch_game:Find("sitdown_gaming_pos").localPosition
                 end
             end
 
@@ -297,7 +314,7 @@ return function(init_game, player_data, on_over)
                 end)()
             end)
         else
-            startgame.position = transform:Find("waiting/prepare").position
+            startgame.position = watch_game:Find("start_pos").position
             show_sit_down = function()
                 if not player_can_start() then
                     invite_center()
@@ -326,7 +343,6 @@ return function(init_game, player_data, on_over)
             return
         end
 
-        UI.Active(transform:Find("waiting"), true)
         UI.Active(startgame, true)
 
         local ready_count = 0
@@ -338,7 +354,9 @@ return function(init_game, player_data, on_over)
 
         local player_size = table.length(role_tbl)
         if room_data.is_visit then
-            player_size = player_size - 1
+            if role_tbl and role_tbl[player_id] then
+                player_size = player_size - 1
+            end
         end
 
         local mask = startgame:Find("mask")
@@ -361,10 +379,12 @@ return function(init_game, player_data, on_over)
         end
 
         if count == room_data.player_size then
-            hide_waiting()
-            room_data.start_count = room_data.round
-            for _, role in pairs(role_tbl) do
-                role.start()
+            if not room_data.auto_start_type or room_data.auto_start_type ~= -1 then
+                hide_waiting()
+                room_data.start_count = room_data.round
+                for _, role in pairs(role_tbl) do
+                    role.start()
+                end
             end
         end
 
@@ -426,7 +446,18 @@ return function(init_game, player_data, on_over)
     local on_init_role
     server.listen(msg.INIT, function(data, distance)     --观战状态进入游戏
         if room_data.is_visit then
-            if room_is_full(-1 + (role_tbl[data.id] and 0 or 1)) then
+            local count = table.length(role_tbl or {})
+            if role_tbl then 
+                if role_tbl[player_id] then
+                    count = count - 1
+                end
+                
+                if not role_tbl[data.id] then
+                    count = count + 1
+                end
+            end
+            
+            if count >= room_data.player_size or (room_data.max_player_size and count >= room_data.max_player_size) then
                 distance = 0
             else
                 if distance >= 0 then
