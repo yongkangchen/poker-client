@@ -54,6 +54,7 @@ local function init_visit_list(visit_list)
             if visitor_tbl[id] then
                 return
             end
+
             local card = UnityEngine.Object.Instantiate(trans_card).transform
             card:SetParent(trans_grid, false)
 
@@ -117,10 +118,8 @@ local function init_watch_game(transform, player_data, simple_close)
     local invite = waiting_btn:Find("invite")
 
     local watch_game = UI.InitPrefab("watch_game", transform)
-    if room_data.auto_start_type and room_data.auto_start_type == -1 then
-        if room_data.host_id == player_id and room_data.start_count == 0 then
-            UI.Active(startgame:Find("mask"), true)
-        end
+    if room_data.auto_start_type and room_data.auto_start_type == -1 and room_data.host_id == player_id and room_data.start_count == 0 then
+        UI.Active(startgame:Find("mask"), true)
     else
         UI.Active(startgame, false)
     end
@@ -328,6 +327,7 @@ return function(init_game, player_data, on_over)
             return
         end
 
+        UI.Active(transform:Find("waiting"), true)
         UI.Active(startgame, true)
 
         local ready_count = 0
@@ -412,6 +412,7 @@ return function(init_game, player_data, on_over)
                 return
             end
         end
+
         role_tbl[pid] = nil
         can_startgame()
     end)
@@ -431,7 +432,7 @@ return function(init_game, player_data, on_over)
     end)
 
     local on_init_role
-    server.listen(msg.INIT, function(data, distance)     --观战状态进入游戏
+    server.listen(msg.INIT, function(data, distance)
         if room_data.is_visit then
             local count = table.length(role_tbl or {})
             if role_tbl then
@@ -454,9 +455,11 @@ return function(init_game, player_data, on_over)
         end
 
         data.src_distance = distance
+
         if distance < 0 then
-            distance = distance + room_data.player_size
+            distance = distance + (room_data.all_player_size or room_data.player_size)
         end
+
         data.distance = distance
         data.role_tbl = role_tbl
 
@@ -481,6 +484,7 @@ return function(init_game, player_data, on_over)
                 role.show_score()
             end
         end
+
         role.score(data.score)
         can_startgame()
     end)
