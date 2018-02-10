@@ -64,7 +64,7 @@ local function init_visit_list(visit_list)
             label_id.text = id
 
             local visitor_pic = card:Find("icon/pic")
-            UI.RoleHead(visitor_pic, id)
+            -- UI.RoleHead(visitor_pic, id)
 
             UI.Active(card, true)
             visitor_tbl[id] = card
@@ -145,12 +145,17 @@ return function(init_game, player_data, on_over)
             end)
         end
     end
-
+    
+    local bg_tween
     local function hide_waiting()
         UI.Active(transform:Find("waiting"), false)
         local blink = transform:Find("desk/blink")
         if blink then
             UI.Active(blink, true)
+        end
+        
+        if room_data.is_visit and bg_tween then
+            bg_tween.enabled = true
         end
     end
 
@@ -196,7 +201,7 @@ return function(init_game, player_data, on_over)
             startgame.position = start_pos.position
         end
         if room_data.host_id == player_id then
-            UI.Active(startgame:Find("mask"), false)
+            UI.Active(startgame:Find("mask"), true)
         else
             UI.Active(startgame, false)
         end
@@ -257,13 +262,18 @@ return function(init_game, player_data, on_over)
         UI.OnClick(watch_game, "bg/quit", do_quit)
         UI.Active(transform:Find("waiting/prepare"), false)
         UI.Active(transform:Find("waiting/cancel"), false)
-
+        
+        bg_tween = UI.GetComponent(watch_game, "bg", TweenPosition)
         if room_data.is_visit then
             local sit_down = watch_game:Find("sit_down")
             UI.Active(watch_game:Find("bg"), true)
             UI.Active(invite, false)
             
-            if room_data.auto_start_type == -1 then
+            if bg_tween and room_data.start_count > 0 then
+                bg_tween.enabled = true
+            end
+            
+            if room_data.auto_start_type == -1 and room_data.host_id == player_id then
                 local sitdown_pos = watch_game:Find("sitdown_pos")
                 if sitdown_pos then
                     sit_down.localPosition = sitdown_pos.localPosition
@@ -271,6 +281,10 @@ return function(init_game, player_data, on_over)
             end
             
             show_sit_down = function()
+                if room_data.start_count > 0 and not (game_cfg.CAN_MID_ENTER or room.can_mid_enter) then
+                    return
+                end
+                
                 local offset = -1
                 if role_tbl and not role_tbl[player_id] then
                     offset = 0
