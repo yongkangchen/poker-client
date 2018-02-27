@@ -127,9 +127,6 @@ do
 	
 	function server.halt(v)
 		halt = v
-		if v then
-			return
-		end
 		
 		while not halt do
 			local result = table.remove(msg_tbl, 1)
