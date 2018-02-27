@@ -131,7 +131,7 @@ do
 			return
 		end
 		
-		while true do
+		while not halt do
 			local result = table.remove(msg_tbl, 1)
 			if not result then
 				break
