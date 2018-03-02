@@ -144,8 +144,8 @@ local function init_watch_game(transform, player_data, simple_close)
     UI.Active(waiting_btn:Find("cancel"), false)
 
     local function invite_center()
-        if not player_can_start() then
-            invite.localPosition = watch_game:Find("invite_pos")
+        if not player_can_start(player_data) then
+            invite.localPosition = watch_game:Find("invite_pos").localPosition
         end
     end
 
@@ -163,7 +163,7 @@ local function init_watch_game(transform, player_data, simple_close)
             if room_data.start_count > 0 then
                 sit_down.localPosition = watch_game:Find("sitdown_gaming_pos").localPosition
                 UI.Active(watch_game:Find("bg"), true)
-		UI.Active(watch_game:Find("quit"), true)
+		        UI.Active(watch_game:Find("quit"), true)
                 if bg_tween then
                     bg_tween.enabled = true
                 end
@@ -427,7 +427,11 @@ return function(init_game, player_data, on_over)
         can_startgame()
     end)
 
-    server.listen(msg.APPLY, function(dismiss_tbl, dismiss_time)
+    server.listen(msg.APPLY, function(dismiss_tbl, dismiss_time, is_add, id)
+        if is_add and update_apply then
+            update_apply(id, nil, is_add, table.copy(role_tbl[id].data))
+            return
+        end
         show_apply(transform, {
             player_name = role_tbl[player_id].data.name,
             player_id = player_id,
