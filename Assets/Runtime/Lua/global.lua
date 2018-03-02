@@ -338,6 +338,10 @@ function UI.OnDestroy(transform, func)
 end
 
 function UI.LimitName(name)
+    if not name then
+        return ""
+    end
+
     local v = string.utf8sub(name, 1, 10)
     if v == name then
         return name
