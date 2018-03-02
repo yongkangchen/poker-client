@@ -31,15 +31,17 @@ local function get_room_players(role_tbl)
     return tbl
 end
 
-local function init_visit_list(visit_list)
+local function init_visit_list(visit_list, show_waiting)
     UI.Active(visit_list, true)
 
     local window_trans = visit_list:Find("window")
     UI.OnClick(visit_list, "btn", function()
+        show_waiting(false)
         UI.Active(window_trans, true)
     end)
 
     UI.OnClick(window_trans, "close", function()
+        show_waiting(true)
         UI.Active(window_trans, false)
     end)
 
@@ -79,6 +81,7 @@ local function init_visit_list(visit_list)
         end
         grid.repositionNow = true
     end, function(v)
+        show_waiting(v)
         UI.Active(visit_list, v)
     end
 end
@@ -425,13 +428,14 @@ return function(init_game, player_data, on_over)
         role_tbl[pid] = nil
         can_startgame()
     end)
-
+    
+    local update_apply
     server.listen(msg.APPLY, function(dismiss_tbl, dismiss_time, is_add, id)
         if is_add and update_apply then
             update_apply(id, nil, is_add, table.copy(role_tbl[id].data))
             return
         end
-        show_apply(transform, {
+        update_apply = show_apply(transform, {
             player_name = role_tbl[player_id].data.name,
             player_id = player_id,
             role_tbl = get_room_players(role_tbl),
