@@ -18,71 +18,66 @@ local msg = require "data.msg"
 local show_hint = require "hint"
 local agree_color_tbl = {{12, 120, 165}, {191, 54, 0}, {135, 77, 46}, {28, 111, 135}}
 
-local function create_item(transform, item_tbl, role_data)
-    local role_name = role_data.name
-    local is_agree = false
-    local agree_str
-    local is_online = true
-    local online_str
-    if not role_data.ip then
-        is_online = false
-    end
-    local idx = role_data.idx
-    local item_trans = transform:Find("grid/" .. idx)
-    local function set_state()
-        if is_agree then
-            agree_str = "【已同意】"
-            UI.LabelColorChange(item_trans, nil, unpack(agree_color_tbl[idx] or agree_color_tbl[4]))
-        else
-            agree_str = "【等待选择】"
-            UI.LabelColorChange(item_trans, nil, unpack(agree_color_tbl[idx] or agree_color_tbl[4]))
-        end
-        UI.Label(item_trans, nil, UI.LimitName(role_name) .. agree_str)
-        
-        if not is_online then
-            online_str = "离线"
-            UI.LabelColorChange(item_trans:Find("online"), nil, 121, 121, 121)
-        else
-            online_str = "在线"
-            UI.LabelColorChange(item_trans:Find("online"), nil, 5, 143, 21)
-        end
-        UI.Label(item_trans:Find("online"), nil, online_str)
-        
-        local online_position_x = item_trans:GetComponent(UIWidget).width + 10
-        item_trans:Find("online").localPosition = Vector3(online_position_x, 0, 0)
-    end
-
-    UI.Active(item_trans, true)
-
-    item_tbl[role_data.id] = {
-        name = role_name,
-        set_agree = function()
-            is_agree = true
-            set_state()
-        end,
-        set_wait = function()
-            if is_agree then
-                return
-            end
-            set_state()
-        end,
-        set_online = function(online)
-            is_online = online
-            set_state()
-        end,
-        hide = function()
-            UI.Active(item_trans, false)
-        end,
-    }
-end
-
 return function(parent, exit_info, on_close)
     local transform = UI.InitWindow("apply", parent)
     local item_tbl = {}
-    for _, role_data in pairs(exit_info.role_tbl) do
-        if not (role_data.is_mid_enter and exit_info.player_id ~= role_data.id) then
-            create_item(transform, item_tbl, role_data)
+    
+    for idx, role_data in pairs(exit_info.role_tbl) do
+        local role_name = role_data.name
+        local is_agree = false
+        local agree_str
+        local is_online = true
+        local online_str
+        if not role_data.ip then
+            is_online = false
         end
+        
+        local item_trans = transform:Find("grid/" .. idx)
+        local function set_state()
+            if is_agree then
+                agree_str = "【已同意】"
+                UI.LabelColorChange(item_trans, nil, unpack(agree_color_tbl[idx] or agree_color_tbl[4]))
+            else
+                agree_str = "【等待选择】"
+                UI.LabelColorChange(item_trans, nil, unpack(agree_color_tbl[idx] or agree_color_tbl[4]))
+            end
+            UI.Label(item_trans, nil, UI.LimitName(role_name) .. agree_str)
+            
+            if not is_online then
+                online_str = "离线"
+                UI.LabelColorChange(item_trans:Find("online"), nil, 121, 121, 121)
+            else
+                online_str = "在线"
+                UI.LabelColorChange(item_trans:Find("online"), nil, 5, 143, 21)
+            end
+            UI.Label(item_trans:Find("online"), nil, online_str)
+            
+            local online_position_x = item_trans:GetComponent(UIWidget).width + 10
+            item_trans:Find("online").localPosition = Vector3(online_position_x, 0, 0)
+        end
+    
+        UI.Active(item_trans, true)
+
+        item_tbl[role_data.id] = {
+            name = role_name,
+            set_agree = function()
+                is_agree = true
+                set_state()
+            end,
+            set_wait = function()
+                if is_agree then
+                    return
+                end
+                set_state()
+            end,
+            set_online = function(online)
+                is_online = online
+                set_state()
+            end,
+            hide = function()
+                UI.Active(item_trans, false)
+            end,
+        }
     end
     for idx, role_id in pairs(exit_info.dismiss_tbl) do
         if idx == 1 then
@@ -143,14 +138,13 @@ return function(parent, exit_info, on_close)
         transform = nil
     end)
     
-    return function(id, is_online, is_add, role_data)
+    return function(id, is_online)
         if transform == nil then
             return
         end
-        if is_add then
-            create_item(transform, item_tbl, role_data)
-        else
-            item_tbl[id].set_online(is_online)
-        end
+        item_tbl[id].set_online(is_online)
+    end,
+    function()
+        Destroy(transform.gameObject)
     end
 end

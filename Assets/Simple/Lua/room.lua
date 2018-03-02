@@ -21,12 +21,14 @@ local show_dialog = require "dialog"
 local game_cfg = require "game_cfg"
 local game = require "game"
 
-local function get_room_players(role_tbl)
+local function get_room_players(role_tbl, is_all_show)
     local tbl = {}
     for role_id, role in pairs(role_tbl) do
-        local role_data = role.data
-        role_data.id = role_id
-        tbl[role_data.idx or 1] = role_data
+        if is_all_show or not role.data.is_mid_enter then
+            local role_data = role.data
+            role_data.id = role_id
+            tbl[role_data.idx or 1] = role_data
+        end
     end
     return tbl
 end
@@ -429,16 +431,15 @@ return function(init_game, player_data, on_over)
         can_startgame()
     end)
     
-    local update_apply
-    server.listen(msg.APPLY, function(dismiss_tbl, dismiss_time, is_add, id)
-        if is_add and update_apply then
-            update_apply(id, nil, is_add, table.copy(role_tbl[id].data))
-            return
+    local update_apply, close_apply
+    server.listen(msg.APPLY, function(dismiss_tbl, dismiss_time, is_all_show)
+        if is_all_show and close_apply then
+            close_apply()
         end
-        update_apply = show_apply(transform, {
+        update_apply, close_apply = show_apply(transform, {
             player_name = role_tbl[player_id].data.name,
             player_id = player_id,
-            role_tbl = get_room_players(role_tbl),
+            role_tbl = get_room_players(role_tbl, is_all_show),
             dismiss_tbl = dismiss_tbl,
             dismiss_time = dismiss_time
         }, function()
