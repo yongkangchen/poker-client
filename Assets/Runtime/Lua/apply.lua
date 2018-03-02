@@ -143,5 +143,8 @@ return function(parent, exit_info, on_close)
             return
         end
         item_tbl[id].set_online(is_online)
+    end,
+    function()
+        Destroy(transform.gameObject)
     end
 end
