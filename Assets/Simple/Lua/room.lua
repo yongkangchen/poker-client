@@ -116,10 +116,10 @@ local function init_watch_game(transform, player_data, simple_close)
     local waiting_btn = transform:Find("waiting")
     local startgame = waiting_btn:Find("startgame")
     local invite = waiting_btn:Find("invite")
-
+    UI.Active(invite, room_data.start_count == 0)
+    
     local watch_game = UI.InitPrefab("watch_game", transform)
     local sit_down = waiting_btn:Find("sit_down")
-
     if room_data.auto_start_type and room_data.auto_start_type == -1 and room_data.host_id == player_id and room_data.start_count == 0 then
         UI.Active(startgame:Find("mask"), true)
         local startgame_init_pos = watch_game:Find("startgame_init_pos")
@@ -143,8 +143,10 @@ local function init_watch_game(transform, player_data, simple_close)
     UI.Active(waiting_btn:Find("prepare"), false)
     UI.Active(waiting_btn:Find("cancel"), false)
 
-    local function invite_center()
-        if not player_can_start(player_data) then
+    local function button_center()
+        if player_can_start(player_data) then  
+            startgame.position = watch_game:Find("start_pos").position
+        else
             invite.localPosition = watch_game:Find("invite_pos").localPosition
         end
     end
@@ -159,16 +161,15 @@ local function init_watch_game(transform, player_data, simple_close)
     local bg_tween = UI.GetComponent(watch_game, "bg", TweenPosition)
     local show_sit_down
     if room_data.is_visit then
+        UI.Active(watch_game:Find("bg"), true)
+        UI.Active(watch_game:Find("quit"), true)
+                
         show_sit_down = function()
             if room_data.start_count > 0 then
                 sit_down.localPosition = watch_game:Find("sitdown_gaming_pos").localPosition
-                UI.Active(watch_game:Find("bg"), true)
-		        UI.Active(watch_game:Find("quit"), true)
                 if bg_tween then
                     bg_tween.enabled = true
                 end
-
-                UI.Active(invite, false)
 
                 if room_data.stop_mid_enter then
                     UI.Active(sit_down, false)
@@ -184,32 +185,30 @@ local function init_watch_game(transform, player_data, simple_close)
             UI.Active(sit_down, active)
 
             if not active then
-                invite_center()
+                button_center()
             end
         end
-
         show_sit_down()
-
+        
         UI.OnClick(sit_down, nil, function()
             coroutine.wrap(function()
                 server.sit_down()
                 local new_room_data = game.wait_enter()
                 if new_room_data then
                     player_data.room_data = new_room_data
+                    UI.Active(watch_game, false)
+                    UI.Active(waiting_btn, false)
                     simple_close()
                 end
             end)()
         end)
     else
-        startgame.position = watch_game:Find("start_pos").position
-        show_sit_down = function()
-            if not player_can_start(player_data) then
-                invite_center()
-            end
-        end
+        show_sit_down = button_center
     end
-
-    local show_visitor_info, show_watch_btn = init_visit_list(watch_game:Find("list"))
+    
+    local show_visitor_info, show_watch_btn = init_visit_list(watch_game:Find("list"), function(v)
+        UI.Active(waiting_btn, v)
+    end)
     server.listen(msg.VISITOR_LIST, function(visit_player)
         if type(visit_player) == "table" then
             for id, name in pairs(visit_player) do
