@@ -354,13 +354,15 @@ function UI.TrimBlank(s)
     return (string.gsub(s, "^%s*(.-)%s*$", "%1"))
 end
 
-function UI.ShareScreen(transform, path)
+function UI.ShareScreen(transform, path, ...)
     if require "game_cfg".APPSTORE then
         UI.Active(transform:Find(path), false)
         return
     end
-    
+
+    local param = {...}
+
     UI.OnClick(transform, path, function()
-        ShareScreenShot()
+        ShareScreenShot(unpack(param, 1, table.maxn(param)))
     end)
 end
