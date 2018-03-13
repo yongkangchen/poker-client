@@ -16,6 +16,7 @@ local show_create = require "create"
 local game_cfg = require "game_cfg"
 
 local Destroy = UnityEngine.Object.Destroy
+local GameObject = UnityEngine.GameObject
 
 local function init_game_create(game_name, transform)
     local select_trans = UI.InitPrefab(game_name .. "/select", transform)
@@ -54,9 +55,9 @@ local function init(parent, enter_room, create_room)
     end)
 
     UI.OnClick(trans:Find("create"), nil, function()
+        local parse_create = require(game_name .. ".create")
         local transform = show_create(function(close_create)
             coroutine.wrap(function()
-                local parse_create = require(game_name .. ".create")
                 if create_room(game_name, nil, parse_create()) then
                     close_create()
                 end
@@ -89,6 +90,10 @@ local function init(parent, enter_room, create_room)
                 Destroy(trans_create_sub.gameObject)
             end
             EventDelegate.Add(toggle.onChange, load_content)
+        end
+
+        if not game_cfg.IS_NEW_CREATE then
+            parse_create = parse_create(function() end, transform)
         end
     end)
 end
