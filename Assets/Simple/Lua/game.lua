@@ -16,9 +16,8 @@ local show_create = require "create"
 local game_cfg = require "game_cfg"
 
 local Destroy = UnityEngine.Object.Destroy
-local GameObject = UnityEngine.GameObject
 
-local function init_game_create(game_name, transform)
+local function init_game_create(game_name, transform, parse_create)
     local select_trans = UI.InitPrefab(game_name .. "/select", transform)
     local pos = transform:Find("select_pos")
     if pos then
@@ -32,8 +31,37 @@ local function init_game_create(game_name, transform)
         tb:Reposition()
     end
 
-    local select_tbl = UI.Children(select_trans)
-    return select_tbl
+    local trans_select_tbl = UI.Children(select_trans)
+    local trans_create_parent = UI.InitPrefab(game_name .. "/create", transform)
+    local trans_panel_tbl = UI.Children(trans_create_parent)
+
+    for i, trans_select in ipairs(trans_select_tbl) do
+        local trans_panel = trans_panel_tbl[i]
+        trans_select:GetComponent(UIToggledObjects).activate[0] = trans_panel.gameObject
+
+        local toggle = trans_select:GetComponent(UIToggle)
+        local function load_content()
+            if not toggle.value then
+                return
+            end
+            EventDelegate.Remove(toggle.onChange, load_content)
+
+            local trans_create_sub = UI.InitPrefab(game_name .. "/create_" .. trans_select.name, trans_panel)
+            if not trans_create_sub then
+                return
+            end
+
+            for _, trans in ipairs(UI.Children(trans_create_sub)) do
+                trans:SetParent(trans_panel, false)
+            end
+            Destroy(trans_create_sub.gameObject)
+        end
+        EventDelegate.Add(toggle.onChange, load_content)
+    end
+
+    if not game_cfg.IS_NEW_CREATE then
+        parse_create = parse_create(function() end, transform)
+    end
 end
 
 local function init(parent, enter_room, create_room)
@@ -64,37 +92,7 @@ local function init(parent, enter_room, create_room)
             end)()
         end)
 
-        local trans_select_tbl = init_game_create(game_name, transform)
-        local trans_create_parent = UI.InitPrefab(game_name .. "/create", transform)
-        local trans_panel_tbl = UI.Children(trans_create_parent)
-
-        for i, trans_select in ipairs(trans_select_tbl) do
-            local trans_panel = trans_panel_tbl[i]
-            trans_select:GetComponent(UIToggledObjects).activate[0] = trans_panel.gameObject
-
-            local toggle = trans_select:GetComponent(UIToggle)
-            local function load_content()
-                if not toggle.value then
-                    return
-                end
-                EventDelegate.Remove(toggle.onChange, load_content)
-
-                local trans_create_sub = UI.InitPrefab(game_name .. "/create_" .. trans_select.name, trans_panel)
-                if not trans_create_sub then
-                    return
-                end
-
-                for _, trans in ipairs(UI.Children(trans_create_sub)) do
-                    trans:SetParent(trans_panel, false)
-                end
-                Destroy(trans_create_sub.gameObject)
-            end
-            EventDelegate.Add(toggle.onChange, load_content)
-        end
-
-        if not game_cfg.IS_NEW_CREATE then
-            parse_create = parse_create(function() end, transform)
-        end
+        init_game_create(game_name, transform, parse_create)
     end)
 end
 
