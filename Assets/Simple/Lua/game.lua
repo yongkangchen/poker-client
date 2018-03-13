@@ -13,8 +13,9 @@ of this license document, but changing it is not allowed.
 
 local show_join = require "join"
 local show_create = require "create"
-
 local game_cfg = require "game_cfg"
+
+local Destroy = UnityEngine.Object.Destroy
 
 local function init_game_create(game_name, transform)
     local select_trans = UI.InitPrefab(game_name .. "/select", transform)
@@ -30,10 +31,8 @@ local function init_game_create(game_name, transform)
         tb:Reposition()
     end
 
-    local panel_tbl = UI.Children(UI.InitPrefab(game_name .. "/create", transform))
-    for i, select in ipairs(UI.Children(select_trans)) do
-        select:GetComponent(UIToggledObjects).activate[0] = panel_tbl[i].gameObject
-    end
+    local select_tbl = UI.Children(select_trans)
+    return select_tbl
 end
 
 local function init(parent, enter_room, create_room)
@@ -63,7 +62,34 @@ local function init(parent, enter_room, create_room)
                 end
             end)()
         end)
-        init_game_create(game_name, transform)
+
+        local trans_select_tbl = init_game_create(game_name, transform)
+        local trans_create_parent = UI.InitPrefab(game_name .. "/create", transform)
+        local trans_panel_tbl = UI.Children(trans_create_parent)
+
+        for i, trans_select in ipairs(trans_select_tbl) do
+            local trans_panel = trans_panel_tbl[i]
+            trans_select:GetComponent(UIToggledObjects).activate[0] = trans_panel.gameObject
+
+            local toggle = trans_select:GetComponent(UIToggle)
+            local function load_content()
+                if not toggle.value then
+                    return
+                end
+                EventDelegate.Remove(toggle.onChange, load_content)
+
+                local trans_create_sub = UI.InitPrefab(game_name .. "/create_" .. trans_select.name, trans_panel)
+                if not trans_create_sub then
+                    return
+                end
+
+                for _, trans in ipairs(UI.Children(trans_create_sub)) do
+                    trans:SetParent(trans_panel, false)
+                end
+                Destroy(trans_create_sub.gameObject)
+            end
+            EventDelegate.Add(toggle.onChange, load_content)
+        end
     end)
 end
 
