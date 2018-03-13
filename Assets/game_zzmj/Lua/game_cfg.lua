@@ -18,5 +18,6 @@ return {
     ID = 2, -- 游戏Id
     NAME = "zzmj", -- 游戏入口名
     BASE_ROUND = 8, -- 大局里的小局数
-    TYPE_NAME = "转转麻将" --历史战绩类型名称
+    TYPE_NAME = "转转麻将", --历史战绩类型名称
+    IS_NEW_CREATE = true
 }
