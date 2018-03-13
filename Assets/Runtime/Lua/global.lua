@@ -17,10 +17,6 @@ WeChatUtil = WeChatUtil or {
     Md5Sum = function() return tostring(os.clock()) end,
 }
 
-if not bit then
-    bit = require "lib.numberlua".bit
-end
-
 require "lib.log"
 require "lib.ext"
 ThirdDLL = require "ThirdDLL"
