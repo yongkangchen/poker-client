@@ -13,10 +13,11 @@ of this license document, but changing it is not allowed.
 
 local show_join = require "join"
 local show_create = require "create"
-
 local game_cfg = require "game_cfg"
 
-local function init_game_create(game_name, transform)
+local Destroy = UnityEngine.Object.Destroy
+
+local function init_game_create(game_name, transform, parse_create)
     local select_trans = UI.InitPrefab(game_name .. "/select", transform)
     local pos = transform:Find("select_pos")
     if pos then
@@ -30,9 +31,36 @@ local function init_game_create(game_name, transform)
         tb:Reposition()
     end
 
-    local panel_tbl = UI.Children(UI.InitPrefab(game_name .. "/create", transform))
-    for i, select in ipairs(UI.Children(select_trans)) do
-        select:GetComponent(UIToggledObjects).activate[0] = panel_tbl[i].gameObject
+    local trans_select_tbl = UI.Children(select_trans)
+    local trans_create_parent = UI.InitPrefab(game_name .. "/create", transform)
+    local trans_panel_tbl = UI.Children(trans_create_parent)
+
+    for i, trans_select in ipairs(trans_select_tbl) do
+        local trans_panel = trans_panel_tbl[i]
+        trans_select:GetComponent(UIToggledObjects).activate[0] = trans_panel.gameObject
+
+        local toggle = trans_select:GetComponent(UIToggle)
+        local function load_content()
+            if not toggle.value then
+                return
+            end
+            EventDelegate.Remove(toggle.onChange, load_content)
+
+            local trans_create_sub = UI.InitPrefab(game_name .. "/create_" .. trans_select.name, trans_panel)
+            if not trans_create_sub then
+                return
+            end
+
+            for _, trans in ipairs(UI.Children(trans_create_sub)) do
+                trans:SetParent(trans_panel, false)
+            end
+            Destroy(trans_create_sub.gameObject)
+        end
+        EventDelegate.Add(toggle.onChange, load_content)
+    end
+
+    if not game_cfg.IS_NEW_CREATE then
+        parse_create = parse_create(function() end, transform)
     end
 end
 
@@ -55,15 +83,16 @@ local function init(parent, enter_room, create_room)
     end)
 
     UI.OnClick(trans:Find("create"), nil, function()
+        local parse_create = require(game_name .. ".create")
         local transform = show_create(function(close_create)
             coroutine.wrap(function()
-                local parse_create = require(game_name .. ".create")
                 if create_room(game_name, nil, parse_create()) then
                     close_create()
                 end
             end)()
         end)
-        init_game_create(game_name, transform)
+
+        init_game_create(game_name, transform, parse_create)
     end)
 end
 
