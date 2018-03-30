@@ -15,7 +15,7 @@ local function copy_result(result, data)
     share_text = string.format("房间号ID: %d(%d局)\n%s\n%s\n", data.id, data.max_round, time, data.type_name)
 
     for _, v in pairs(result) do
-        local text = string.format("玩家姓名 %s 积分 【%d】\n", v.name, v.total_score)
+        local text = string.format("姓名 %s 积分 【%d】\n", v.name, v.total_score)
         share_text = share_text .. text
     end
     
