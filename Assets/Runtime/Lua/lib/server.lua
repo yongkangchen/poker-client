@@ -54,7 +54,6 @@ do
 	local halt
 	local on_data
 	local wait_data
-	local pt_waitbl = {}
 
 	local listen_tbl = {}
 	local msg_tbl = {}
