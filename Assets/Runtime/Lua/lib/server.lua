@@ -54,7 +54,8 @@ do
 	local halt
 	local on_data
 	local wait_data
-	
+	local pt_waitbl = {}
+
 	local listen_tbl = {}
 	local msg_tbl = {}
 	local function init_recv()
@@ -90,6 +91,11 @@ do
 		local co = wait_tbl[t]
 		if co then
 			wait_tbl[t] = nil
+			if pt_waitbl[t] then
+				local co1 = pt_waitbl[t][1]
+				table.remove(pt_waitbl[t], 1)
+				resume(co1)
+			end
 			resume(co, true, unpack(result, 2, len))
 		else
 			local func = listen_tbl[t]
@@ -162,6 +168,13 @@ do
 	end
 
 	local function do_wait(t)
+		if wait_tbl[t] then
+			if not pt_waitbl[t] then
+				pt_waitbl[t] = {}
+			end
+			table.insert(pt_waitbl[t], coroutine.running())
+			coroutine.yield()
+		end
 		wait_tbl[t] = coroutine.running()
 		return check_result(coroutine.yield())
 	end
