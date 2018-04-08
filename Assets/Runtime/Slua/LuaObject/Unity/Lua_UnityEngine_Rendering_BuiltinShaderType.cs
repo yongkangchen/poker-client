@@ -10,10 +10,9 @@ public class Lua_UnityEngine_Rendering_BuiltinShaderType : LuaObject {
 		addMember(l,2,"LegacyDeferredLighting");
 		addMember(l,3,"ScreenSpaceShadows");
 		addMember(l,4,"DepthNormals");
-		addMember(l,5,"LightHalo");
-		addMember(l,6,"LensFlare");
-		addMember(l,7,"Sprite");
-		addMember(l,8,"MotionVectors");
+		addMember(l,5,"MotionVectors");
+		addMember(l,6,"LightHalo");
+		addMember(l,7,"LensFlare");
 		LuaDLL.lua_pop(l, 1);
 	}
 }

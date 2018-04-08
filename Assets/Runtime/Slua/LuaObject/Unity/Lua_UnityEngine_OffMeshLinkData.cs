@@ -6,8 +6,8 @@ public class Lua_UnityEngine_OffMeshLinkData : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int constructor(IntPtr l) {
 		try {
-			UnityEngine.OffMeshLinkData o;
-			o=new UnityEngine.OffMeshLinkData();
+			UnityEngine.AI.OffMeshLinkData o;
+			o=new UnityEngine.AI.OffMeshLinkData();
 			pushValue(l,true);
 			pushValue(l,o);
 			return 2;
@@ -19,7 +19,7 @@ public class Lua_UnityEngine_OffMeshLinkData : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int get_valid(IntPtr l) {
 		try {
-			UnityEngine.OffMeshLinkData self;
+			UnityEngine.AI.OffMeshLinkData self;
 			checkValueType(l,1,out self);
 			pushValue(l,true);
 			pushValue(l,self.valid);
@@ -32,7 +32,7 @@ public class Lua_UnityEngine_OffMeshLinkData : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int get_activated(IntPtr l) {
 		try {
-			UnityEngine.OffMeshLinkData self;
+			UnityEngine.AI.OffMeshLinkData self;
 			checkValueType(l,1,out self);
 			pushValue(l,true);
 			pushValue(l,self.activated);
@@ -45,7 +45,7 @@ public class Lua_UnityEngine_OffMeshLinkData : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int get_linkType(IntPtr l) {
 		try {
-			UnityEngine.OffMeshLinkData self;
+			UnityEngine.AI.OffMeshLinkData self;
 			checkValueType(l,1,out self);
 			pushValue(l,true);
 			pushEnum(l,(int)self.linkType);
@@ -58,7 +58,7 @@ public class Lua_UnityEngine_OffMeshLinkData : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int get_startPos(IntPtr l) {
 		try {
-			UnityEngine.OffMeshLinkData self;
+			UnityEngine.AI.OffMeshLinkData self;
 			checkValueType(l,1,out self);
 			pushValue(l,true);
 			pushValue(l,self.startPos);
@@ -71,7 +71,7 @@ public class Lua_UnityEngine_OffMeshLinkData : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int get_endPos(IntPtr l) {
 		try {
-			UnityEngine.OffMeshLinkData self;
+			UnityEngine.AI.OffMeshLinkData self;
 			checkValueType(l,1,out self);
 			pushValue(l,true);
 			pushValue(l,self.endPos);
@@ -84,7 +84,7 @@ public class Lua_UnityEngine_OffMeshLinkData : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int get_offMeshLink(IntPtr l) {
 		try {
-			UnityEngine.OffMeshLinkData self;
+			UnityEngine.AI.OffMeshLinkData self;
 			checkValueType(l,1,out self);
 			pushValue(l,true);
 			pushValue(l,self.offMeshLink);
@@ -102,6 +102,6 @@ public class Lua_UnityEngine_OffMeshLinkData : LuaObject {
 		addMember(l,"startPos",get_startPos,null,true);
 		addMember(l,"endPos",get_endPos,null,true);
 		addMember(l,"offMeshLink",get_offMeshLink,null,true);
-		createTypeMetatable(l,constructor, typeof(UnityEngine.OffMeshLinkData),typeof(System.ValueType));
+		createTypeMetatable(l,constructor, typeof(UnityEngine.AI.OffMeshLinkData),typeof(System.ValueType));
 	}
 }

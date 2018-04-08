@@ -135,6 +135,18 @@ public class Lua_UnityEngine_RenderTexture : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static public int GenerateMips(IntPtr l) {
+		try {
+			UnityEngine.RenderTexture self=(UnityEngine.RenderTexture)checkSelf(l);
+			self.GenerateMips();
+			pushValue(l,true);
+			return 1;
+		}
+		catch(Exception e) {
+			return error(l,e);
+		}
+	}
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int GetNativeDepthBufferPtr(IntPtr l) {
 		try {
 			UnityEngine.RenderTexture self=(UnityEngine.RenderTexture)checkSelf(l);
@@ -156,19 +168,6 @@ public class Lua_UnityEngine_RenderTexture : LuaObject {
 			self.SetGlobalShaderProperty(a1);
 			pushValue(l,true);
 			return 1;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int GetTexelOffset(IntPtr l) {
-		try {
-			UnityEngine.RenderTexture self=(UnityEngine.RenderTexture)checkSelf(l);
-			var ret=self.GetTexelOffset();
-			pushValue(l,true);
-			pushValue(l,ret);
-			return 2;
 		}
 		catch(Exception e) {
 			return error(l,e);
@@ -244,6 +243,26 @@ public class Lua_UnityEngine_RenderTexture : LuaObject {
 				System.Int32 a6;
 				checkType(l,6,out a6);
 				var ret=UnityEngine.RenderTexture.GetTemporary(a1,a2,a3,a4,a5,a6);
+				pushValue(l,true);
+				pushValue(l,ret);
+				return 2;
+			}
+			else if(argc==7){
+				System.Int32 a1;
+				checkType(l,1,out a1);
+				System.Int32 a2;
+				checkType(l,2,out a2);
+				System.Int32 a3;
+				checkType(l,3,out a3);
+				UnityEngine.RenderTextureFormat a4;
+				checkEnum(l,4,out a4);
+				UnityEngine.RenderTextureReadWrite a5;
+				checkEnum(l,5,out a5);
+				System.Int32 a6;
+				checkType(l,6,out a6);
+				UnityEngine.VRTextureUsage a7;
+				checkEnum(l,7,out a7);
+				var ret=UnityEngine.RenderTexture.GetTemporary(a1,a2,a3,a4,a5,a6,a7);
 				pushValue(l,true);
 				pushValue(l,ret);
 				return 2;
@@ -328,6 +347,32 @@ public class Lua_UnityEngine_RenderTexture : LuaObject {
 			int v;
 			checkType(l,2,out v);
 			self.height=v;
+			pushValue(l,true);
+			return 1;
+		}
+		catch(Exception e) {
+			return error(l,e);
+		}
+	}
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static public int get_vrUsage(IntPtr l) {
+		try {
+			UnityEngine.RenderTexture self=(UnityEngine.RenderTexture)checkSelf(l);
+			pushValue(l,true);
+			pushEnum(l,(int)self.vrUsage);
+			return 2;
+		}
+		catch(Exception e) {
+			return error(l,e);
+		}
+	}
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static public int set_vrUsage(IntPtr l) {
+		try {
+			UnityEngine.RenderTexture self=(UnityEngine.RenderTexture)checkSelf(l);
+			UnityEngine.VRTextureUsage v;
+			checkEnum(l,2,out v);
+			self.vrUsage=v;
 			pushValue(l,true);
 			return 1;
 		}
@@ -452,11 +497,11 @@ public class Lua_UnityEngine_RenderTexture : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int get_generateMips(IntPtr l) {
+	static public int get_autoGenerateMips(IntPtr l) {
 		try {
 			UnityEngine.RenderTexture self=(UnityEngine.RenderTexture)checkSelf(l);
 			pushValue(l,true);
-			pushValue(l,self.generateMips);
+			pushValue(l,self.autoGenerateMips);
 			return 2;
 		}
 		catch(Exception e) {
@@ -464,12 +509,12 @@ public class Lua_UnityEngine_RenderTexture : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int set_generateMips(IntPtr l) {
+	static public int set_autoGenerateMips(IntPtr l) {
 		try {
 			UnityEngine.RenderTexture self=(UnityEngine.RenderTexture)checkSelf(l);
 			bool v;
 			checkType(l,2,out v);
-			self.generateMips=v;
+			self.autoGenerateMips=v;
 			pushValue(l,true);
 			return 1;
 		}
@@ -636,20 +681,21 @@ public class Lua_UnityEngine_RenderTexture : LuaObject {
 		addMember(l,IsCreated);
 		addMember(l,DiscardContents);
 		addMember(l,MarkRestoreExpected);
+		addMember(l,GenerateMips);
 		addMember(l,GetNativeDepthBufferPtr);
 		addMember(l,SetGlobalShaderProperty);
-		addMember(l,GetTexelOffset);
 		addMember(l,GetTemporary_s);
 		addMember(l,ReleaseTemporary_s);
 		addMember(l,SupportsStencil_s);
 		addMember(l,"width",get_width,set_width,true);
 		addMember(l,"height",get_height,set_height,true);
+		addMember(l,"vrUsage",get_vrUsage,set_vrUsage,true);
 		addMember(l,"depth",get_depth,set_depth,true);
 		addMember(l,"isPowerOfTwo",get_isPowerOfTwo,set_isPowerOfTwo,true);
 		addMember(l,"sRGB",get_sRGB,null,true);
 		addMember(l,"format",get_format,set_format,true);
 		addMember(l,"useMipMap",get_useMipMap,set_useMipMap,true);
-		addMember(l,"generateMips",get_generateMips,set_generateMips,true);
+		addMember(l,"autoGenerateMips",get_autoGenerateMips,set_autoGenerateMips,true);
 		addMember(l,"dimension",get_dimension,set_dimension,true);
 		addMember(l,"volumeDepth",get_volumeDepth,set_volumeDepth,true);
 		addMember(l,"antiAliasing",get_antiAliasing,set_antiAliasing,true);

@@ -4,29 +4,16 @@ using SLua;
 using System.Collections.Generic;
 public class Lua_UnityEngine_NavMesh : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int constructor(IntPtr l) {
-		try {
-			UnityEngine.NavMesh o;
-			o=new UnityEngine.NavMesh();
-			pushValue(l,true);
-			pushValue(l,o);
-			return 2;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int Raycast_s(IntPtr l) {
 		try {
 			UnityEngine.Vector3 a1;
 			checkType(l,1,out a1);
 			UnityEngine.Vector3 a2;
 			checkType(l,2,out a2);
-			UnityEngine.NavMeshHit a3;
+			UnityEngine.AI.NavMeshHit a3;
 			System.Int32 a4;
 			checkType(l,4,out a4);
-			var ret=UnityEngine.NavMesh.Raycast(a1,a2,out a3,a4);
+			var ret=UnityEngine.AI.NavMesh.Raycast(a1,a2,out a3,a4);
 			pushValue(l,true);
 			pushValue(l,ret);
 			pushValue(l,a3);
@@ -45,9 +32,9 @@ public class Lua_UnityEngine_NavMesh : LuaObject {
 			checkType(l,2,out a2);
 			System.Int32 a3;
 			checkType(l,3,out a3);
-			UnityEngine.NavMeshPath a4;
+			UnityEngine.AI.NavMeshPath a4;
 			checkType(l,4,out a4);
-			var ret=UnityEngine.NavMesh.CalculatePath(a1,a2,a3,a4);
+			var ret=UnityEngine.AI.NavMesh.CalculatePath(a1,a2,a3,a4);
 			pushValue(l,true);
 			pushValue(l,ret);
 			return 2;
@@ -61,10 +48,10 @@ public class Lua_UnityEngine_NavMesh : LuaObject {
 		try {
 			UnityEngine.Vector3 a1;
 			checkType(l,1,out a1);
-			UnityEngine.NavMeshHit a2;
+			UnityEngine.AI.NavMeshHit a2;
 			System.Int32 a3;
 			checkType(l,3,out a3);
-			var ret=UnityEngine.NavMesh.FindClosestEdge(a1,out a2,a3);
+			var ret=UnityEngine.AI.NavMesh.FindClosestEdge(a1,out a2,a3);
 			pushValue(l,true);
 			pushValue(l,ret);
 			pushValue(l,a2);
@@ -79,12 +66,12 @@ public class Lua_UnityEngine_NavMesh : LuaObject {
 		try {
 			UnityEngine.Vector3 a1;
 			checkType(l,1,out a1);
-			UnityEngine.NavMeshHit a2;
+			UnityEngine.AI.NavMeshHit a2;
 			System.Single a3;
 			checkType(l,3,out a3);
 			System.Int32 a4;
 			checkType(l,4,out a4);
-			var ret=UnityEngine.NavMesh.SamplePosition(a1,out a2,a3,a4);
+			var ret=UnityEngine.AI.NavMesh.SamplePosition(a1,out a2,a3,a4);
 			pushValue(l,true);
 			pushValue(l,ret);
 			pushValue(l,a2);
@@ -101,7 +88,7 @@ public class Lua_UnityEngine_NavMesh : LuaObject {
 			checkType(l,1,out a1);
 			System.Single a2;
 			checkType(l,2,out a2);
-			UnityEngine.NavMesh.SetAreaCost(a1,a2);
+			UnityEngine.AI.NavMesh.SetAreaCost(a1,a2);
 			pushValue(l,true);
 			return 1;
 		}
@@ -114,7 +101,7 @@ public class Lua_UnityEngine_NavMesh : LuaObject {
 		try {
 			System.Int32 a1;
 			checkType(l,1,out a1);
-			var ret=UnityEngine.NavMesh.GetAreaCost(a1);
+			var ret=UnityEngine.AI.NavMesh.GetAreaCost(a1);
 			pushValue(l,true);
 			pushValue(l,ret);
 			return 2;
@@ -128,7 +115,7 @@ public class Lua_UnityEngine_NavMesh : LuaObject {
 		try {
 			System.String a1;
 			checkType(l,1,out a1);
-			var ret=UnityEngine.NavMesh.GetAreaFromName(a1);
+			var ret=UnityEngine.AI.NavMesh.GetAreaFromName(a1);
 			pushValue(l,true);
 			pushValue(l,ret);
 			return 2;
@@ -140,7 +127,7 @@ public class Lua_UnityEngine_NavMesh : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int CalculateTriangulation_s(IntPtr l) {
 		try {
-			var ret=UnityEngine.NavMesh.CalculateTriangulation();
+			var ret=UnityEngine.AI.NavMesh.CalculateTriangulation();
 			pushValue(l,true);
 			pushValue(l,ret);
 			return 2;
@@ -153,7 +140,7 @@ public class Lua_UnityEngine_NavMesh : LuaObject {
 	static public int get_AllAreas(IntPtr l) {
 		try {
 			pushValue(l,true);
-			pushValue(l,UnityEngine.NavMesh.AllAreas);
+			pushValue(l,UnityEngine.AI.NavMesh.AllAreas);
 			return 2;
 		}
 		catch(Exception e) {
@@ -164,7 +151,7 @@ public class Lua_UnityEngine_NavMesh : LuaObject {
 	static public int get_avoidancePredictionTime(IntPtr l) {
 		try {
 			pushValue(l,true);
-			pushValue(l,UnityEngine.NavMesh.avoidancePredictionTime);
+			pushValue(l,UnityEngine.AI.NavMesh.avoidancePredictionTime);
 			return 2;
 		}
 		catch(Exception e) {
@@ -176,7 +163,7 @@ public class Lua_UnityEngine_NavMesh : LuaObject {
 		try {
 			float v;
 			checkType(l,2,out v);
-			UnityEngine.NavMesh.avoidancePredictionTime=v;
+			UnityEngine.AI.NavMesh.avoidancePredictionTime=v;
 			pushValue(l,true);
 			return 1;
 		}
@@ -188,7 +175,7 @@ public class Lua_UnityEngine_NavMesh : LuaObject {
 	static public int get_pathfindingIterationsPerFrame(IntPtr l) {
 		try {
 			pushValue(l,true);
-			pushValue(l,UnityEngine.NavMesh.pathfindingIterationsPerFrame);
+			pushValue(l,UnityEngine.AI.NavMesh.pathfindingIterationsPerFrame);
 			return 2;
 		}
 		catch(Exception e) {
@@ -200,7 +187,7 @@ public class Lua_UnityEngine_NavMesh : LuaObject {
 		try {
 			int v;
 			checkType(l,2,out v);
-			UnityEngine.NavMesh.pathfindingIterationsPerFrame=v;
+			UnityEngine.AI.NavMesh.pathfindingIterationsPerFrame=v;
 			pushValue(l,true);
 			return 1;
 		}
@@ -221,6 +208,6 @@ public class Lua_UnityEngine_NavMesh : LuaObject {
 		addMember(l,"AllAreas",get_AllAreas,null,false);
 		addMember(l,"avoidancePredictionTime",get_avoidancePredictionTime,set_avoidancePredictionTime,false);
 		addMember(l,"pathfindingIterationsPerFrame",get_pathfindingIterationsPerFrame,set_pathfindingIterationsPerFrame,false);
-		createTypeMetatable(l,constructor, typeof(UnityEngine.NavMesh));
+		createTypeMetatable(l,null, typeof(UnityEngine.AI.NavMesh));
 	}
 }

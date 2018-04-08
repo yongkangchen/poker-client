@@ -62,6 +62,34 @@ public class Lua_UnityEngine_ParticleSystemRenderer : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static public int SetActiveVertexStreams(IntPtr l) {
+		try {
+			UnityEngine.ParticleSystemRenderer self=(UnityEngine.ParticleSystemRenderer)checkSelf(l);
+			System.Collections.Generic.List<UnityEngine.ParticleSystemVertexStream> a1;
+			checkType(l,2,out a1);
+			self.SetActiveVertexStreams(a1);
+			pushValue(l,true);
+			return 1;
+		}
+		catch(Exception e) {
+			return error(l,e);
+		}
+	}
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static public int GetActiveVertexStreams(IntPtr l) {
+		try {
+			UnityEngine.ParticleSystemRenderer self=(UnityEngine.ParticleSystemRenderer)checkSelf(l);
+			System.Collections.Generic.List<UnityEngine.ParticleSystemVertexStream> a1;
+			checkType(l,2,out a1);
+			self.GetActiveVertexStreams(a1);
+			pushValue(l,true);
+			return 1;
+		}
+		catch(Exception e) {
+			return error(l,e);
+		}
+	}
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int get_renderMode(IntPtr l) {
 		try {
 			UnityEngine.ParticleSystemRenderer self=(UnityEngine.ParticleSystemRenderer)checkSelf(l);
@@ -385,10 +413,50 @@ public class Lua_UnityEngine_ParticleSystemRenderer : LuaObject {
 			return error(l,e);
 		}
 	}
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static public int get_trailMaterial(IntPtr l) {
+		try {
+			UnityEngine.ParticleSystemRenderer self=(UnityEngine.ParticleSystemRenderer)checkSelf(l);
+			pushValue(l,true);
+			pushValue(l,self.trailMaterial);
+			return 2;
+		}
+		catch(Exception e) {
+			return error(l,e);
+		}
+	}
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static public int set_trailMaterial(IntPtr l) {
+		try {
+			UnityEngine.ParticleSystemRenderer self=(UnityEngine.ParticleSystemRenderer)checkSelf(l);
+			UnityEngine.Material v;
+			checkType(l,2,out v);
+			self.trailMaterial=v;
+			pushValue(l,true);
+			return 1;
+		}
+		catch(Exception e) {
+			return error(l,e);
+		}
+	}
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static public int get_activeVertexStreamsCount(IntPtr l) {
+		try {
+			UnityEngine.ParticleSystemRenderer self=(UnityEngine.ParticleSystemRenderer)checkSelf(l);
+			pushValue(l,true);
+			pushValue(l,self.activeVertexStreamsCount);
+			return 2;
+		}
+		catch(Exception e) {
+			return error(l,e);
+		}
+	}
 	static public void reg(IntPtr l) {
 		getTypeTable(l,"UnityEngine.ParticleSystemRenderer");
 		addMember(l,GetMeshes);
 		addMember(l,SetMeshes);
+		addMember(l,SetActiveVertexStreams);
+		addMember(l,GetActiveVertexStreams);
 		addMember(l,"renderMode",get_renderMode,set_renderMode,true);
 		addMember(l,"lengthScale",get_lengthScale,set_lengthScale,true);
 		addMember(l,"velocityScale",get_velocityScale,set_velocityScale,true);
@@ -402,6 +470,8 @@ public class Lua_UnityEngine_ParticleSystemRenderer : LuaObject {
 		addMember(l,"maxParticleSize",get_maxParticleSize,set_maxParticleSize,true);
 		addMember(l,"mesh",get_mesh,set_mesh,true);
 		addMember(l,"meshCount",get_meshCount,null,true);
+		addMember(l,"trailMaterial",get_trailMaterial,set_trailMaterial,true);
+		addMember(l,"activeVertexStreamsCount",get_activeVertexStreamsCount,null,true);
 		createTypeMetatable(l,constructor, typeof(UnityEngine.ParticleSystemRenderer),typeof(UnityEngine.Renderer));
 	}
 }

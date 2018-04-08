@@ -4,24 +4,11 @@ using SLua;
 using System.Collections.Generic;
 public class Lua_UnityEngine_Profiler : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int constructor(IntPtr l) {
-		try {
-			UnityEngine.Profiler o;
-			o=new UnityEngine.Profiler();
-			pushValue(l,true);
-			pushValue(l,o);
-			return 2;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int AddFramesFromFile_s(IntPtr l) {
 		try {
 			System.String a1;
 			checkType(l,1,out a1);
-			UnityEngine.Profiler.AddFramesFromFile(a1);
+			UnityEngine.Profiling.Profiler.AddFramesFromFile(a1);
 			pushValue(l,true);
 			return 1;
 		}
@@ -36,7 +23,7 @@ public class Lua_UnityEngine_Profiler : LuaObject {
 			if(argc==1){
 				System.String a1;
 				checkType(l,1,out a1);
-				UnityEngine.Profiler.BeginSample(a1);
+				UnityEngine.Profiling.Profiler.BeginSample(a1);
 				pushValue(l,true);
 				return 1;
 			}
@@ -45,7 +32,7 @@ public class Lua_UnityEngine_Profiler : LuaObject {
 				checkType(l,1,out a1);
 				UnityEngine.Object a2;
 				checkType(l,2,out a2);
-				UnityEngine.Profiler.BeginSample(a1,a2);
+				UnityEngine.Profiling.Profiler.BeginSample(a1,a2);
 				pushValue(l,true);
 				return 1;
 			}
@@ -60,7 +47,7 @@ public class Lua_UnityEngine_Profiler : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int EndSample_s(IntPtr l) {
 		try {
-			UnityEngine.Profiler.EndSample();
+			UnityEngine.Profiling.Profiler.EndSample();
 			pushValue(l,true);
 			return 1;
 		}
@@ -73,7 +60,7 @@ public class Lua_UnityEngine_Profiler : LuaObject {
 		try {
 			UnityEngine.Object a1;
 			checkType(l,1,out a1);
-			var ret=UnityEngine.Profiler.GetRuntimeMemorySize(a1);
+			var ret=UnityEngine.Profiling.Profiler.GetRuntimeMemorySize(a1);
 			pushValue(l,true);
 			pushValue(l,ret);
 			return 2;
@@ -85,7 +72,7 @@ public class Lua_UnityEngine_Profiler : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int GetMonoHeapSize_s(IntPtr l) {
 		try {
-			var ret=UnityEngine.Profiler.GetMonoHeapSize();
+			var ret=UnityEngine.Profiling.Profiler.GetMonoHeapSize();
 			pushValue(l,true);
 			pushValue(l,ret);
 			return 2;
@@ -97,7 +84,7 @@ public class Lua_UnityEngine_Profiler : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int GetMonoUsedSize_s(IntPtr l) {
 		try {
-			var ret=UnityEngine.Profiler.GetMonoUsedSize();
+			var ret=UnityEngine.Profiling.Profiler.GetMonoUsedSize();
 			pushValue(l,true);
 			pushValue(l,ret);
 			return 2;
@@ -109,7 +96,7 @@ public class Lua_UnityEngine_Profiler : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int GetTotalAllocatedMemory_s(IntPtr l) {
 		try {
-			var ret=UnityEngine.Profiler.GetTotalAllocatedMemory();
+			var ret=UnityEngine.Profiling.Profiler.GetTotalAllocatedMemory();
 			pushValue(l,true);
 			pushValue(l,ret);
 			return 2;
@@ -121,7 +108,7 @@ public class Lua_UnityEngine_Profiler : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int GetTotalUnusedReservedMemory_s(IntPtr l) {
 		try {
-			var ret=UnityEngine.Profiler.GetTotalUnusedReservedMemory();
+			var ret=UnityEngine.Profiling.Profiler.GetTotalUnusedReservedMemory();
 			pushValue(l,true);
 			pushValue(l,ret);
 			return 2;
@@ -133,7 +120,7 @@ public class Lua_UnityEngine_Profiler : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int GetTotalReservedMemory_s(IntPtr l) {
 		try {
-			var ret=UnityEngine.Profiler.GetTotalReservedMemory();
+			var ret=UnityEngine.Profiling.Profiler.GetTotalReservedMemory();
 			pushValue(l,true);
 			pushValue(l,ret);
 			return 2;
@@ -146,7 +133,7 @@ public class Lua_UnityEngine_Profiler : LuaObject {
 	static public int get_supported(IntPtr l) {
 		try {
 			pushValue(l,true);
-			pushValue(l,UnityEngine.Profiler.supported);
+			pushValue(l,UnityEngine.Profiling.Profiler.supported);
 			return 2;
 		}
 		catch(Exception e) {
@@ -157,7 +144,7 @@ public class Lua_UnityEngine_Profiler : LuaObject {
 	static public int get_logFile(IntPtr l) {
 		try {
 			pushValue(l,true);
-			pushValue(l,UnityEngine.Profiler.logFile);
+			pushValue(l,UnityEngine.Profiling.Profiler.logFile);
 			return 2;
 		}
 		catch(Exception e) {
@@ -169,7 +156,7 @@ public class Lua_UnityEngine_Profiler : LuaObject {
 		try {
 			string v;
 			checkType(l,2,out v);
-			UnityEngine.Profiler.logFile=v;
+			UnityEngine.Profiling.Profiler.logFile=v;
 			pushValue(l,true);
 			return 1;
 		}
@@ -181,7 +168,7 @@ public class Lua_UnityEngine_Profiler : LuaObject {
 	static public int get_enableBinaryLog(IntPtr l) {
 		try {
 			pushValue(l,true);
-			pushValue(l,UnityEngine.Profiler.enableBinaryLog);
+			pushValue(l,UnityEngine.Profiling.Profiler.enableBinaryLog);
 			return 2;
 		}
 		catch(Exception e) {
@@ -193,7 +180,7 @@ public class Lua_UnityEngine_Profiler : LuaObject {
 		try {
 			bool v;
 			checkType(l,2,out v);
-			UnityEngine.Profiler.enableBinaryLog=v;
+			UnityEngine.Profiling.Profiler.enableBinaryLog=v;
 			pushValue(l,true);
 			return 1;
 		}
@@ -205,7 +192,7 @@ public class Lua_UnityEngine_Profiler : LuaObject {
 	static public int get_enabled(IntPtr l) {
 		try {
 			pushValue(l,true);
-			pushValue(l,UnityEngine.Profiler.enabled);
+			pushValue(l,UnityEngine.Profiling.Profiler.enabled);
 			return 2;
 		}
 		catch(Exception e) {
@@ -217,7 +204,7 @@ public class Lua_UnityEngine_Profiler : LuaObject {
 		try {
 			bool v;
 			checkType(l,2,out v);
-			UnityEngine.Profiler.enabled=v;
+			UnityEngine.Profiling.Profiler.enabled=v;
 			pushValue(l,true);
 			return 1;
 		}
@@ -229,7 +216,7 @@ public class Lua_UnityEngine_Profiler : LuaObject {
 	static public int get_maxNumberOfSamplesPerFrame(IntPtr l) {
 		try {
 			pushValue(l,true);
-			pushValue(l,UnityEngine.Profiler.maxNumberOfSamplesPerFrame);
+			pushValue(l,UnityEngine.Profiling.Profiler.maxNumberOfSamplesPerFrame);
 			return 2;
 		}
 		catch(Exception e) {
@@ -241,7 +228,7 @@ public class Lua_UnityEngine_Profiler : LuaObject {
 		try {
 			int v;
 			checkType(l,2,out v);
-			UnityEngine.Profiler.maxNumberOfSamplesPerFrame=v;
+			UnityEngine.Profiling.Profiler.maxNumberOfSamplesPerFrame=v;
 			pushValue(l,true);
 			return 1;
 		}
@@ -253,7 +240,7 @@ public class Lua_UnityEngine_Profiler : LuaObject {
 	static public int get_usedHeapSize(IntPtr l) {
 		try {
 			pushValue(l,true);
-			pushValue(l,UnityEngine.Profiler.usedHeapSize);
+			pushValue(l,UnityEngine.Profiling.Profiler.usedHeapSize);
 			return 2;
 		}
 		catch(Exception e) {
@@ -277,6 +264,6 @@ public class Lua_UnityEngine_Profiler : LuaObject {
 		addMember(l,"enabled",get_enabled,set_enabled,false);
 		addMember(l,"maxNumberOfSamplesPerFrame",get_maxNumberOfSamplesPerFrame,set_maxNumberOfSamplesPerFrame,false);
 		addMember(l,"usedHeapSize",get_usedHeapSize,null,false);
-		createTypeMetatable(l,constructor, typeof(UnityEngine.Profiler));
+		createTypeMetatable(l,null, typeof(UnityEngine.Profiling.Profiler));
 	}
 }

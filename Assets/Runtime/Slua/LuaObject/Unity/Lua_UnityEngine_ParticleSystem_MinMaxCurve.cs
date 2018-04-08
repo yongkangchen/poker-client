@@ -118,12 +118,12 @@ public class Lua_UnityEngine_ParticleSystem_MinMaxCurve : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int get_curveScalar(IntPtr l) {
+	static public int get_curveMultiplier(IntPtr l) {
 		try {
 			UnityEngine.ParticleSystem.MinMaxCurve self;
 			checkValueType(l,1,out self);
 			pushValue(l,true);
-			pushValue(l,self.curveScalar);
+			pushValue(l,self.curveMultiplier);
 			return 2;
 		}
 		catch(Exception e) {
@@ -131,13 +131,13 @@ public class Lua_UnityEngine_ParticleSystem_MinMaxCurve : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int set_curveScalar(IntPtr l) {
+	static public int set_curveMultiplier(IntPtr l) {
 		try {
 			UnityEngine.ParticleSystem.MinMaxCurve self;
 			checkValueType(l,1,out self);
 			float v;
 			checkType(l,2,out v);
-			self.curveScalar=v;
+			self.curveMultiplier=v;
 			setBack(l,self);
 			pushValue(l,true);
 			return 1;
@@ -324,7 +324,7 @@ public class Lua_UnityEngine_ParticleSystem_MinMaxCurve : LuaObject {
 		getTypeTable(l,"UnityEngine.ParticleSystem.MinMaxCurve");
 		addMember(l,Evaluate);
 		addMember(l,"mode",get_mode,set_mode,true);
-		addMember(l,"curveScalar",get_curveScalar,set_curveScalar,true);
+		addMember(l,"curveMultiplier",get_curveMultiplier,set_curveMultiplier,true);
 		addMember(l,"curveMax",get_curveMax,set_curveMax,true);
 		addMember(l,"curveMin",get_curveMin,set_curveMin,true);
 		addMember(l,"constantMax",get_constantMax,set_constantMax,true);

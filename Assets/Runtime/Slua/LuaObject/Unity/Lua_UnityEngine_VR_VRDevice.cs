@@ -4,6 +4,32 @@ using SLua;
 using System.Collections.Generic;
 public class Lua_UnityEngine_VR_VRDevice : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static public int GetTrackingSpaceType_s(IntPtr l) {
+		try {
+			var ret=UnityEngine.VR.VRDevice.GetTrackingSpaceType();
+			pushValue(l,true);
+			pushEnum(l,(int)ret);
+			return 2;
+		}
+		catch(Exception e) {
+			return error(l,e);
+		}
+	}
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static public int SetTrackingSpaceType_s(IntPtr l) {
+		try {
+			UnityEngine.VR.TrackingSpaceType a1;
+			checkEnum(l,1,out a1);
+			var ret=UnityEngine.VR.VRDevice.SetTrackingSpaceType(a1);
+			pushValue(l,true);
+			pushValue(l,ret);
+			return 2;
+		}
+		catch(Exception e) {
+			return error(l,e);
+		}
+	}
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int GetNativePtr_s(IntPtr l) {
 		try {
 			var ret=UnityEngine.VR.VRDevice.GetNativePtr();
@@ -50,6 +76,8 @@ public class Lua_UnityEngine_VR_VRDevice : LuaObject {
 	}
 	static public void reg(IntPtr l) {
 		getTypeTable(l,"UnityEngine.VR.VRDevice");
+		addMember(l,GetTrackingSpaceType_s);
+		addMember(l,SetTrackingSpaceType_s);
 		addMember(l,GetNativePtr_s);
 		addMember(l,"isPresent",get_isPresent,null,false);
 		addMember(l,"model",get_model,null,false);

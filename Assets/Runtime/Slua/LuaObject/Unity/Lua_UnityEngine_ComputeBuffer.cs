@@ -103,6 +103,19 @@ public class Lua_UnityEngine_ComputeBuffer : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static public int GetNativeBufferPtr(IntPtr l) {
+		try {
+			UnityEngine.ComputeBuffer self=(UnityEngine.ComputeBuffer)checkSelf(l);
+			var ret=self.GetNativeBufferPtr();
+			pushValue(l,true);
+			pushValue(l,ret);
+			return 2;
+		}
+		catch(Exception e) {
+			return error(l,e);
+		}
+	}
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int CopyCount_s(IntPtr l) {
 		try {
 			UnityEngine.ComputeBuffer a1;
@@ -150,6 +163,7 @@ public class Lua_UnityEngine_ComputeBuffer : LuaObject {
 		addMember(l,SetData);
 		addMember(l,SetCounterValue);
 		addMember(l,GetData);
+		addMember(l,GetNativeBufferPtr);
 		addMember(l,CopyCount_s);
 		addMember(l,"count",get_count,null,true);
 		addMember(l,"stride",get_stride,null,true);

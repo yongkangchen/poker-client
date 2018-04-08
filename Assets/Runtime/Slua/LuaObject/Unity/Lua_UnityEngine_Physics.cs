@@ -2313,6 +2313,54 @@ public class Lua_UnityEngine_Physics : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static public int ComputePenetration_s(IntPtr l) {
+		try {
+			UnityEngine.Collider a1;
+			checkType(l,1,out a1);
+			UnityEngine.Vector3 a2;
+			checkType(l,2,out a2);
+			UnityEngine.Quaternion a3;
+			checkType(l,3,out a3);
+			UnityEngine.Collider a4;
+			checkType(l,4,out a4);
+			UnityEngine.Vector3 a5;
+			checkType(l,5,out a5);
+			UnityEngine.Quaternion a6;
+			checkType(l,6,out a6);
+			UnityEngine.Vector3 a7;
+			System.Single a8;
+			var ret=UnityEngine.Physics.ComputePenetration(a1,a2,a3,a4,a5,a6,out a7,out a8);
+			pushValue(l,true);
+			pushValue(l,ret);
+			pushValue(l,a7);
+			pushValue(l,a8);
+			return 4;
+		}
+		catch(Exception e) {
+			return error(l,e);
+		}
+	}
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static public int ClosestPoint_s(IntPtr l) {
+		try {
+			UnityEngine.Vector3 a1;
+			checkType(l,1,out a1);
+			UnityEngine.Collider a2;
+			checkType(l,2,out a2);
+			UnityEngine.Vector3 a3;
+			checkType(l,3,out a3);
+			UnityEngine.Quaternion a4;
+			checkType(l,4,out a4);
+			var ret=UnityEngine.Physics.ClosestPoint(a1,a2,a3,a4);
+			pushValue(l,true);
+			pushValue(l,ret);
+			return 2;
+		}
+		catch(Exception e) {
+			return error(l,e);
+		}
+	}
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int get_IgnoreRaycastLayer(IntPtr l) {
 		try {
 			pushValue(l,true);
@@ -2513,6 +2561,30 @@ public class Lua_UnityEngine_Physics : LuaObject {
 			return error(l,e);
 		}
 	}
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static public int get_queriesHitBackfaces(IntPtr l) {
+		try {
+			pushValue(l,true);
+			pushValue(l,UnityEngine.Physics.queriesHitBackfaces);
+			return 2;
+		}
+		catch(Exception e) {
+			return error(l,e);
+		}
+	}
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static public int set_queriesHitBackfaces(IntPtr l) {
+		try {
+			bool v;
+			checkType(l,2,out v);
+			UnityEngine.Physics.queriesHitBackfaces=v;
+			pushValue(l,true);
+			return 1;
+		}
+		catch(Exception e) {
+			return error(l,e);
+		}
+	}
 	static public void reg(IntPtr l) {
 		getTypeTable(l,"UnityEngine.Physics");
 		addMember(l,Raycast_s);
@@ -2540,6 +2612,8 @@ public class Lua_UnityEngine_Physics : LuaObject {
 		addMember(l,IgnoreCollision_s);
 		addMember(l,IgnoreLayerCollision_s);
 		addMember(l,GetIgnoreLayerCollision_s);
+		addMember(l,ComputePenetration_s);
+		addMember(l,ClosestPoint_s);
 		addMember(l,"IgnoreRaycastLayer",get_IgnoreRaycastLayer,null,false);
 		addMember(l,"DefaultRaycastLayers",get_DefaultRaycastLayers,null,false);
 		addMember(l,"AllLayers",get_AllLayers,null,false);
@@ -2550,6 +2624,7 @@ public class Lua_UnityEngine_Physics : LuaObject {
 		addMember(l,"defaultSolverVelocityIterations",get_defaultSolverVelocityIterations,set_defaultSolverVelocityIterations,false);
 		addMember(l,"sleepThreshold",get_sleepThreshold,set_sleepThreshold,false);
 		addMember(l,"queriesHitTriggers",get_queriesHitTriggers,set_queriesHitTriggers,false);
+		addMember(l,"queriesHitBackfaces",get_queriesHitBackfaces,set_queriesHitBackfaces,false);
 		createTypeMetatable(l,constructor, typeof(UnityEngine.Physics));
 	}
 }

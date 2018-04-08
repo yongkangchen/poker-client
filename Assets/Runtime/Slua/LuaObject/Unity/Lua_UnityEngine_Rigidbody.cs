@@ -975,32 +975,6 @@ public class Lua_UnityEngine_Rigidbody : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int get_useConeFriction(IntPtr l) {
-		try {
-			UnityEngine.Rigidbody self=(UnityEngine.Rigidbody)checkSelf(l);
-			pushValue(l,true);
-			pushValue(l,self.useConeFriction);
-			return 2;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int set_useConeFriction(IntPtr l) {
-		try {
-			UnityEngine.Rigidbody self=(UnityEngine.Rigidbody)checkSelf(l);
-			bool v;
-			checkType(l,2,out v);
-			self.useConeFriction=v;
-			pushValue(l,true);
-			return 1;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int get_position(IntPtr l) {
 		try {
 			UnityEngine.Rigidbody self=(UnityEngine.Rigidbody)checkSelf(l);
@@ -1219,7 +1193,6 @@ public class Lua_UnityEngine_Rigidbody : LuaObject {
 		addMember(l,"inertiaTensorRotation",get_inertiaTensorRotation,set_inertiaTensorRotation,true);
 		addMember(l,"inertiaTensor",get_inertiaTensor,set_inertiaTensor,true);
 		addMember(l,"detectCollisions",get_detectCollisions,set_detectCollisions,true);
-		addMember(l,"useConeFriction",get_useConeFriction,set_useConeFriction,true);
 		addMember(l,"position",get_position,set_position,true);
 		addMember(l,"rotation",get_rotation,set_rotation,true);
 		addMember(l,"interpolation",get_interpolation,set_interpolation,true);

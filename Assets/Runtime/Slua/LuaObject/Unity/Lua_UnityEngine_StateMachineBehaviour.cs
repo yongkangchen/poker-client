@@ -28,7 +28,7 @@ public class Lua_UnityEngine_StateMachineBehaviour : LuaObject {
 				System.Int32 a3;
 				checkType(l,4,out a3);
 				UnityEngine.Experimental.Director.AnimatorControllerPlayable a4;
-				checkValueType(l,5,out a4);
+				checkType(l,5,out a4);
 				self.OnStateEnter(a1,a2,a3,a4);
 				pushValue(l,true);
 				return 1;
@@ -66,7 +66,7 @@ public class Lua_UnityEngine_StateMachineBehaviour : LuaObject {
 				System.Int32 a3;
 				checkType(l,4,out a3);
 				UnityEngine.Experimental.Director.AnimatorControllerPlayable a4;
-				checkValueType(l,5,out a4);
+				checkType(l,5,out a4);
 				self.OnStateUpdate(a1,a2,a3,a4);
 				pushValue(l,true);
 				return 1;
@@ -104,7 +104,7 @@ public class Lua_UnityEngine_StateMachineBehaviour : LuaObject {
 				System.Int32 a3;
 				checkType(l,4,out a3);
 				UnityEngine.Experimental.Director.AnimatorControllerPlayable a4;
-				checkValueType(l,5,out a4);
+				checkType(l,5,out a4);
 				self.OnStateExit(a1,a2,a3,a4);
 				pushValue(l,true);
 				return 1;
@@ -142,7 +142,7 @@ public class Lua_UnityEngine_StateMachineBehaviour : LuaObject {
 				System.Int32 a3;
 				checkType(l,4,out a3);
 				UnityEngine.Experimental.Director.AnimatorControllerPlayable a4;
-				checkValueType(l,5,out a4);
+				checkType(l,5,out a4);
 				self.OnStateMove(a1,a2,a3,a4);
 				pushValue(l,true);
 				return 1;
@@ -180,7 +180,7 @@ public class Lua_UnityEngine_StateMachineBehaviour : LuaObject {
 				System.Int32 a3;
 				checkType(l,4,out a3);
 				UnityEngine.Experimental.Director.AnimatorControllerPlayable a4;
-				checkValueType(l,5,out a4);
+				checkType(l,5,out a4);
 				self.OnStateIK(a1,a2,a3,a4);
 				pushValue(l,true);
 				return 1;
@@ -214,7 +214,7 @@ public class Lua_UnityEngine_StateMachineBehaviour : LuaObject {
 				System.Int32 a2;
 				checkType(l,3,out a2);
 				UnityEngine.Experimental.Director.AnimatorControllerPlayable a3;
-				checkValueType(l,4,out a3);
+				checkType(l,4,out a3);
 				self.OnStateMachineEnter(a1,a2,a3);
 				pushValue(l,true);
 				return 1;
@@ -248,7 +248,7 @@ public class Lua_UnityEngine_StateMachineBehaviour : LuaObject {
 				System.Int32 a2;
 				checkType(l,3,out a2);
 				UnityEngine.Experimental.Director.AnimatorControllerPlayable a3;
-				checkValueType(l,4,out a3);
+				checkType(l,4,out a3);
 				self.OnStateMachineExit(a1,a2,a3);
 				pushValue(l,true);
 				return 1;

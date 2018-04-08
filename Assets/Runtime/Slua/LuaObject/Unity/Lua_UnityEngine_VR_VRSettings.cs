@@ -54,6 +54,17 @@ public class Lua_UnityEngine_VR_VRSettings : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static public int get_isDeviceActive(IntPtr l) {
+		try {
+			pushValue(l,true);
+			pushValue(l,UnityEngine.VR.VRSettings.isDeviceActive);
+			return 2;
+		}
+		catch(Exception e) {
+			return error(l,e);
+		}
+	}
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int get_showDeviceView(IntPtr l) {
 		try {
 			pushValue(l,true);
@@ -173,6 +184,7 @@ public class Lua_UnityEngine_VR_VRSettings : LuaObject {
 		getTypeTable(l,"UnityEngine.VR.VRSettings");
 		addMember(l,LoadDeviceByName_s);
 		addMember(l,"enabled",get_enabled,set_enabled,false);
+		addMember(l,"isDeviceActive",get_isDeviceActive,null,false);
 		addMember(l,"showDeviceView",get_showDeviceView,set_showDeviceView,false);
 		addMember(l,"renderScale",get_renderScale,set_renderScale,false);
 		addMember(l,"eyeTextureWidth",get_eyeTextureWidth,null,false);

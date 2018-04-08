@@ -6,8 +6,8 @@ public class Lua_UnityEngine_NavMeshHit : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int constructor(IntPtr l) {
 		try {
-			UnityEngine.NavMeshHit o;
-			o=new UnityEngine.NavMeshHit();
+			UnityEngine.AI.NavMeshHit o;
+			o=new UnityEngine.AI.NavMeshHit();
 			pushValue(l,true);
 			pushValue(l,o);
 			return 2;
@@ -19,7 +19,7 @@ public class Lua_UnityEngine_NavMeshHit : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int get_position(IntPtr l) {
 		try {
-			UnityEngine.NavMeshHit self;
+			UnityEngine.AI.NavMeshHit self;
 			checkValueType(l,1,out self);
 			pushValue(l,true);
 			pushValue(l,self.position);
@@ -32,7 +32,7 @@ public class Lua_UnityEngine_NavMeshHit : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int set_position(IntPtr l) {
 		try {
-			UnityEngine.NavMeshHit self;
+			UnityEngine.AI.NavMeshHit self;
 			checkValueType(l,1,out self);
 			UnityEngine.Vector3 v;
 			checkType(l,2,out v);
@@ -48,7 +48,7 @@ public class Lua_UnityEngine_NavMeshHit : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int get_normal(IntPtr l) {
 		try {
-			UnityEngine.NavMeshHit self;
+			UnityEngine.AI.NavMeshHit self;
 			checkValueType(l,1,out self);
 			pushValue(l,true);
 			pushValue(l,self.normal);
@@ -61,7 +61,7 @@ public class Lua_UnityEngine_NavMeshHit : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int set_normal(IntPtr l) {
 		try {
-			UnityEngine.NavMeshHit self;
+			UnityEngine.AI.NavMeshHit self;
 			checkValueType(l,1,out self);
 			UnityEngine.Vector3 v;
 			checkType(l,2,out v);
@@ -77,7 +77,7 @@ public class Lua_UnityEngine_NavMeshHit : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int get_distance(IntPtr l) {
 		try {
-			UnityEngine.NavMeshHit self;
+			UnityEngine.AI.NavMeshHit self;
 			checkValueType(l,1,out self);
 			pushValue(l,true);
 			pushValue(l,self.distance);
@@ -90,7 +90,7 @@ public class Lua_UnityEngine_NavMeshHit : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int set_distance(IntPtr l) {
 		try {
-			UnityEngine.NavMeshHit self;
+			UnityEngine.AI.NavMeshHit self;
 			checkValueType(l,1,out self);
 			float v;
 			checkType(l,2,out v);
@@ -106,7 +106,7 @@ public class Lua_UnityEngine_NavMeshHit : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int get_mask(IntPtr l) {
 		try {
-			UnityEngine.NavMeshHit self;
+			UnityEngine.AI.NavMeshHit self;
 			checkValueType(l,1,out self);
 			pushValue(l,true);
 			pushValue(l,self.mask);
@@ -119,7 +119,7 @@ public class Lua_UnityEngine_NavMeshHit : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int set_mask(IntPtr l) {
 		try {
-			UnityEngine.NavMeshHit self;
+			UnityEngine.AI.NavMeshHit self;
 			checkValueType(l,1,out self);
 			int v;
 			checkType(l,2,out v);
@@ -135,7 +135,7 @@ public class Lua_UnityEngine_NavMeshHit : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int get_hit(IntPtr l) {
 		try {
-			UnityEngine.NavMeshHit self;
+			UnityEngine.AI.NavMeshHit self;
 			checkValueType(l,1,out self);
 			pushValue(l,true);
 			pushValue(l,self.hit);
@@ -148,7 +148,7 @@ public class Lua_UnityEngine_NavMeshHit : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int set_hit(IntPtr l) {
 		try {
-			UnityEngine.NavMeshHit self;
+			UnityEngine.AI.NavMeshHit self;
 			checkValueType(l,1,out self);
 			bool v;
 			checkType(l,2,out v);
@@ -168,6 +168,6 @@ public class Lua_UnityEngine_NavMeshHit : LuaObject {
 		addMember(l,"distance",get_distance,set_distance,true);
 		addMember(l,"mask",get_mask,set_mask,true);
 		addMember(l,"hit",get_hit,set_hit,true);
-		createTypeMetatable(l,constructor, typeof(UnityEngine.NavMeshHit),typeof(System.ValueType));
+		createTypeMetatable(l,constructor, typeof(UnityEngine.AI.NavMeshHit),typeof(System.ValueType));
 	}
 }

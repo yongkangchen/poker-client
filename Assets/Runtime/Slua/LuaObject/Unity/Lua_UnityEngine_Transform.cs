@@ -34,6 +34,22 @@ public class Lua_UnityEngine_Transform : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static public int SetPositionAndRotation(IntPtr l) {
+		try {
+			UnityEngine.Transform self=(UnityEngine.Transform)checkSelf(l);
+			UnityEngine.Vector3 a1;
+			checkType(l,2,out a1);
+			UnityEngine.Quaternion a2;
+			checkType(l,3,out a2);
+			self.SetPositionAndRotation(a1,a2);
+			pushValue(l,true);
+			return 1;
+		}
+		catch(Exception e) {
+			return error(l,e);
+		}
+	}
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int Translate(IntPtr l) {
 		try {
 			int argc = LuaDLL.lua_gettop(l);
@@ -555,21 +571,6 @@ public class Lua_UnityEngine_Transform : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int FindChild(IntPtr l) {
-		try {
-			UnityEngine.Transform self=(UnityEngine.Transform)checkSelf(l);
-			System.String a1;
-			checkType(l,2,out a1);
-			var ret=self.FindChild(a1);
-			pushValue(l,true);
-			pushValue(l,ret);
-			return 2;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int GetChild(IntPtr l) {
 		try {
 			UnityEngine.Transform self=(UnityEngine.Transform)checkSelf(l);
@@ -1065,6 +1066,7 @@ public class Lua_UnityEngine_Transform : LuaObject {
 	static public void reg(IntPtr l) {
 		getTypeTable(l,"UnityEngine.Transform");
 		addMember(l,SetParent);
+		addMember(l,SetPositionAndRotation);
 		addMember(l,Translate);
 		addMember(l,Rotate);
 		addMember(l,RotateAround);
@@ -1082,7 +1084,6 @@ public class Lua_UnityEngine_Transform : LuaObject {
 		addMember(l,GetSiblingIndex);
 		addMember(l,Find);
 		addMember(l,IsChildOf);
-		addMember(l,FindChild);
 		addMember(l,GetChild);
 		addMember(l,OverlayPosition);
 		addMember(l,SetChildLayer);

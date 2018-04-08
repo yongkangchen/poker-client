@@ -367,11 +367,11 @@ public class Lua_UnityEngine_Renderer : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int get_motionVectors(IntPtr l) {
+	static public int get_motionVectorGenerationMode(IntPtr l) {
 		try {
 			UnityEngine.Renderer self=(UnityEngine.Renderer)checkSelf(l);
 			pushValue(l,true);
-			pushValue(l,self.motionVectors);
+			pushEnum(l,(int)self.motionVectorGenerationMode);
 			return 2;
 		}
 		catch(Exception e) {
@@ -379,12 +379,12 @@ public class Lua_UnityEngine_Renderer : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int set_motionVectors(IntPtr l) {
+	static public int set_motionVectorGenerationMode(IntPtr l) {
 		try {
 			UnityEngine.Renderer self=(UnityEngine.Renderer)checkSelf(l);
-			bool v;
-			checkType(l,2,out v);
-			self.motionVectors=v;
+			UnityEngine.MotionVectorGenerationMode v;
+			checkEnum(l,2,out v);
+			self.motionVectorGenerationMode=v;
 			pushValue(l,true);
 			return 1;
 		}
@@ -631,7 +631,7 @@ public class Lua_UnityEngine_Renderer : LuaObject {
 		addMember(l,"lightmapIndex",get_lightmapIndex,set_lightmapIndex,true);
 		addMember(l,"realtimeLightmapIndex",get_realtimeLightmapIndex,set_realtimeLightmapIndex,true);
 		addMember(l,"lightmapScaleOffset",get_lightmapScaleOffset,set_lightmapScaleOffset,true);
-		addMember(l,"motionVectors",get_motionVectors,set_motionVectors,true);
+		addMember(l,"motionVectorGenerationMode",get_motionVectorGenerationMode,set_motionVectorGenerationMode,true);
 		addMember(l,"realtimeLightmapScaleOffset",get_realtimeLightmapScaleOffset,set_realtimeLightmapScaleOffset,true);
 		addMember(l,"isVisible",get_isVisible,null,true);
 		addMember(l,"lightProbeUsage",get_lightProbeUsage,set_lightProbeUsage,true);
