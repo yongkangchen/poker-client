@@ -300,21 +300,30 @@ function UI.GetVolume()
     return volume
 end
 
-function UI.singleton_timer()
+function UI.singleton_timer(cycle)
     local timer_id
     return function(sec, func)
         if timer_id then
             LuaTimer.Delete(timer_id)
         end
-        
+
         if not sec then
             return
         end
-        
-        timer_id = LuaTimer.Add(sec, function()
-            timer_id = nil
-            func()
-        end)
+
+        local function timer_func()
+            local ret = func()
+            if not ret then
+                timer_id = nil
+            end
+            return ret
+        end
+
+        if cycle then
+            timer_id = LuaTimer.Add(cycle, sec, timer_func)
+        else
+            timer_id = LuaTimer.Add(sec, timer_func)
+        end
     end
 end
 
