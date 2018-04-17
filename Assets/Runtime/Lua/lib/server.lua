@@ -86,12 +86,12 @@ do
 		local t = result[1]
 
 		LLOG("on result: 0x%08x, len: %d, dump: %s, pack: %s", result[1], len, table.dump(result), table.dump({unpack(result, 2, len)}))
-
-		local co = wait_tbl[t][1]
+		
+		local co = table.remove(wait_tbl[t] or {}, 1)
 		if co then
-			table.remove(wait_tbl[t], 1)
 			resume(co, true, unpack(result, 2, len))
 		else
+			wait_tbl[t] = nil
 			local func = listen_tbl[t]
 			if func then
 				local func_co = coroutine.create(func)
@@ -146,8 +146,10 @@ do
 
 		local tbl = wait_tbl
 		wait_tbl = {}
-		for _,co in pairs(tbl) do
-			resume(co, false)
+		for _, co_tbl in pairs(tbl) do
+			for _, co in pairs(co_tbl) do
+				resume(co, false)
+			end
 		end
 		LERR("网络异常，请求失败！")
 	end
@@ -162,6 +164,7 @@ do
 	end
 
 	local function do_wait(t)
+		wait_tbl[t] = wait_tbl[t] or {}
 		table.insert(wait_tbl[t], coroutine.running())
 		return check_result(coroutine.yield())
 	end
