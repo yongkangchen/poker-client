@@ -24,6 +24,7 @@ return function(parent, data, distance)
     if not info_trans then
         info_trans = UI.InitPrefab("role", parent) 
     end
+    UI.Active(info_trans, true)
 
     local start_pos = parent:Find("pos/start").position
     info_trans.position = parent:Find("pos/ready").position
@@ -130,6 +131,7 @@ return function(parent, data, distance)
             UI.Active(ok, false)
             UI.Active(not_ok, false)
             player_texture.mainTexture = player_default_pic
+            UI.Active(info_trans, false)
         end,
         play_voice = function(v)
             play_audio.clip = v
