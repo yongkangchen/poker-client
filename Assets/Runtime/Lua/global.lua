@@ -77,6 +77,9 @@ end
 
 function UI.InitWindow(path, parent)
     local transform = UI.InitPrefab(path, parent)
+    if not transform then
+        return
+    end
     -- assert(transform:GetComponent(UIPanel) ~= nil)
     if not transform:GetComponent(UIPanel) then 
         transform.gameObject:AddComponent(UIPanel).depth = 2
