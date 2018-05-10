@@ -54,7 +54,7 @@ do
 	local halt
 	local on_data
 	local wait_data
-	
+
 	local listen_tbl = {}
 	local msg_tbl = {}
 	local function init_recv()
@@ -80,18 +80,18 @@ do
 			end
 		end)
 	end
-	
+
 	server.dispatch = function(result)
 		local len = table.maxn(result)
 		local t = result[1]
-		
+
 		LLOG("on result: 0x%08x, len: %d, dump: %s, pack: %s", result[1], len, table.dump(result), table.dump({unpack(result, 2, len)}))
 		
-		local co = wait_tbl[t]
+		local co = table.remove(wait_tbl[t] or {}, 1)
 		if co then
-			wait_tbl[t] = nil
 			resume(co, true, unpack(result, 2, len))
 		else
+			wait_tbl[t] = nil
 			local func = listen_tbl[t]
 			if func then
 				local func_co = coroutine.create(func)
@@ -109,7 +109,7 @@ do
 			on_data()
 		end
 	end
-	
+
 	SocketManager.onError = function( errno )
 		LERR("errno: %s", errno)
 		server.close()
@@ -117,17 +117,17 @@ do
 			UnityEngine.SceneManagement.SceneManager.LoadScene(0)
 		end)
 	end
-	
+
 	function server.sleep(sec)
 		server.halt(true)
 		LuaTimer.Add(sec, function()
 			server.halt()
 		end)
 	end
-	
+
 	function server.halt(v)
 		halt = v
-		
+
 		while not halt do
 			local result = table.remove(msg_tbl, 1)
 			if not result then
@@ -136,7 +136,7 @@ do
 			server.dispatch(result)
 		end
 	end
-	
+
 	function server.close()
 		init_recv()
 
@@ -146,8 +146,10 @@ do
 
 		local tbl = wait_tbl
 		wait_tbl = {}
-		for _,co in pairs(tbl) do
-			resume(co, false)
+		for _, co_tbl in pairs(tbl) do
+			for _, co in pairs(co_tbl) do
+				resume(co, false)
+			end
 		end
 		LERR("网络异常，请求失败！")
 	end
@@ -162,7 +164,8 @@ do
 	end
 
 	local function do_wait(t)
-		wait_tbl[t] = coroutine.running()
+		wait_tbl[t] = wait_tbl[t] or {}
+		table.insert(wait_tbl[t], coroutine.running())
 		return check_result(coroutine.yield())
 	end
 
@@ -177,11 +180,11 @@ do
 
 	function server.send(wait, t, ... )
 		local msg_data = table.dump({t, ...}) .. "\r\n"
-		
+
 		SocketManager.send(Slua.ToBytes(msg_data))
 
 		LLOG("send: 0x%08x, %s", t, msg_data)
-		
+
 		if wait == false then
 			return
 		end
