@@ -16,7 +16,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using SLua;
-using System;
+
 public class Main : MonoBehaviour {
 	#if UNITY_EDITOR
 	public bool isLua = false;
