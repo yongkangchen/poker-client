@@ -48,8 +48,6 @@ end)
 
 local game_path, game_loaded, game_reg
 local function game_require(name)
-    assert(name ~= "game_msg", "do not load " .. name .. ".lua file!")
-
     local mod = open_require[name]
     if mod then
         return mod
@@ -64,6 +62,8 @@ local function game_require(name)
     if mod then
         return mod
     end
+
+    assert(name ~= "game_msg", "do not load " .. name .. ".lua file!")
 
     local path = game_path .. "/" .. name:gsub("%.", "/") .. ".lua"
     local f = loadfile(path)
