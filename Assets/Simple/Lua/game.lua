@@ -101,7 +101,11 @@ return {
         local init_room = require "room"
         return function(player_data, on_over)
             local game_name = player_data.room_data.game_name
-            local play = require(game_name .. "." .. game_name)
+
+            ENABLE_SANDBOX = true
+            local _game_path = CWD..MainFloder.."/Lua"
+            local play = require "game_require"(game_name .. "." .. game_name, _game_path)
+            -- local play = require(game_name .. "." .. game_name)
             return init_room(play, player_data, on_over)
         end
     end,
