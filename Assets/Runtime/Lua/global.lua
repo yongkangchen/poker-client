@@ -17,10 +17,6 @@ WeChatUtil = WeChatUtil or {
     Md5Sum = function() return tostring(os.clock()) end,
 }
 
-if not bit then
-    bit = require "lib.numberlua".bit
-end
-
 require "lib.log"
 require "lib.ext"
 ThirdDLL = require "ThirdDLL"
@@ -79,8 +75,11 @@ function UI.InitPrefab(path, parent)
     return transform
 end
 
-function UI.InitWindow(path, parent)
+function UI.InitWindow(path, parent, play_tween)
     local transform = UI.InitPrefab(path, parent)
+    if not transform then
+        return
+    end
     -- assert(transform:GetComponent(UIPanel) ~= nil)
     if not transform:GetComponent(UIPanel) then 
         transform.gameObject:AddComponent(UIPanel).depth = 2
@@ -90,7 +89,25 @@ function UI.InitWindow(path, parent)
     --TODO: 要设置mask的anchor使其全屏
     mask:GetComponent(UIWidget):SetAnchor(transform.gameObject, 0, 0, 0, 0)    
     mask:GetComponent(UI2DSprite).depth = -100
-    
+
+    if play_tween == nil then
+        play_tween = UI.WindowTween
+    end
+
+    if play_tween then
+        local tweenobj = UnityEngine.GameObject().transform
+        tweenobj:SetParent(mask, false)
+        tweenobj.name = "__WindowTween"
+        mask.name = "mask"
+
+        local Vector3 = UnityEngine.Vector3
+        transform.localScale = Vector3(0.2, 0.2, 1)
+        EventDelegate.Add(TweenScale.Begin(transform.gameObject, 0.15, Vector3(1.15, 1.15, 1)).onFinished, function()
+            TweenScale.Begin(transform.gameObject, 0.08, UnityEngine.Vector3(1, 1, 1))
+        end)
+    end
+
+   
     return transform
 end
 
@@ -304,26 +321,42 @@ function UI.GetVolume()
     return volume
 end
 
-function UI.singleton_timer()
+function UI.singleton_timer(cycle)
     local timer_id
     return function(sec, func)
         if timer_id then
             LuaTimer.Delete(timer_id)
         end
-        
+
         if not sec then
             return
         end
-        
-        timer_id = LuaTimer.Add(sec, function()
-            timer_id = nil
-            func()
-        end)
+
+        local function timer_func()
+            local ret = func()
+            if not ret then
+                timer_id = nil
+            end
+            return ret
+        end
+
+        if cycle then
+            timer_id = LuaTimer.Add(cycle, sec, timer_func)
+        else
+            timer_id = LuaTimer.Add(sec, timer_func)
+        end
     end
 end
 
 function UI.Destroy(transform)
-  GameObject.Destroy(transform.gameObject)
+   if UI.WindowTween and transform:Find("mask/__WindowTween") then
+        local Vector3 = UnityEngine.Vector3
+        EventDelegate.Add(TweenScale.Begin(transform.gameObject, 0.15, Vector3(0.2, 0.2, 1)).onFinished, function()
+            GameObject.Destroy(transform.gameObject)
+        end)
+    else
+        GameObject.Destroy(transform.gameObject)
+    end
 end
 
 function UI.OnDestroy(transform, func)
@@ -338,6 +371,10 @@ function UI.OnDestroy(transform, func)
 end
 
 function UI.LimitName(name)
+    if not name then
+        return ""
+    end
+
     local v = string.utf8sub(name, 1, 10)
     if v == name then
         return name
@@ -350,13 +387,15 @@ function UI.TrimBlank(s)
     return (string.gsub(s, "^%s*(.-)%s*$", "%1"))
 end
 
-function UI.ShareScreen(transform, path)
+function UI.ShareScreen(transform, path, ...)
     if require "game_cfg".APPSTORE then
         UI.Active(transform:Find(path), false)
         return
     end
-    
+
+    local param = {...}
+
     UI.OnClick(transform, path, function()
-        ShareScreenShot()
+        ShareScreenShot(unpack(param, 1, table.maxn(param)))
     end)
 end
