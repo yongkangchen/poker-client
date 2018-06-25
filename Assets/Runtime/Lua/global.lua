@@ -94,8 +94,7 @@ function UI.InitWindow(path, parent, play_tween)
         play_tween = UI.WindowTween
     end
 
-    local game_cfg = require "game_cfg"
-    if play_tween and table.index(game_cfg.ADD_TWEEN, path) then
+    if play_tween then
         local tweenobj = UnityEngine.GameObject().transform
         tweenobj:SetParent(mask, false)
         tweenobj.name = "__WindowTween"
