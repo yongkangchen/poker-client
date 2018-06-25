@@ -94,21 +94,18 @@ function UI.InitWindow(path, parent, play_tween)
         play_tween = UI.WindowTween
     end
 
-    if play_tween then
-        local tbl = path:split("/")
-        local game_cfg = require "game_cfg"
-        if table.index(game_cfg.ADD_TWEEN, tbl[#tbl]) then
-            local tweenobj = UnityEngine.GameObject().transform
-            tweenobj:SetParent(mask, false)
-            tweenobj.name = "__WindowTween"
-            mask.name = "mask"
+    local game_cfg = require "game_cfg"
+    if play_tween and table.index(game_cfg.ADD_TWEEN, path) then
+        local tweenobj = UnityEngine.GameObject().transform
+        tweenobj:SetParent(mask, false)
+        tweenobj.name = "__WindowTween"
+        mask.name = "mask"
 
-            local Vector3 = UnityEngine.Vector3
-            transform.localScale = Vector3(0.85, 0.85, 1)
-            EventDelegate.Add(TweenScale.Begin(transform.gameObject, 0.08, Vector3(1.05, 1.05, 1)).onFinished, function()
-                TweenScale.Begin(transform.gameObject, 0.15, UnityEngine.Vector3(1, 1, 1))
-            end)
-        end
+        local Vector3 = UnityEngine.Vector3
+        transform.localScale = Vector3(0.85, 0.85, 1)
+        EventDelegate.Add(TweenScale.Begin(transform.gameObject, 0.08, Vector3(1.05, 1.05, 1)).onFinished, function()
+            TweenScale.Begin(transform.gameObject, 0.15, UnityEngine.Vector3(1, 1, 1))
+        end)
     end
    
     return transform
