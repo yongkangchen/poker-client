@@ -97,7 +97,7 @@ function UI.InitWindow(path, parent, play_tween)
     if play_tween then
         local tbl = path:split("/")
         local game_cfg = require "game_cfg"
-        if table.index(game_cfg.add_tween, tbl[#tbl]) then
+        if table.index(game_cfg.ADD_TWEEN, tbl[#tbl]) then
             local tweenobj = UnityEngine.GameObject().transform
             tweenobj:SetParent(mask, false)
             tweenobj.name = "__WindowTween"
