@@ -94,19 +94,19 @@ function UI.InitWindow(path, parent, play_tween)
         play_tween = UI.WindowTween
     end
 
-    if play_tween then
+    local game_cfg = require "game_cfg"
+    if play_tween and table.index(game_cfg.ADD_TWEEN, path) then
         local tweenobj = UnityEngine.GameObject().transform
         tweenobj:SetParent(mask, false)
         tweenobj.name = "__WindowTween"
         mask.name = "mask"
 
         local Vector3 = UnityEngine.Vector3
-        transform.localScale = Vector3(0.2, 0.2, 1)
-        EventDelegate.Add(TweenScale.Begin(transform.gameObject, 0.15, Vector3(1.15, 1.15, 1)).onFinished, function()
-            TweenScale.Begin(transform.gameObject, 0.08, UnityEngine.Vector3(1, 1, 1))
+        transform.localScale = Vector3(0.85, 0.85, 1)
+        EventDelegate.Add(TweenScale.Begin(transform.gameObject, 0.08, Vector3(1.05, 1.05, 1)).onFinished, function()
+            TweenScale.Begin(transform.gameObject, 0.15, UnityEngine.Vector3(1, 1, 1))
         end)
     end
-
    
     return transform
 end
@@ -351,7 +351,7 @@ end
 function UI.Destroy(transform)
    if UI.WindowTween and transform:Find("mask/__WindowTween") then
         local Vector3 = UnityEngine.Vector3
-        EventDelegate.Add(TweenScale.Begin(transform.gameObject, 0.15, Vector3(0.2, 0.2, 1)).onFinished, function()
+        EventDelegate.Add(TweenScale.Begin(transform.gameObject, 0.15, Vector3(0.9, 0.9, 1)).onFinished, function()
             GameObject.Destroy(transform.gameObject)
         end)
     else
