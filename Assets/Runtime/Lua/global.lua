@@ -25,6 +25,12 @@ local File = System.IO.File
 
 sync = require "lib.sync"
 
+coroutine.wrapnew = function(func)
+    return function(...)
+        return coroutine.wrap(func)(...)
+    end
+end
+
 local GameObject = UnityEngine.GameObject
 local PlayerPrefs = UnityEngine.PlayerPrefs
 local Instantiate = UnityEngine.Object.Instantiate
@@ -112,6 +118,26 @@ end
 
 UI.InitPrefabX = UI.InitPrefab
 UI.InitWindowX = UI.InitWindow
+
+function UI.InitPrefabSync(...)
+   UnityEngine.Yield(UnityEngine.WaitForEndOfFrame())
+   return UI.InitPrefab(...)
+end
+
+function UI.InitWindowSync(...)
+   UnityEngine.Yield(UnityEngine.WaitForEndOfFrame())
+   return UI.InitWindow(...)
+end
+
+function UI.LoadSpriteSync(...)
+   UnityEngine.Yield(UnityEngine.WaitForEndOfFrame())
+   return UI.LoadSprite(...)
+end
+
+function UI.LoadAudioSync(...)
+   UnityEngine.Yield(UnityEngine.WaitForEndOfFrame())
+   return UI.LoadSprite(...)
+end
 
 function UI.Child(transform, path)
     if path == nil then
