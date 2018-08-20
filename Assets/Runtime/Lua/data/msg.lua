@@ -14,7 +14,6 @@ of this license document, but changing it is not allowed.
 return {
     DEBUG = 0x0001, --Lua
     TICK = 0x0002, --Lua
-
     KICK = 0x0009,
 
     -----LOBBY---------------
@@ -32,7 +31,8 @@ return {
     AGREE = 0x0028,
     DISMISS = 0x0032,
     ROOM_OUT = 0x0033,
-
+    ROOM_CONTINUE = 0x004A,
+    ROOM_INVITE = 0x004B,
     -----ROOM_EXTEND--------------
     START_GAME = 0x001A,
     GPS = 0x0029,
@@ -66,4 +66,8 @@ return {
 
     SIT_DOWN = 0x003E,
     VISITOR_LIST = 0x003F,
+
+    ------simple record----------
+    SIMPLE_HISTORY = 0x9001,
+    SIMPLE_PLAY_RECODE = 0x9002,
 }
