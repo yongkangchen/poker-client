@@ -47,7 +47,7 @@ return {
     TRUST = 0x0051,
 
     ------LOBBY_EXTEND----------
-    NEWS = 0x0003, --lobby
+    NEWS = 0x0005, --lobby
     COIN = 0x0023,
     HISTORY = 0x0030,
 
@@ -55,7 +55,6 @@ return {
     INVITER_REWARD = 0x0037,
 
     CASH = 0x1010, --lobby
-    REFRESH_PAY = 0x1013, --lobby
     IDENTIFY = 0x1014, --lobby
 
     ACCREDIT_COUNT = 0x1015, --lobby

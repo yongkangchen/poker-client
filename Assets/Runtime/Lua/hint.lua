@@ -14,13 +14,18 @@ of this license document, but changing it is not allowed.
 local Destroy = UnityEngine.Object.Destroy
 
 return function(text, sec)
-    sec = sec or 2
+    sec = sec or 1
     local transform = UI.InitPrefab("hint")
     local bg = transform:Find("bg"):GetComponent(UI2DSprite)
     local label = transform:Find("text"):GetComponent(UILabel)
     UI.Label(transform, "text", text)
     bg.width = label.width + 100
-    LuaTimer.Add(sec * 1000, function()
-        Destroy(transform.gameObject)
-    end)
+
+    local tweens = transform:GetComponents(TweenAlpha)
+    if tweens and tweens.Length >= 2 then
+        local tween = tweens[2]
+        sec = tween.delay + tween.duration
+    end
+
+    Destroy(transform.gameObject, sec)
 end

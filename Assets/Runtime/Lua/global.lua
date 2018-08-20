@@ -15,6 +15,7 @@ WeChatUtil = WeChatUtil or {
     Reg = function() end,
     Login = function() end,
     Md5Sum = function() return tostring(os.clock()) end,
+    ShareScreenShot = function() end,
 }
 
 require "lib.log"
@@ -30,7 +31,6 @@ coroutine.wrapnew = function(func)
         return coroutine.wrap(func)(...)
     end
 end
-
 local GameObject = UnityEngine.GameObject
 local PlayerPrefs = UnityEngine.PlayerPrefs
 local Instantiate = UnityEngine.Object.Instantiate
@@ -45,7 +45,7 @@ local function play_click_audio(is_close)
     else
         clip = UI.LoadAudio("sound_button_click")
     end
-    
+
     if not click_audio then
         local click_obj = GameObject()
         click_obj.name = "click_obj"
@@ -62,13 +62,13 @@ function UI.InitPrefab(path, parent)
         LERR("nil prefab: %s", path)
         return
     end
-    
+
     local gameObject = Instantiate(prefab)
     local transform = gameObject.transform
 
     parent = parent or GameObject.Find("UI Root").transform
     transform:SetParent(parent, false)
-    
+
     local toggles = gameObject:GetComponentsInChildren(UIToggle)
     LuaTimer.Add(1000, function()
         for i = 1, toggles.Length do
@@ -77,24 +77,35 @@ function UI.InitPrefab(path, parent)
             end)
         end
     end)
-    
+
     return transform
 end
 
-function UI.InitWindow(path, parent, play_tween)
+function UI.InitPrefabSync(...)
+   UnityEngine.Yield(UnityEngine.WaitForEndOfFrame())
+   return UI.InitPrefab(...)
+end
+
+function UI.InitWindow(path, parent, play_tween, mask_close)
     local transform = UI.InitPrefab(path, parent)
     if not transform then
         return
     end
     -- assert(transform:GetComponent(UIPanel) ~= nil)
-    if not transform:GetComponent(UIPanel) then 
+    if not transform:GetComponent(UIPanel) then
         transform.gameObject:AddComponent(UIPanel).depth = 2
-    end    
+    end
     --TODO: mask, depth = -100
     local mask = UI.InitPrefab("mask", transform)
     --TODO: 要设置mask的anchor使其全屏
-    mask:GetComponent(UIWidget):SetAnchor(transform.gameObject, 0, 0, 0, 0)    
+    mask:GetComponent(UIWidget):SetAnchor(transform.gameObject, 0, 0, 0, 0)
     mask:GetComponent(UI2DSprite).depth = -100
+
+    if mask_close then
+        UI.OnClick(mask, "box", function()
+            UI.Destroy(transform)
+        end)
+    end
 
     if play_tween == nil then
         play_tween = UI.WindowTween
@@ -112,16 +123,8 @@ function UI.InitWindow(path, parent, play_tween)
             TweenScale.Begin(transform.gameObject, 0.15, UnityEngine.Vector3(1, 1, 1))
         end)
     end
-   
+
     return transform
-end
-
-UI.InitPrefabX = UI.InitPrefab
-UI.InitWindowX = UI.InitWindow
-
-function UI.InitPrefabSync(...)
-   UnityEngine.Yield(UnityEngine.WaitForEndOfFrame())
-   return UI.InitPrefab(...)
 end
 
 function UI.InitWindowSync(...)
@@ -129,15 +132,8 @@ function UI.InitWindowSync(...)
    return UI.InitWindow(...)
 end
 
-function UI.LoadSpriteSync(...)
-   UnityEngine.Yield(UnityEngine.WaitForEndOfFrame())
-   return UI.LoadSprite(...)
-end
-
-function UI.LoadAudioSync(...)
-   UnityEngine.Yield(UnityEngine.WaitForEndOfFrame())
-   return UI.LoadSprite(...)
-end
+UI.InitPrefabX = UI.InitPrefab
+UI.InitWindowX = UI.InitWindow
 
 function UI.Child(transform, path)
     if path == nil then
@@ -229,10 +225,15 @@ function UI.LoadSprite(value, game_name)
     if not prefab then
         LERR("nil prefab: %s, %s", value, prefab_name)
     end
-    
+
     local render = UI.GetComponent(prefab.transform, table.remove(value:split("/")), SpriteRenderer)
     -- print(render, value, prefab_name)
     return render.sprite
+end
+
+function UI.LoadSpriteSync(...)
+   UnityEngine.Yield(UnityEngine.WaitForEndOfFrame())
+   return UI.LoadSprite(...)
 end
 
 function UI.SpriteColorChange(transform, r, g, b, a)
@@ -258,12 +259,17 @@ function UI.Sprite(transform, path, value, game_name, perfect)
         perfect = game_name
         game_name = nil
     end
-    
+
     local sprite = UI.GetComponent(transform, path, UI2DSprite)
     sprite.sprite2D = value and UI.LoadSprite(value, game_name) or nil
-    if perfect then 
+    if perfect then
         sprite:MakePixelPerfect()
     end
+end
+
+function UI.SpriteSync(...)
+    UnityEngine.Yield(UnityEngine.WaitForEndOfFrame())
+    return UI.Sprite(...)
 end
 
 function UI.LoadAudio(path)
@@ -272,6 +278,11 @@ function UI.LoadAudio(path)
         LERR("nil audio: %s", path)
     end
     return audio
+end
+
+function UI.LoadAudioSync(...)
+   UnityEngine.Yield(UnityEngine.WaitForEndOfFrame())
+   return UI.LoadSprite(...)
 end
 
 function UI.LoadIcon(path)
@@ -289,43 +300,48 @@ function UI.RoleHead(transform, url, on_end)
         if not game_cfg.IS_VISITOR then
             return
         end
-        
+
         if game_cfg.APPSTORE then
             return
         end
-        
+
         url = url or "https://www.baidu.com/img/bd_logo1.png"
     end
-    
+
     local texture = transform:GetComponent(UITexture)
     local name = WeChatUtil.Md5Sum(url):lower()
     local path = UnityEngine.Application.persistentDataPath .. "/"..name
-    
+
     local new = Texture2D(2, 2)
     transform.gameObject:AddComponent(BehaviourEvent).onDestroy = function()
         Object.Destroy(new)
     end
     texture.mainTexture = new
-    
+
     if File.Exists(path) then
         local data = File.ReadAllBytes(path)
         new:LoadImage(data)
+        if on_end then
+            on_end()
+        end
         return
     end
-    
-    coroutine.wrap(function()    
+
+    coroutine.wrap(function()
         local www = WWW(url)
         Yield(www)
         if www.error then
             LERR("error download: %s, %s", url, www.text)
+            if on_end then
+                on_end()
+            end
             return
         end
-        
+
         if texture.mainTexture == new then
             www:LoadImageIntoTexture(new)
             File.WriteAllBytes(path, new:EncodeToPNG())
         end
-        www:Dispose()
         if on_end then
             on_end()
         end
@@ -416,6 +432,10 @@ function UI.ShareScreen(transform, path, ...)
     if require "game_cfg".APPSTORE then
         UI.Active(transform:Find(path), false)
         return
+    end
+
+    if ShareScreenMark then
+        UI.OnDestroy(transform, ShareScreenMark())
     end
 
     local param = {...}

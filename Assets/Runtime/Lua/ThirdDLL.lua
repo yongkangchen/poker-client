@@ -23,4 +23,5 @@ return {
     SwitchNet = empty_func,
     CheckLobby = empty_func,
     CheckGame = empty_func,
+    GetBatteryQuantity = function() return 100 end
 }

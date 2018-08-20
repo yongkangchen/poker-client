@@ -44,7 +44,7 @@ return function(room_data, mid_enter_room)
                 return
             end
             coroutine.wrap(function()
-                mid_enter_room(room_data.room_id, nil, true)
+                mid_enter_room(room_data.room_id, nil, nil, true)
                 Destroy(transform.gameObject)
             end)()
         end)

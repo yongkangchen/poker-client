@@ -28,7 +28,7 @@ return function(func)
         local co
         local ret
         local called = false
-        
+
         local arg = {...}
         local len = select("#", ...) + 1
         arg[len] = function(...)
@@ -48,7 +48,7 @@ return function(func)
         if ret then
             return unpack(ret)
         end
-        
+
         co = coroutine.running()
         return coroutine.yield()
     end

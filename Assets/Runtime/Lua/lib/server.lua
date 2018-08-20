@@ -49,8 +49,6 @@ do
 
 	local buf = ""
 	local wait_tbl = {}
-	local handle_sleep
-	local recv_co
 	local halt
 	local on_data
 	local wait_data
@@ -70,13 +68,13 @@ do
 				else
 					local msg_data = buf:sub(1, start_pos - 1)
 					buf = buf:sub(end_pos + 1)
-					local result = table.undump(msg_data)
+					local result = server.unpack(msg_data)
 					if result[1] < 0x0010 or not halt then
 						server.dispatch(result)
 					else
 						table.insert(msg_tbl, result)
-					end
 				end
+			end
 			end
 		end)
 	end
@@ -86,12 +84,19 @@ do
 		local t = result[1]
 
 		LLOG("on result: 0x%08x, len: %d, dump: %s, pack: %s", result[1], len, table.dump(result), table.dump({unpack(result, 2, len)}))
-		
-		local co = table.remove(wait_tbl[t] or {}, 1)
+
+		local tbl = wait_tbl[t]
+		local co
+		if tbl then
+			co = table.remove(tbl, 1)
+			if #tbl == 0 then
+				wait_tbl[t] = nil
+			end
+		end
+
 		if co then
 			resume(co, true, unpack(result, 2, len))
 		else
-			wait_tbl[t] = nil
 			local func = listen_tbl[t]
 			if func then
 				local func_co = coroutine.create(func)
@@ -178,12 +183,15 @@ do
 		return do_wait(t)
 	end
 
+	server.pack = table.dump
+	server.unpack = table.undump
+
 	function server.send(wait, t, ... )
-		local msg_data = table.dump({t, ...}) .. "\r\n"
+		local msg_data = server.pack({t, ...}) .. "\r\n"
 
 		SocketManager.send(Slua.ToBytes(msg_data))
 
-		LLOG("send: 0x%08x, %s", t, msg_data)
+		LLOG("send: 0x%08x, %s", t, table.dump{...})
 
 		if wait == false then
 			return
