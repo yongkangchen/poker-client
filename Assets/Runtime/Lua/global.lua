@@ -444,3 +444,17 @@ function UI.ShareScreen(transform, path, ...)
         ShareScreenShot(unpack(param, 1, table.maxn(param)))
     end)
 end
+
+function UI.ComputeCash(v)
+    if v <= 9999 then
+        return v
+    end
+
+    if v > 9999 and v < 1000000 then
+        local integer, float = math.modf(v/10000)
+        float = float == 0 and "" or string.sub(tostring(float), 2, 4)
+        return integer .. float .. "万"
+    end
+
+    return math.modf(v/10000) .. "万"
+end
