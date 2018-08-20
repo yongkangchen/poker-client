@@ -282,7 +282,7 @@ end
 
 function UI.LoadAudioSync(...)
    UnityEngine.Yield(UnityEngine.WaitForEndOfFrame())
-   return UI.LoadSprite(...)
+   return UI.LoadAudio(...)
 end
 
 function UI.LoadIcon(path)
