@@ -156,6 +156,34 @@ return function(parent, data, distance)
 
             end
             UI.Active(offline_sign, not v)
+            if not v then
+                local offline_time = os.time()
+                local time_secends = 0
+                local time_hores = 0
+                LuaTimer.Add(0, 1000, function()
+                    local count = os.time() - offline_time
+                    if count >= 0 then
+                        time_secends = time_secends + 1
+                        if time_secends == 60 then
+                            time_hores = time_hores + 1
+                            time_secends = 0
+                        end
+
+                        if time_secends < 10 then
+                            secends_word = "0" .. tostring(time_secends)
+                        else
+                            secends_word = tostring(time_secends)
+                        end
+                        if time_hores < 10 then
+                            hores_word = "0" .. tostring(time_hores)
+                        else
+                            hores_word = tostring(time_hores)
+                        end
+
+                        UI.Label(offline_sign, "time", hores_word .. ":" .. secends_word)
+                    end
+                end)
+            end
         end,
         pause = function(v)
             if v then
