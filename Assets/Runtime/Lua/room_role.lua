@@ -95,10 +95,18 @@ return function(parent, data, distance)
             show_eff_voice_output(false, is_text)
         end)
     end
-    
+
     local play_audio = smaile_trans:GetComponent(AudioSource)
     local zhuang = info_trans:Find("zhuang")
     local msg_start = info_trans:Find("msg_start")
+    local offline_timer
+    UI.OnDestroy(info_trans, function()
+        if offline then
+            LuaTimer.Delete(offline_timer)
+            offline_timer = nil
+        end
+    end)
+
     return {
         get_pos = function()
             return start_pos
@@ -149,41 +157,30 @@ return function(parent, data, distance)
             if v then
                 UI.SpriteColorChange(icon, 255.0, 255.0, 255.0, 255.0)
                 UI.SpriteColorChange(player_pic, 255.0, 255.0, 255.0, 255.0)
+
+                if offline then
+                    LuaTimer.Delete(offline_timer)
+                    offline_timer = nil
+                end
             else
                 UI.Active(icon_pause, v)
                 UI.SpriteColorChange(icon, 128.0, 128.0, 128.0, 128.0)
                 UI.SpriteColorChange(player_pic, 128.0, 128.0, 128.0, 128.0)
 
-            end
-            UI.Active(offline_sign, not v)
-            if not v then
                 local offline_time = os.time()
-                local time_secends = 0
-                local time_hores = 0
-                LuaTimer.Add(0, 1000, function()
-                    local count = os.time() - offline_time
-                    if count >= 0 then
-                        time_secends = time_secends + 1
-                        if time_secends == 60 then
-                            time_hores = time_hores + 1
-                            time_secends = 0
-                        end
+                offline_timer = LuaTimer.Add(0, 1000, function()
+                    local secends = os.time() - offline_time
 
-                        if time_secends < 10 then
-                            secends_word = "0" .. tostring(time_secends)
-                        else
-                            secends_word = tostring(time_secends)
-                        end
-                        if time_hores < 10 then
-                            hores_word = "0" .. tostring(time_hores)
-                        else
-                            hores_word = tostring(time_hores)
-                        end
+                    secends_word = string.format("%02d", secends % 60)
+                    hores_word = string.format("%02d", math.floor(secends / 60))
 
-                        UI.Label(offline_sign, "time", hores_word .. ":" .. secends_word)
-                    end
+                    UI.Label(offline_sign, "time", hores_word .. ":" .. secends_word)
+
+                    return true
                 end)
             end
+            UI.Active(offline_sign, not v)
+
         end,
         pause = function(v)
             if v then
