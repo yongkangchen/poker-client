@@ -147,17 +147,21 @@ return function(parent, data, distance)
             play_audio.time = 0
             play_audio:Stop()
             play_audio:Play()
-            
+
             show_eff_voice(v.length)
         end,
         ip_warning = function(_)
             -- UI.Active(ip_warning, false)
         end,
         online = function(v)
+            local time_ui = offline_sign:Find("time")
             if v then
                 UI.SpriteColorChange(icon, 255.0, 255.0, 255.0, 255.0)
                 UI.SpriteColorChange(player_pic, 255.0, 255.0, 255.0, 255.0)
-
+                
+                if not time_ui then
+                    return
+                end
                 if offline then
                     LuaTimer.Delete(offline_timer)
                     offline_timer = nil
@@ -167,6 +171,9 @@ return function(parent, data, distance)
                 UI.SpriteColorChange(icon, 128.0, 128.0, 128.0, 128.0)
                 UI.SpriteColorChange(player_pic, 128.0, 128.0, 128.0, 128.0)
 
+                if not time_ui then
+                    return
+                end
                 local offline_time = os.time()
                 offline_timer = LuaTimer.Add(0, 1000, function()
                     local secends = os.time() - offline_time
