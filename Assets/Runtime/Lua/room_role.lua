@@ -177,9 +177,15 @@ return function(parent, data, distance)
                 local offline_time = os.time()
                 offline_timer = LuaTimer.Add(0, 1000, function()
                     local secends = os.time() - offline_time
-
-                    secends_word = string.format("%02d", secends % 60)
-                    hores_word = string.format("%02d", math.floor(secends / 60))
+                    local secends_word
+                    local hores_word
+                    if secends >= 6000 then
+                        secends_word = 60
+                        hores_word = 99
+                    else
+                        secends_word = string.format("%02d", secends % 60)
+                        hores_word = string.format("%02d", math.floor(secends / 60))
+                    end
 
                     UI.Label(offline_sign, "time", hores_word .. ":" .. secends_word)
 
