@@ -54,7 +54,7 @@ return function(result, parent, room_data, pos, type, tbl)
         end)
     end
     
-    require "feedback"(transform, room_data)
+    require "feedback"(transform:Find("feedback"), room_data)
 
     if pos then
         transform.position = pos.position
