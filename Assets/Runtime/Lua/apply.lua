@@ -107,7 +107,9 @@ return function(parent, exit_info, on_close)
             item_tbl[role_id].set_agree()
             if is_close then
                 LuaTimer.Add(1000, function()
-                    Destroy(transform.gameObject)
+                    if transform then
+                        Destroy(transform.gameObject)
+                    end
                     on_close()
                 end)
             end
