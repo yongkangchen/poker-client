@@ -201,6 +201,16 @@ function UI.GetComponent(transform, path, type)
     return UI.Child(transform, path):GetComponent(type)
 end
 
+function UI.ActiveChild(trans, name)
+    if not trans then
+        return
+    end
+
+    for _, v in ipairs(UI.Children(trans)) do
+        UI.Active(v, v.name == name)
+    end
+end
+
 function UI.Active(transform, v)
     transform.gameObject:SetActive(v ~= nil and v ~= false)
     return v
