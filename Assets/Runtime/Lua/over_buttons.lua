@@ -50,6 +50,15 @@ return function(result, parent, room_data, pos, type, tbl)
         copy_result(result, room_data)
     end)
     
+    local room_continue = UI.room_continue
+    if room_continue then
+        UI.Active(transform:Find("continue"), true)
+        UI.OnClick(transform, "continue", function()
+            room_continue()
+        end)
+    end
+
+    
     if pos then
         transform.position = pos.position
     end
