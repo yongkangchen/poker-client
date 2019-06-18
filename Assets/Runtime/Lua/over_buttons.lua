@@ -55,6 +55,7 @@ return function(result, parent, room_data, pos, type, tbl)
         UI.Active(transform:Find("continue"), true)
         UI.OnClick(transform, "continue", function()
             room_continue()
+            Destroy(parent.gameObject)
         end)
     end
 
