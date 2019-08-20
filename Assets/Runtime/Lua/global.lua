@@ -299,6 +299,14 @@ function UI.LoadIcon(path)
     return ResourcesLoad(path)
 end
 
+function UI.RoleHeadClear(transform)
+    local texture = transform:GetComponent(UITexture)
+    if not texture then
+        return
+    end
+    texture.mainTexture = nil
+end
+
 local WWW = UnityEngine.WWW
 local Yield = UnityEngine.Yield
 local Texture2D = UnityEngine.Texture2D
