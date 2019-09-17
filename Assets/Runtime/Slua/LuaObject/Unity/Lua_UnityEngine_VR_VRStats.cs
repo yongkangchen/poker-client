@@ -4,42 +4,11 @@ using SLua;
 using System.Collections.Generic;
 public class Lua_UnityEngine_VR_VRStats : LuaObject {
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int TryGetGPUTimeLastFrame_s(IntPtr l) {
+	static public int get_gpuTimeLastFrame(IntPtr l) {
 		try {
-			System.Single a1;
-			var ret=UnityEngine.VR.VRStats.TryGetGPUTimeLastFrame(out a1);
 			pushValue(l,true);
-			pushValue(l,ret);
-			pushValue(l,a1);
-			return 3;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int TryGetDroppedFrameCount_s(IntPtr l) {
-		try {
-			System.Int32 a1;
-			var ret=UnityEngine.VR.VRStats.TryGetDroppedFrameCount(out a1);
-			pushValue(l,true);
-			pushValue(l,ret);
-			pushValue(l,a1);
-			return 3;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int TryGetFramePresentCount_s(IntPtr l) {
-		try {
-			System.Int32 a1;
-			var ret=UnityEngine.VR.VRStats.TryGetFramePresentCount(out a1);
-			pushValue(l,true);
-			pushValue(l,ret);
-			pushValue(l,a1);
-			return 3;
+			pushValue(l,UnityEngine.XR.XRStats.gpuTimeLastFrame);
+			return 2;
 		}
 		catch(Exception e) {
 			return error(l,e);
@@ -47,9 +16,7 @@ public class Lua_UnityEngine_VR_VRStats : LuaObject {
 	}
 	static public void reg(IntPtr l) {
 		getTypeTable(l,"UnityEngine.VR.VRStats");
-		addMember(l,TryGetGPUTimeLastFrame_s);
-		addMember(l,TryGetDroppedFrameCount_s);
-		addMember(l,TryGetFramePresentCount_s);
-		createTypeMetatable(l,null, typeof(UnityEngine.VR.VRStats));
+		addMember(l,"gpuTimeLastFrame",get_gpuTimeLastFrame,null,false);
+		createTypeMetatable(l,null, typeof(UnityEngine.XR.XRStats));
 	}
 }

@@ -348,11 +348,11 @@ public class Lua_UnityEngine_Canvas : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int get_normalizedSortingGridSize(IntPtr l) {
+	static public int get_sortingGridNormalizedSize(IntPtr l) {
 		try {
 			UnityEngine.Canvas self=(UnityEngine.Canvas)checkSelf(l);
 			pushValue(l,true);
-			pushValue(l,self.normalizedSortingGridSize);
+			pushValue(l,self.sortingGridNormalizedSize);
 			return 2;
 		}
 		catch(Exception e) {
@@ -360,12 +360,12 @@ public class Lua_UnityEngine_Canvas : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int set_normalizedSortingGridSize(IntPtr l) {
+	static public int set_sortingGridNormalizedSize(IntPtr l) {
 		try {
 			UnityEngine.Canvas self=(UnityEngine.Canvas)checkSelf(l);
-			float v;
+			int v;
 			checkType(l,2,out v);
-			self.normalizedSortingGridSize=v;
+			self.sortingGridNormalizedSize=v;
 			pushValue(l,true);
 			return 1;
 		}
@@ -406,32 +406,6 @@ public class Lua_UnityEngine_Canvas : LuaObject {
 			pushValue(l,true);
 			pushValue(l,self.cachedSortingLayerValue);
 			return 2;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int get_additionalShaderChannels(IntPtr l) {
-		try {
-			UnityEngine.Canvas self=(UnityEngine.Canvas)checkSelf(l);
-			pushValue(l,true);
-			pushEnum(l,(int)self.additionalShaderChannels);
-			return 2;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int set_additionalShaderChannels(IntPtr l) {
-		try {
-			UnityEngine.Canvas self=(UnityEngine.Canvas)checkSelf(l);
-			UnityEngine.AdditionalCanvasShaderChannels v;
-			checkEnum(l,2,out v);
-			self.additionalShaderChannels=v;
-			pushValue(l,true);
-			return 1;
 		}
 		catch(Exception e) {
 			return error(l,e);
@@ -493,10 +467,9 @@ public class Lua_UnityEngine_Canvas : LuaObject {
 		addMember(l,"overrideSorting",get_overrideSorting,set_overrideSorting,true);
 		addMember(l,"sortingOrder",get_sortingOrder,set_sortingOrder,true);
 		addMember(l,"targetDisplay",get_targetDisplay,set_targetDisplay,true);
-		addMember(l,"normalizedSortingGridSize",get_normalizedSortingGridSize,set_normalizedSortingGridSize,true);
+		addMember(l,"sortingGridNormalizedSize",get_sortingGridNormalizedSize,set_sortingGridNormalizedSize,true);
 		addMember(l,"sortingLayerID",get_sortingLayerID,set_sortingLayerID,true);
 		addMember(l,"cachedSortingLayerValue",get_cachedSortingLayerValue,null,true);
-		addMember(l,"additionalShaderChannels",get_additionalShaderChannels,set_additionalShaderChannels,true);
 		addMember(l,"sortingLayerName",get_sortingLayerName,set_sortingLayerName,true);
 		addMember(l,"rootCanvas",get_rootCanvas,null,true);
 		createTypeMetatable(l,constructor, typeof(UnityEngine.Canvas),typeof(UnityEngine.Behaviour));

@@ -10,7 +10,6 @@ public class Lua_UnityEngine_ParticleSystemRenderMode : LuaObject {
 		addMember(l,2,"HorizontalBillboard");
 		addMember(l,3,"VerticalBillboard");
 		addMember(l,4,"Mesh");
-		addMember(l,5,"None");
 		LuaDLL.lua_pop(l, 1);
 	}
 }

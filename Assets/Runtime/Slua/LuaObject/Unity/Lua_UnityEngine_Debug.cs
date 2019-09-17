@@ -545,7 +545,7 @@ public class Lua_UnityEngine_Debug : LuaObject {
 	static public int get_logger(IntPtr l) {
 		try {
 			pushValue(l,true);
-			pushValue(l,UnityEngine.Debug.logger);
+			pushValue(l,UnityEngine.Debug.unityLogger);
 			return 2;
 		}
 		catch(Exception e) {

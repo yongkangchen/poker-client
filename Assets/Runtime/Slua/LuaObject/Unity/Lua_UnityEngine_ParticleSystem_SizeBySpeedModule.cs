@@ -75,35 +75,6 @@ public class Lua_UnityEngine_ParticleSystem_SizeBySpeedModule : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int get_sizeMultiplier(IntPtr l) {
-		try {
-			UnityEngine.ParticleSystem.SizeBySpeedModule self;
-			checkValueType(l,1,out self);
-			pushValue(l,true);
-			pushValue(l,self.sizeMultiplier);
-			return 2;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int set_sizeMultiplier(IntPtr l) {
-		try {
-			UnityEngine.ParticleSystem.SizeBySpeedModule self;
-			checkValueType(l,1,out self);
-			float v;
-			checkType(l,2,out v);
-			self.sizeMultiplier=v;
-			setBack(l,self);
-			pushValue(l,true);
-			return 1;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int get_x(IntPtr l) {
 		try {
 			UnityEngine.ParticleSystem.SizeBySpeedModule self;
@@ -124,35 +95,6 @@ public class Lua_UnityEngine_ParticleSystem_SizeBySpeedModule : LuaObject {
 			UnityEngine.ParticleSystem.MinMaxCurve v;
 			checkValueType(l,2,out v);
 			self.x=v;
-			setBack(l,self);
-			pushValue(l,true);
-			return 1;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int get_xMultiplier(IntPtr l) {
-		try {
-			UnityEngine.ParticleSystem.SizeBySpeedModule self;
-			checkValueType(l,1,out self);
-			pushValue(l,true);
-			pushValue(l,self.xMultiplier);
-			return 2;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int set_xMultiplier(IntPtr l) {
-		try {
-			UnityEngine.ParticleSystem.SizeBySpeedModule self;
-			checkValueType(l,1,out self);
-			float v;
-			checkType(l,2,out v);
-			self.xMultiplier=v;
 			setBack(l,self);
 			pushValue(l,true);
 			return 1;
@@ -191,35 +133,6 @@ public class Lua_UnityEngine_ParticleSystem_SizeBySpeedModule : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int get_yMultiplier(IntPtr l) {
-		try {
-			UnityEngine.ParticleSystem.SizeBySpeedModule self;
-			checkValueType(l,1,out self);
-			pushValue(l,true);
-			pushValue(l,self.yMultiplier);
-			return 2;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int set_yMultiplier(IntPtr l) {
-		try {
-			UnityEngine.ParticleSystem.SizeBySpeedModule self;
-			checkValueType(l,1,out self);
-			float v;
-			checkType(l,2,out v);
-			self.yMultiplier=v;
-			setBack(l,self);
-			pushValue(l,true);
-			return 1;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int get_z(IntPtr l) {
 		try {
 			UnityEngine.ParticleSystem.SizeBySpeedModule self;
@@ -240,35 +153,6 @@ public class Lua_UnityEngine_ParticleSystem_SizeBySpeedModule : LuaObject {
 			UnityEngine.ParticleSystem.MinMaxCurve v;
 			checkValueType(l,2,out v);
 			self.z=v;
-			setBack(l,self);
-			pushValue(l,true);
-			return 1;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int get_zMultiplier(IntPtr l) {
-		try {
-			UnityEngine.ParticleSystem.SizeBySpeedModule self;
-			checkValueType(l,1,out self);
-			pushValue(l,true);
-			pushValue(l,self.zMultiplier);
-			return 2;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int set_zMultiplier(IntPtr l) {
-		try {
-			UnityEngine.ParticleSystem.SizeBySpeedModule self;
-			checkValueType(l,1,out self);
-			float v;
-			checkType(l,2,out v);
-			self.zMultiplier=v;
 			setBack(l,self);
 			pushValue(l,true);
 			return 1;
@@ -339,13 +223,9 @@ public class Lua_UnityEngine_ParticleSystem_SizeBySpeedModule : LuaObject {
 		getTypeTable(l,"UnityEngine.ParticleSystem.SizeBySpeedModule");
 		addMember(l,"enabled",get_enabled,set_enabled,true);
 		addMember(l,"size",get_size,set_size,true);
-		addMember(l,"sizeMultiplier",get_sizeMultiplier,set_sizeMultiplier,true);
 		addMember(l,"x",get_x,set_x,true);
-		addMember(l,"xMultiplier",get_xMultiplier,set_xMultiplier,true);
 		addMember(l,"y",get_y,set_y,true);
-		addMember(l,"yMultiplier",get_yMultiplier,set_yMultiplier,true);
 		addMember(l,"z",get_z,set_z,true);
-		addMember(l,"zMultiplier",get_zMultiplier,set_zMultiplier,true);
 		addMember(l,"separateAxes",get_separateAxes,set_separateAxes,true);
 		addMember(l,"range",get_range,set_range,true);
 		createTypeMetatable(l,constructor, typeof(UnityEngine.ParticleSystem.SizeBySpeedModule),typeof(System.ValueType));

@@ -39,17 +39,6 @@ public class Lua_UnityEngine_Application : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int Unload_s(IntPtr l) {
-		try {
-			UnityEngine.Application.Unload();
-			pushValue(l,true);
-			return 1;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int GetStreamProgressForLevel_s(IntPtr l) {
 		try {
 			int argc = LuaDLL.lua_gettop(l);
@@ -106,25 +95,13 @@ public class Lua_UnityEngine_Application : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int GetBuildTags_s(IntPtr l) {
-		try {
-			var ret=UnityEngine.Application.GetBuildTags();
-			pushValue(l,true);
-			pushValue(l,ret);
-			return 2;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int CaptureScreenshot_s(IntPtr l) {
 		try {
 			int argc = LuaDLL.lua_gettop(l);
 			if(argc==1){
 				System.String a1;
 				checkType(l,1,out a1);
-				UnityEngine.Application.CaptureScreenshot(a1);
+				UnityEngine.ScreenCapture.CaptureScreenshot(a1);
 				pushValue(l,true);
 				return 1;
 			}
@@ -133,7 +110,7 @@ public class Lua_UnityEngine_Application : LuaObject {
 				checkType(l,1,out a1);
 				System.Int32 a2;
 				checkType(l,2,out a2);
-				UnityEngine.Application.CaptureScreenshot(a1,a2);
+				UnityEngine.ScreenCapture.CaptureScreenshot(a1,a2);
 				pushValue(l,true);
 				return 1;
 			}
@@ -279,17 +256,6 @@ public class Lua_UnityEngine_Application : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int get_isFocused(IntPtr l) {
-		try {
-			pushValue(l,true);
-			pushValue(l,UnityEngine.Application.isFocused);
-			return 2;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int get_isEditor(IntPtr l) {
 		try {
 			pushValue(l,true);
@@ -301,32 +267,10 @@ public class Lua_UnityEngine_Application : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int get_isWebPlayer(IntPtr l) {
-		try {
-			pushValue(l,true);
-			pushValue(l,UnityEngine.Application.isWebPlayer);
-			return 2;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int get_platform(IntPtr l) {
 		try {
 			pushValue(l,true);
 			pushEnum(l,(int)UnityEngine.Application.platform);
-			return 2;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int get_buildGUID(IntPtr l) {
-		try {
-			pushValue(l,true);
-			pushValue(l,UnityEngine.Application.buildGUID);
 			return 2;
 		}
 		catch(Exception e) {
@@ -424,17 +368,6 @@ public class Lua_UnityEngine_Application : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int get_srcValue(IntPtr l) {
-		try {
-			pushValue(l,true);
-			pushValue(l,UnityEngine.Application.srcValue);
-			return 2;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int get_absoluteURL(IntPtr l) {
 		try {
 			pushValue(l,true);
@@ -468,18 +401,7 @@ public class Lua_UnityEngine_Application : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int get_installerName(IntPtr l) {
-		try {
-			pushValue(l,true);
-			pushValue(l,UnityEngine.Application.installerName);
-			return 2;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int get_identifier(IntPtr l) {
+	static public int get_bundleIdentifier(IntPtr l) {
 		try {
 			pushValue(l,true);
 			pushValue(l,UnityEngine.Application.identifier);
@@ -636,14 +558,23 @@ public class Lua_UnityEngine_Application : LuaObject {
 			return error(l,e);
 		}
 	}
+	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+	static public int get_isShowingSplashScreen(IntPtr l) {
+		try {
+			pushValue(l,true);
+			pushValue(l,UnityEngine.Application.isShowingSplashScreen);
+			return 2;
+		}
+		catch(Exception e) {
+			return error(l,e);
+		}
+	}
 	static public void reg(IntPtr l) {
 		getTypeTable(l,"UnityEngine.Application");
 		addMember(l,Quit_s);
 		addMember(l,CancelQuit_s);
-		addMember(l,Unload_s);
 		addMember(l,GetStreamProgressForLevel_s);
 		addMember(l,CanStreamedLevelBeLoaded_s);
-		addMember(l,GetBuildTags_s);
 		addMember(l,CaptureScreenshot_s);
 		addMember(l,HasProLicense_s);
 		addMember(l,ExternalCall_s);
@@ -655,11 +586,8 @@ public class Lua_UnityEngine_Application : LuaObject {
 		addMember(l,HasUserAuthorization_s);
 		addMember(l,"streamedBytes",get_streamedBytes,null,false);
 		addMember(l,"isPlaying",get_isPlaying,null,false);
-		addMember(l,"isFocused",get_isFocused,null,false);
 		addMember(l,"isEditor",get_isEditor,null,false);
-		addMember(l,"isWebPlayer",get_isWebPlayer,null,false);
 		addMember(l,"platform",get_platform,null,false);
-		addMember(l,"buildGUID",get_buildGUID,null,false);
 		addMember(l,"isMobilePlatform",get_isMobilePlatform,null,false);
 		addMember(l,"isConsolePlatform",get_isConsolePlatform,null,false);
 		addMember(l,"runInBackground",get_runInBackground,set_runInBackground,false);
@@ -667,12 +595,10 @@ public class Lua_UnityEngine_Application : LuaObject {
 		addMember(l,"streamingAssetsPath",get_streamingAssetsPath,null,false);
 		addMember(l,"persistentDataPath",get_persistentDataPath,null,false);
 		addMember(l,"temporaryCachePath",get_temporaryCachePath,null,false);
-		addMember(l,"srcValue",get_srcValue,null,false);
 		addMember(l,"absoluteURL",get_absoluteURL,null,false);
 		addMember(l,"unityVersion",get_unityVersion,null,false);
 		addMember(l,"version",get_version,null,false);
-		addMember(l,"installerName",get_installerName,null,false);
-		addMember(l,"identifier",get_identifier,null,false);
+		addMember(l,"bundleIdentifier",get_bundleIdentifier,null,false);
 		addMember(l,"installMode",get_installMode,null,false);
 		addMember(l,"sandboxType",get_sandboxType,null,false);
 		addMember(l,"productName",get_productName,null,false);
@@ -684,6 +610,7 @@ public class Lua_UnityEngine_Application : LuaObject {
 		addMember(l,"internetReachability",get_internetReachability,null,false);
 		addMember(l,"genuine",get_genuine,null,false);
 		addMember(l,"genuineCheckAvailable",get_genuineCheckAvailable,null,false);
+		addMember(l,"isShowingSplashScreen",get_isShowingSplashScreen,null,false);
 		createTypeMetatable(l,constructor, typeof(UnityEngine.Application));
 	}
 }

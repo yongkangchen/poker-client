@@ -17,22 +17,6 @@ public class Lua_UnityEngine_GeometryUtility : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int TestPlanesAABB_s(IntPtr l) {
-		try {
-			UnityEngine.Plane[] a1;
-			checkArray(l,1,out a1);
-			UnityEngine.Bounds a2;
-			checkValueType(l,2,out a2);
-			var ret=UnityEngine.GeometryUtility.TestPlanesAABB(a1,a2);
-			pushValue(l,true);
-			pushValue(l,ret);
-			return 2;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int CalculateFrustumPlanes_s(IntPtr l) {
 		try {
 			int argc = LuaDLL.lua_gettop(l);
@@ -61,13 +45,13 @@ public class Lua_UnityEngine_GeometryUtility : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int CalculateBounds_s(IntPtr l) {
+	static public int TestPlanesAABB_s(IntPtr l) {
 		try {
-			UnityEngine.Vector3[] a1;
+			UnityEngine.Plane[] a1;
 			checkArray(l,1,out a1);
-			UnityEngine.Matrix4x4 a2;
+			UnityEngine.Bounds a2;
 			checkValueType(l,2,out a2);
-			var ret=UnityEngine.GeometryUtility.CalculateBounds(a1,a2);
+			var ret=UnityEngine.GeometryUtility.TestPlanesAABB(a1,a2);
 			pushValue(l,true);
 			pushValue(l,ret);
 			return 2;
@@ -78,9 +62,8 @@ public class Lua_UnityEngine_GeometryUtility : LuaObject {
 	}
 	static public void reg(IntPtr l) {
 		getTypeTable(l,"UnityEngine.GeometryUtility");
-		addMember(l,TestPlanesAABB_s);
 		addMember(l,CalculateFrustumPlanes_s);
-		addMember(l,CalculateBounds_s);
+		addMember(l,TestPlanesAABB_s);
 		createTypeMetatable(l,constructor, typeof(UnityEngine.GeometryUtility));
 	}
 }

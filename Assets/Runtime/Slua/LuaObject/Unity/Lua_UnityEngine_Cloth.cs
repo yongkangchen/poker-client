@@ -343,11 +343,11 @@ public class Lua_UnityEngine_Cloth : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int get_useContinuousCollision(IntPtr l) {
+	static public int get_enableContinuousCollision(IntPtr l) {
 		try {
 			UnityEngine.Cloth self=(UnityEngine.Cloth)checkSelf(l);
 			pushValue(l,true);
-			pushValue(l,self.useContinuousCollision);
+			pushValue(l,self.enableContinuousCollision);
 			return 2;
 		}
 		catch(Exception e) {
@@ -355,12 +355,12 @@ public class Lua_UnityEngine_Cloth : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int set_useContinuousCollision(IntPtr l) {
+	static public int set_enableContinuousCollision(IntPtr l) {
 		try {
 			UnityEngine.Cloth self=(UnityEngine.Cloth)checkSelf(l);
-			float v;
+			bool v;
 			checkType(l,2,out v);
-			self.useContinuousCollision=v;
+			self.enableContinuousCollision=v;
 			pushValue(l,true);
 			return 1;
 		}
@@ -473,11 +473,11 @@ public class Lua_UnityEngine_Cloth : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int get_solverFrequency(IntPtr l) {
+	static public int get_clothSolverFrequency(IntPtr l) {
 		try {
 			UnityEngine.Cloth self=(UnityEngine.Cloth)checkSelf(l);
 			pushValue(l,true);
-			pushValue(l,self.solverFrequency);
+			pushValue(l,self.clothSolverFrequency);
 			return 2;
 		}
 		catch(Exception e) {
@@ -485,12 +485,12 @@ public class Lua_UnityEngine_Cloth : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int set_solverFrequency(IntPtr l) {
+	static public int set_clothSolverFrequency(IntPtr l) {
 		try {
 			UnityEngine.Cloth self=(UnityEngine.Cloth)checkSelf(l);
-			bool v;
+			float v;
 			checkType(l,2,out v);
-			self.solverFrequency=v;
+			self.clothSolverFrequency=v;
 			pushValue(l,true);
 			return 1;
 		}
@@ -566,12 +566,12 @@ public class Lua_UnityEngine_Cloth : LuaObject {
 		addMember(l,"normals",get_normals,null,true);
 		addMember(l,"friction",get_friction,set_friction,true);
 		addMember(l,"collisionMassScale",get_collisionMassScale,set_collisionMassScale,true);
-		addMember(l,"useContinuousCollision",get_useContinuousCollision,set_useContinuousCollision,true);
+		addMember(l,"enableContinuousCollision",get_enableContinuousCollision,set_enableContinuousCollision,true);
 		addMember(l,"useVirtualParticles",get_useVirtualParticles,set_useVirtualParticles,true);
 		addMember(l,"coefficients",get_coefficients,set_coefficients,true);
 		addMember(l,"worldVelocityScale",get_worldVelocityScale,set_worldVelocityScale,true);
 		addMember(l,"worldAccelerationScale",get_worldAccelerationScale,set_worldAccelerationScale,true);
-		addMember(l,"solverFrequency",get_solverFrequency,set_solverFrequency,true);
+		addMember(l,"clothSolverFrequency",get_clothSolverFrequency,set_clothSolverFrequency,true);
 		addMember(l,"capsuleColliders",get_capsuleColliders,set_capsuleColliders,true);
 		addMember(l,"sphereColliders",get_sphereColliders,set_sphereColliders,true);
 		createTypeMetatable(l,constructor, typeof(UnityEngine.Cloth),typeof(UnityEngine.Component));

@@ -71,20 +71,6 @@ public class Lua_UnityEngine_SceneManagement_SceneManager : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int GetSceneByBuildIndex_s(IntPtr l) {
-		try {
-			System.Int32 a1;
-			checkType(l,1,out a1);
-			var ret=UnityEngine.SceneManagement.SceneManager.GetSceneByBuildIndex(a1);
-			pushValue(l,true);
-			pushValue(l,ret);
-			return 2;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int GetSceneAt_s(IntPtr l) {
 		try {
 			System.Int32 a1;
@@ -205,13 +191,13 @@ public class Lua_UnityEngine_SceneManagement_SceneManager : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int UnloadSceneAsync_s(IntPtr l) {
+	static public int UnloadScene_s(IntPtr l) {
 		try {
 			int argc = LuaDLL.lua_gettop(l);
 			if(matchType(l,argc,1,typeof(UnityEngine.SceneManagement.Scene))){
 				UnityEngine.SceneManagement.Scene a1;
 				checkValueType(l,1,out a1);
-				var ret=UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(a1);
+				var ret=UnityEngine.SceneManagement.SceneManager.UnloadScene(a1);
 				pushValue(l,true);
 				pushValue(l,ret);
 				return 2;
@@ -219,7 +205,7 @@ public class Lua_UnityEngine_SceneManagement_SceneManager : LuaObject {
 			else if(matchType(l,argc,1,typeof(string))){
 				System.String a1;
 				checkType(l,1,out a1);
-				var ret=UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(a1);
+				var ret=UnityEngine.SceneManagement.SceneManager.UnloadScene(a1);
 				pushValue(l,true);
 				pushValue(l,ret);
 				return 2;
@@ -227,7 +213,7 @@ public class Lua_UnityEngine_SceneManagement_SceneManager : LuaObject {
 			else if(matchType(l,argc,1,typeof(int))){
 				System.Int32 a1;
 				checkType(l,1,out a1);
-				var ret=UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(a1);
+				var ret=UnityEngine.SceneManagement.SceneManager.UnloadScene(a1);
 				pushValue(l,true);
 				pushValue(l,ret);
 				return 2;
@@ -298,12 +284,11 @@ public class Lua_UnityEngine_SceneManagement_SceneManager : LuaObject {
 		addMember(l,SetActiveScene_s);
 		addMember(l,GetSceneByPath_s);
 		addMember(l,GetSceneByName_s);
-		addMember(l,GetSceneByBuildIndex_s);
 		addMember(l,GetSceneAt_s);
 		addMember(l,LoadScene_s);
 		addMember(l,LoadSceneAsync_s);
 		addMember(l,CreateScene_s);
-		addMember(l,UnloadSceneAsync_s);
+		addMember(l,UnloadScene_s);
 		addMember(l,MergeScenes_s);
 		addMember(l,MoveGameObjectToScene_s);
 		addMember(l,"sceneCount",get_sceneCount,null,false);

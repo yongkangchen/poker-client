@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using LuaInterface;
 using SLua;
 using System.Collections.Generic;
@@ -67,24 +67,6 @@ public class Lua_UnityEngine_WWW : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int InitWWW(IntPtr l) {
-		try {
-			UnityEngine.WWW self=(UnityEngine.WWW)checkSelf(l);
-			System.String a1;
-			checkType(l,2,out a1);
-			System.Byte[] a2;
-			checkArray(l,3,out a2);
-			System.String[] a3;
-			checkArray(l,4,out a3);
-			self.InitWWW(a1,a2,a3);
-			pushValue(l,true);
-			return 1;
-		}
-		catch(Exception e) {
-			return error(l,e);
-		}
-	}
-	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 	static public int GetAudioClip(IntPtr l) {
 		try {
 			int argc = LuaDLL.lua_gettop(l);
@@ -92,7 +74,7 @@ public class Lua_UnityEngine_WWW : LuaObject {
 				UnityEngine.WWW self=(UnityEngine.WWW)checkSelf(l);
 				System.Boolean a1;
 				checkType(l,2,out a1);
-				var ret=UnityEngine.WWWAudioExtensions.GetAudioClip(self, a1);
+				var ret=self.GetAudioClip(a1);
 				pushValue(l,true);
 				pushValue(l,ret);
 				return 2;
@@ -103,7 +85,7 @@ public class Lua_UnityEngine_WWW : LuaObject {
 				checkType(l,2,out a1);
 				System.Boolean a2;
 				checkType(l,3,out a2);
-				var ret=UnityEngine.WWWAudioExtensions.GetAudioClip(self,a1,a2);
+				var ret=self.GetAudioClip(a1,a2);
 				pushValue(l,true);
 				pushValue(l,ret);
 				return 2;
@@ -116,7 +98,7 @@ public class Lua_UnityEngine_WWW : LuaObject {
 				checkType(l,3,out a2);
 				UnityEngine.AudioType a3;
 				checkEnum(l,4,out a3);
-				var ret=UnityEngine.WWWAudioExtensions.GetAudioClip(self,a1,a2,a3);
+				var ret=self.GetAudioClip(a1,a2,a3);
 				pushValue(l,true);
 				pushValue(l,ret);
 				return 2;
@@ -135,7 +117,7 @@ public class Lua_UnityEngine_WWW : LuaObject {
 			int argc = LuaDLL.lua_gettop(l);
 			if(argc==1){
 				UnityEngine.WWW self=(UnityEngine.WWW)checkSelf(l);
-				var ret=UnityEngine.WWWAudioExtensions.GetAudioClipCompressed(self);
+				var ret=self.GetAudioClipCompressed();
 				pushValue(l,true);
 				pushValue(l,ret);
 				return 2;
@@ -144,7 +126,7 @@ public class Lua_UnityEngine_WWW : LuaObject {
 				UnityEngine.WWW self=(UnityEngine.WWW)checkSelf(l);
 				System.Boolean a1;
 				checkType(l,2,out a1);
-				var ret=UnityEngine.WWWAudioExtensions.GetAudioClipCompressed(self,a1);
+				var ret=self.GetAudioClipCompressed(a1);
 				pushValue(l,true);
 				pushValue(l,ret);
 				return 2;
@@ -155,7 +137,7 @@ public class Lua_UnityEngine_WWW : LuaObject {
 				checkType(l,2,out a1);
 				UnityEngine.AudioType a2;
 				checkEnum(l,3,out a2);
-				var ret=UnityEngine.WWWAudioExtensions.GetAudioClipCompressed(self,a1,a2);
+				var ret=self.GetAudioClipCompressed(a1,a2);
 				pushValue(l,true);
 				pushValue(l,ret);
 				return 2;
@@ -387,7 +369,7 @@ public class Lua_UnityEngine_WWW : LuaObject {
 		try {
 			UnityEngine.WWW self=(UnityEngine.WWW)checkSelf(l);
 			pushValue(l,true);
-			pushValue(l,UnityEngine.WWWAudioExtensions.GetAudioClip(self));
+			pushValue(l,self.GetAudioClip());
 			return 2;
 		}
 		catch(Exception e) {
@@ -495,7 +477,6 @@ public class Lua_UnityEngine_WWW : LuaObject {
 	static public void reg(IntPtr l) {
 		getTypeTable(l,"UnityEngine.WWW");
 		addMember(l,Dispose);
-		addMember(l,InitWWW);
 		addMember(l,GetAudioClip);
 		addMember(l,GetAudioClipCompressed);
 		addMember(l,LoadImageIntoTexture);

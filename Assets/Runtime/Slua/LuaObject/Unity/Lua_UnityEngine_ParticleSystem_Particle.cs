@@ -123,7 +123,7 @@ public class Lua_UnityEngine_ParticleSystem_Particle : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int get_remainingLifetime(IntPtr l) {
+	static public int get_lifetime(IntPtr l) {
 		try {
 			UnityEngine.ParticleSystem.Particle self;
 			checkValueType(l,1,out self);
@@ -136,7 +136,7 @@ public class Lua_UnityEngine_ParticleSystem_Particle : LuaObject {
 		}
 	}
 	[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-	static public int set_remainingLifetime(IntPtr l) {
+	static public int set_lifetime(IntPtr l) {
 		try {
 			UnityEngine.ParticleSystem.Particle self;
 			checkValueType(l,1,out self);
@@ -448,7 +448,7 @@ public class Lua_UnityEngine_ParticleSystem_Particle : LuaObject {
 		addMember(l,GetCurrentColor);
 		addMember(l,"position",get_position,set_position,true);
 		addMember(l,"velocity",get_velocity,set_velocity,true);
-		addMember(l,"remainingLifetime",get_remainingLifetime,set_remainingLifetime,true);
+		addMember(l,"lifetime",get_lifetime,set_lifetime,true);
 		addMember(l,"startLifetime",get_startLifetime,set_startLifetime,true);
 		addMember(l,"startSize",get_startSize,set_startSize,true);
 		addMember(l,"startSize3D",get_startSize3D,set_startSize3D,true);
