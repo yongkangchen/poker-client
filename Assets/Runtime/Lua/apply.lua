@@ -21,8 +21,10 @@ local agree_color_tbl = {{12, 120, 165}, {191, 54, 0}, {135, 77, 46}, {28, 111, 
 return function(parent, exit_info, on_close)
     local transform = UI.InitWindow("apply", parent)
     local item_tbl = {}
+    local is_playback = false
     
     for idx, role_data in pairs(exit_info.role_tbl) do
+        is_playback = is_playback or role_data.is_playback
         local role_name = role_data.name
         local is_agree = false
         local agree_str
@@ -106,8 +108,14 @@ return function(parent, exit_info, on_close)
         if ret then
             item_tbl[role_id].set_agree()
             if is_close then
-                Destroy(transform.gameObject)
-                on_close()
+                if is_playback then
+                    LuaTimer.Add(1000, function()
+                        on_close()
+                    end)
+                else
+                    Destroy(transform.gameObject)
+                    on_close()
+                end
             end
         else
             show_hint(item_tbl[role_id].name .. "拒绝了解散房间")

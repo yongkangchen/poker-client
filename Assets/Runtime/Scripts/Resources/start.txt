@@ -58,4 +58,4 @@ end
 
 ResourcesLoad = UnityEngine.Resources.Load
 
-require("main").start()
+require(IsLobby and "lobby_main" or "main").start()

@@ -153,15 +153,21 @@ end
 local function chsize(char)
     if not char then
         return 0
-    elseif char > 240 then
-        return 4
-    elseif char > 225 then
-        return 3
-    elseif char > 192 then
-        return 2
-    else
-        return 1
     end
+
+    if char >= 240 then
+        return 4
+    end
+
+    if char >= 224 then
+        return 3
+    end
+
+    if char >= 194 then
+        return 2
+    end
+
+    return 1
 end
 
 function string.utf8sub(str, startChar, numChars)
@@ -169,12 +175,12 @@ function string.utf8sub(str, startChar, numChars)
     while startChar > 1 do
         local char = string.byte(str, startIndex)
         local size = chsize(char)
-        startIndex = startIndex + size 
+        startIndex = startIndex + size
         startChar = startChar - (size > 1 and 2 or size)
     end
- 
+
     local currentIndex = startIndex
- 
+
     while numChars > 0 and currentIndex <= #str do
         local char = string.byte(str, currentIndex)
         local size = chsize(char)

@@ -21,6 +21,7 @@ return {
     StartRecord = empty_func,
     DownloadRecord = empty_func,
     SwitchNet = empty_func,
-    CheckLobby = empty_func,
-    CheckGame = empty_func,
+    CheckLobby = function() UnityEngine.Yield(UnityEngine.WaitForSeconds(0.5)) end,
+    CheckGame = function() UnityEngine.Yield(UnityEngine.WaitForSeconds(0.5)) end,
+    GetBatteryQuantity = function() return 100 end
 }

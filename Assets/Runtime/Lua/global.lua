@@ -15,6 +15,7 @@ WeChatUtil = WeChatUtil or {
     Reg = function() end,
     Login = function() end,
     Md5Sum = function() return tostring(os.clock()) end,
+    ShareScreenShot = function() end,
 }
 
 require "lib.log"
@@ -25,6 +26,11 @@ local File = System.IO.File
 
 sync = require "lib.sync"
 
+coroutine.wrapnew = function(func)
+    return function(...)
+        return coroutine.wrap(func)(...)
+    end
+end
 local GameObject = UnityEngine.GameObject
 local PlayerPrefs = UnityEngine.PlayerPrefs
 local Instantiate = UnityEngine.Object.Instantiate
@@ -39,7 +45,7 @@ local function play_click_audio(is_close)
     else
         clip = UI.LoadAudio("sound_button_click")
     end
-    
+
     if not click_audio then
         local click_obj = GameObject()
         click_obj.name = "click_obj"
@@ -56,13 +62,13 @@ function UI.InitPrefab(path, parent)
         LERR("nil prefab: %s", path)
         return
     end
-    
+
     local gameObject = Instantiate(prefab)
     local transform = gameObject.transform
 
     parent = parent or GameObject.Find("UI Root").transform
     transform:SetParent(parent, false)
-    
+
     local toggles = gameObject:GetComponentsInChildren(UIToggle)
     LuaTimer.Add(1000, function()
         for i = 1, toggles.Length do
@@ -71,23 +77,59 @@ function UI.InitPrefab(path, parent)
             end)
         end
     end)
-    
+
     return transform
 end
 
-function UI.InitWindow(path, parent)
+function UI.InitPrefabSync(...)
+   UnityEngine.Yield(UnityEngine.WaitForEndOfFrame())
+   return UI.InitPrefab(...)
+end
+
+function UI.InitWindow(path, parent, play_tween, mask_close)
     local transform = UI.InitPrefab(path, parent)
+    if not transform then
+        return
+    end
     -- assert(transform:GetComponent(UIPanel) ~= nil)
-    if not transform:GetComponent(UIPanel) then 
+    if not transform:GetComponent(UIPanel) then
         transform.gameObject:AddComponent(UIPanel).depth = 2
-    end    
+    end
     --TODO: mask, depth = -100
     local mask = UI.InitPrefab("mask", transform)
     --TODO: 要设置mask的anchor使其全屏
-    mask:GetComponent(UIWidget):SetAnchor(transform.gameObject, 0, 0, 0, 0)    
+    mask:GetComponent(UIWidget):SetAnchor(transform.gameObject, 0, 0, 0, 0)
     mask:GetComponent(UI2DSprite).depth = -100
-    
+
+    if mask_close then
+        UI.OnClick(mask, "box", function()
+            UI.Destroy(transform)
+        end)
+    end
+
+    if play_tween == nil then
+        play_tween = UI.WindowTween
+    end
+
+    if play_tween then
+        local tweenobj = UnityEngine.GameObject().transform
+        tweenobj:SetParent(mask, false)
+        tweenobj.name = "__WindowTween"
+        mask.name = "mask"
+
+        local Vector3 = UnityEngine.Vector3
+        transform.localScale = Vector3(0.85, 0.85, 1)
+        EventDelegate.Add(TweenScale.Begin(transform.gameObject, 0.08, Vector3(1.05, 1.05, 1)).onFinished, function()
+            TweenScale.Begin(transform.gameObject, 0.15, UnityEngine.Vector3(1, 1, 1))
+        end)
+    end
+
     return transform
+end
+
+function UI.InitWindowSync(...)
+   UnityEngine.Yield(UnityEngine.WaitForEndOfFrame())
+   return UI.InitWindow(...)
 end
 
 UI.InitPrefabX = UI.InitPrefab
@@ -159,6 +201,16 @@ function UI.GetComponent(transform, path, type)
     return UI.Child(transform, path):GetComponent(type)
 end
 
+function UI.ActiveChild(trans, name)
+    if not trans then
+        return
+    end
+
+    for _, v in ipairs(UI.Children(trans)) do
+        UI.Active(v, v.name == name)
+    end
+end
+
 function UI.Active(transform, v)
     transform.gameObject:SetActive(v ~= nil and v ~= false)
     return v
@@ -183,10 +235,15 @@ function UI.LoadSprite(value, game_name)
     if not prefab then
         LERR("nil prefab: %s, %s", value, prefab_name)
     end
-    
+
     local render = UI.GetComponent(prefab.transform, table.remove(value:split("/")), SpriteRenderer)
     -- print(render, value, prefab_name)
     return render.sprite
+end
+
+function UI.LoadSpriteSync(...)
+   UnityEngine.Yield(UnityEngine.WaitForEndOfFrame())
+   return UI.LoadSprite(...)
 end
 
 function UI.SpriteColorChange(transform, r, g, b, a)
@@ -212,12 +269,17 @@ function UI.Sprite(transform, path, value, game_name, perfect)
         perfect = game_name
         game_name = nil
     end
-    
+
     local sprite = UI.GetComponent(transform, path, UI2DSprite)
     sprite.sprite2D = value and UI.LoadSprite(value, game_name) or nil
-    if perfect then 
+    if perfect then
         sprite:MakePixelPerfect()
     end
+end
+
+function UI.SpriteSync(...)
+    UnityEngine.Yield(UnityEngine.WaitForEndOfFrame())
+    return UI.Sprite(...)
 end
 
 function UI.LoadAudio(path)
@@ -228,8 +290,21 @@ function UI.LoadAudio(path)
     return audio
 end
 
+function UI.LoadAudioSync(...)
+   UnityEngine.Yield(UnityEngine.WaitForEndOfFrame())
+   return UI.LoadAudio(...)
+end
+
 function UI.LoadIcon(path)
     return ResourcesLoad(path)
+end
+
+function UI.RoleHeadClear(transform)
+    local texture = transform:GetComponent(UITexture)
+    if not texture then
+        return
+    end
+    texture.mainTexture = nil
 end
 
 local WWW = UnityEngine.WWW
@@ -243,43 +318,48 @@ function UI.RoleHead(transform, url, on_end)
         if not game_cfg.IS_VISITOR then
             return
         end
-        
+
         if game_cfg.APPSTORE then
             return
         end
-        
+
         url = url or "https://www.baidu.com/img/bd_logo1.png"
     end
-    
+
     local texture = transform:GetComponent(UITexture)
     local name = WeChatUtil.Md5Sum(url):lower()
     local path = UnityEngine.Application.persistentDataPath .. "/"..name
-    
+
     local new = Texture2D(2, 2)
     transform.gameObject:AddComponent(BehaviourEvent).onDestroy = function()
         Object.Destroy(new)
     end
     texture.mainTexture = new
-    
+
     if File.Exists(path) then
         local data = File.ReadAllBytes(path)
         new:LoadImage(data)
+        if on_end then
+            on_end()
+        end
         return
     end
-    
-    coroutine.wrap(function()    
+
+    coroutine.wrap(function()
         local www = WWW(url)
         Yield(www)
         if www.error then
             LERR("error download: %s, %s", url, www.text)
+            if on_end then
+                on_end()
+            end
             return
         end
-        
+
         if texture.mainTexture == new then
             www:LoadImageIntoTexture(new)
             File.WriteAllBytes(path, new:EncodeToPNG())
         end
-        www:Dispose()
         if on_end then
             on_end()
         end
@@ -300,26 +380,42 @@ function UI.GetVolume()
     return volume
 end
 
-function UI.singleton_timer()
+function UI.singleton_timer(cycle)
     local timer_id
     return function(sec, func)
         if timer_id then
             LuaTimer.Delete(timer_id)
         end
-        
+
         if not sec then
             return
         end
-        
-        timer_id = LuaTimer.Add(sec, function()
-            timer_id = nil
-            func()
-        end)
+
+        local function timer_func()
+            local ret = func()
+            if not ret then
+                timer_id = nil
+            end
+            return ret
+        end
+
+        if cycle then
+            timer_id = LuaTimer.Add(cycle, sec, timer_func)
+        else
+            timer_id = LuaTimer.Add(sec, timer_func)
+        end
     end
 end
 
 function UI.Destroy(transform)
-  GameObject.Destroy(transform.gameObject)
+   if UI.WindowTween and transform:Find("mask/__WindowTween") then
+        local Vector3 = UnityEngine.Vector3
+        EventDelegate.Add(TweenScale.Begin(transform.gameObject, 0.15, Vector3(0.9, 0.9, 1)).onFinished, function()
+            GameObject.Destroy(transform.gameObject)
+        end)
+    else
+        GameObject.Destroy(transform.gameObject)
+    end
 end
 
 function UI.OnDestroy(transform, func)
@@ -356,9 +452,27 @@ function UI.ShareScreen(transform, path, ...)
         return
     end
 
+    if ShareScreenMark then
+        UI.OnDestroy(transform, ShareScreenMark())
+    end
+
     local param = {...}
 
     UI.OnClick(transform, path, function()
         ShareScreenShot(unpack(param, 1, table.maxn(param)))
     end)
+end
+
+function UI.ComputeCash(v)
+    if v <= 9999 then
+        return v
+    end
+
+    if v > 9999 and v < 1000000 then
+        local integer, float = math.modf(v/10000)
+        float = float == 0 and "" or string.sub(tostring(float), 2, 4)
+        return integer .. float .. "万"
+    end
+
+    return math.modf(v/10000) .. "万"
 end

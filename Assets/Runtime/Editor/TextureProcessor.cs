@@ -50,4 +50,19 @@ public class TextureProcessor :AssetPostprocessor {
 			o.transform.name = render.sprite.name;
 		}
 	}
+	
+	[MenuItem("Assets/Create2DSprite", false, -1)]
+	static public void Create2DSprite()
+	{
+		GameObject parent = new GameObject ();
+		foreach (UnityEngine.Object obj in Selection.objects) {
+			var path = AssetDatabase.GetAssetPath(obj);
+			var o = new GameObject();
+			o.transform.SetParent(parent.transform, false);
+			var render = o.AddComponent<UI2DSprite>();
+			render.sprite2D = AssetDatabase.LoadAssetAtPath(path, typeof(Sprite)) as Sprite;
+			o.transform.name = render.sprite2D.name;
+			render.MakePixelPerfect();
+		}
+	}
 }
