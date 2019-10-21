@@ -82,11 +82,19 @@ return function(parent, exit_info, on_close)
         }
     end
     for idx, role_id in pairs(exit_info.dismiss_tbl) do
-        if idx == 1 then
-            item_tbl[role_id].hide()
-            UI.Label(transform, "name", "玩家" .. item_tbl[role_id].name .. "申请解散房间")
+        if not item_tbl[role_id] then
+            if idx == 1 then
+                UI.Label(transform, "name", "玩家: " .. role_id .. " 申请解散房间")
+            else
+                show_hint("玩家: " .. role_id .. " 拒绝了解散房间")
+            end
         else
-            item_tbl[role_id].set_agree()
+            if idx == 1 then
+                item_tbl[role_id].hide()
+                UI.Label(transform, "name", "玩家" .. item_tbl[role_id].name .. "申请解散房间")
+            else
+                item_tbl[role_id].set_agree()
+            end
         end
     end
     
@@ -105,6 +113,10 @@ return function(parent, exit_info, on_close)
     end)    
     
     server.listen(msg.AGREE, function(ret, role_id, is_close)
+        if not item_tbl[role_id] then
+            show_hint("玩家: " .. role_id .. " 拒绝了解散房间")
+            return
+        end
         if ret then
             item_tbl[role_id].set_agree()
             if is_close then
