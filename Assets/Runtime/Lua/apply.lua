@@ -114,7 +114,7 @@ return function(parent, exit_info, on_close)
     
     server.listen(msg.AGREE, function(ret, role_id, is_close)
         if not item_tbl[role_id] then
-            show_hint("玩家: " .. role_id .. " 拒绝了解散房间")
+            show_hint("玩家: " .. role_id .. (ret and "同意" or "拒绝") .. "了解散房间")
             return
         end
         if ret then
