@@ -12,6 +12,7 @@ of this license document, but changing it is not allowed.
 **/
 ﻿
 using UnityEngine;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using SLua;
@@ -36,6 +37,21 @@ public class Main : MonoBehaviour {
 
 	private LuaSvr svr;
 	void Start () {
+		LuaState.loaderDelegate = (string fn)=>{
+			byte[] bytes = null;
+			if(File.Exists(fn)){
+				bytes = File.ReadAllBytes(fn);
+			}
+			else{
+				fn = fn.Replace(".", "/");
+				TextAsset asset = (TextAsset)Resources.Load(fn);
+
+				if (asset == null)return null;
+				bytes = asset.bytes;
+			}
+			return bytes;
+		};
+
 		svr = new LuaSvr();
 		svr.init(null, () =>
 		{
